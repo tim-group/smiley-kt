@@ -6,7 +6,7 @@ apply plugin: 'kotlin'
 repositories {
   maven {
     name "nexus"
-    url "http://repo.net.local/groups/public"
+    url "http://repo.net.local/nexus/content/groups/public"
   }
 }
 
@@ -44,6 +44,8 @@ dependencies {
   testCompile "com.timgroup:tim-structured-events-testing:autobump"
   testCompile 'org.apache.httpcomponents:httpclient:4.4.1'
   testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+
+  runtime "ch.qos.logback:logback-classic:1.2.2"
 }
 
 test {
@@ -58,7 +60,7 @@ buildscript {
 
   repositories {
     maven {
-      url "http://repo.net.local/groups/public"
+      url "http://repo.net.local/nexus/content/groups/public"
     }
   }
 
