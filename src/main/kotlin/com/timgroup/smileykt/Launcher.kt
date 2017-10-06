@@ -14,9 +14,10 @@ object Launcher {
             System.exit(1)
         }
 
-        val properties = Properties()
-        Files.newInputStream(Paths.get(args[0])).use { stream ->
-            properties.load(stream)
+        val properties = Properties().apply {
+            Files.newInputStream(Paths.get(args[0])).use { stream ->
+                load(stream)
+            }
         }
 
         val statusPage = StatusPageGenerator("smiley-kt", JarVersionComponent(Launcher::class.java))
