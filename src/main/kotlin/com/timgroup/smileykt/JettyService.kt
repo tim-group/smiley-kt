@@ -29,6 +29,9 @@ class JettyService(port: Int, statusPage: StatusPageGenerator) {
         server.stop()
     }
 
-    val port
-        get() = (server.connectors[0] as NetworkConnector).localPort
+    val port: Int
+        get() {
+            check(server.isRunning)
+            return (server.connectors[0] as NetworkConnector).localPort
+        }
 }
