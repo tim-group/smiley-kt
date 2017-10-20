@@ -4,6 +4,7 @@ import com.timgroup.tucker.info.Health
 import com.timgroup.tucker.info.Stoppable
 import com.timgroup.tucker.info.servlet.ApplicationInformationServlet
 import com.timgroup.tucker.info.status.StatusPageGenerator
+import org.eclipse.jetty.server.NetworkConnector
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.servlet.ServletContextHandler
@@ -27,4 +28,7 @@ class JettyService(port: Int, statusPage: StatusPageGenerator) {
     fun stop() {
         server.stop()
     }
+
+    val port
+        get() = (server.connectors[0] as NetworkConnector).localPort
 }

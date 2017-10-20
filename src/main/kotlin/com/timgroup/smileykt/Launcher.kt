@@ -1,10 +1,8 @@
 package com.timgroup.smileykt
 
-import com.timgroup.tucker.info.component.JarVersionComponent
-import com.timgroup.tucker.info.status.StatusPageGenerator
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.Properties
+import java.util.*
 
 object Launcher {
     @JvmStatic
@@ -20,13 +18,12 @@ object Launcher {
             }
         }
 
-        val statusPage = StatusPageGenerator("smiley-kt", JarVersionComponent(Launcher::class.java))
         val port = properties.getProperty("port").toInt()
-        val jettyService = JettyService(port, statusPage)
-        jettyService.start()
+        val app = App(port)
+        app.start()
 
         Runtime.getRuntime().addShutdownHook(Thread(Runnable {
-            jettyService.stop()
+            app.stop()
         }, "shutdown"))
     }
 }
