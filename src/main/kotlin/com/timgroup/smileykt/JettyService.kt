@@ -15,6 +15,7 @@ class JettyService(port: Int, statusPage: StatusPageGenerator) {
             val tuckerServlet = ApplicationInformationServlet(statusPage, Stoppable.ALWAYS_STOPPABLE, Health.ALWAYS_HEALTHY)
             addServlet(ServletHolder(tuckerServlet), "/info/*")
             addServlet(DefaultServlet::class.java, "/*")
+            addServlet(RecordHappinessServlet::class.java, "/record-happiness")
             resourceBase = "src/main/web"
         }
     }
