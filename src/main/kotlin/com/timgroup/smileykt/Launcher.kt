@@ -2,7 +2,7 @@ package com.timgroup.smileykt
 
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.*
+import java.util.Properties
 
 object Launcher {
     @JvmStatic
@@ -17,6 +17,8 @@ object Launcher {
                 load(stream)
             }
         }
+
+        System.setProperty("log.directory", "log")
 
         val port = properties.getProperty("port").toInt()
         val app = App(port)
