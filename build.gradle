@@ -35,8 +35,8 @@ dependencies {
   compile "io.dropwizard.metrics:metrics-core:3.2.3"
   compile "io.dropwizard.metrics:metrics-jvm:3.2.3"
   compile "io.dropwizard.metrics:metrics-graphite:3.2.3"
-  compile 'org.eclipse.jetty:jetty-server:9.4.6.v20170531'
-  compile 'org.eclipse.jetty:jetty-servlet:9.4.6.v20170531'
+  compile 'org.eclipse.jetty:jetty-server:9.4.7.v20170914'
+  compile 'org.eclipse.jetty:jetty-servlet:9.4.7.v20170914'
 
   testCompile "junit:junit:4.12"
   testCompile "org.hamcrest:hamcrest-core:1.3"
