@@ -33,7 +33,7 @@ class RecordHappinessServletIntegrationTest {
                     "email" to "test@example.com",
                     "happiness" to "very happy").toFormEntity()
         }).apply {
-            assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
+            assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.statusCode)
         }
 
         server.execute(HttpGet("/happiness")).apply {
@@ -48,7 +48,7 @@ class RecordHappinessServletIntegrationTest {
         server.execute(HttpPost("/happiness").apply {
             entity = StringEntity("""{"email":"test@example.com", "happiness":"very happy"}""", ContentType.APPLICATION_JSON)
         }).apply {
-            assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
+            assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.statusCode)
         }
 
         server.execute(HttpGet("/happiness")).apply {

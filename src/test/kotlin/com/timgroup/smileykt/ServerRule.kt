@@ -47,7 +47,9 @@ class ServerRule : ExternalResource() {
                 rawResponse.allHeaders.forEach {
                     addHeader(it)
                 }
-                entity = ByteArrayEntity(EntityUtils.toByteArray(rawResponse.entity), ContentType.get(rawResponse.entity))
+                if (rawResponse.entity != null) {
+                    entity = ByteArrayEntity(EntityUtils.toByteArray(rawResponse.entity), ContentType.get(rawResponse.entity))
+                }
             }
         }, httpContext)
         return response

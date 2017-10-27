@@ -14,7 +14,7 @@ class RecordHappinessServlet : HttpServlet() {
             val happiness: String = req.getParameter("happiness") ?: return resp.sendError(400, "Happiness must be supplied")
             happinesses[email] = happiness
             println(happinesses)
-            resp.status = HttpServletResponse.SC_OK
+            resp.status = HttpServletResponse.SC_NO_CONTENT
         }
         else {
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE)
