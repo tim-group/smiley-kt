@@ -17,7 +17,7 @@ class RecordHappinessServlet : HttpServlet() {
             resp.status = HttpServletResponse.SC_OK
         }
         else {
-            resp.status = HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE
+            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE)
         }
     }
 
