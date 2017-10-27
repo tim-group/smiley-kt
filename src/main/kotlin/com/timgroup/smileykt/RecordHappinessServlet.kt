@@ -15,4 +15,13 @@ class RecordHappinessServlet : HttpServlet() {
         println(happinesses)
         resp.status = 200
     }
+
+    override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
+        resp.contentType = "text/plain"
+        resp.writer.use { writer ->
+            happinesses.forEach { email, happiness ->
+                writer.println("$email $happiness")
+            }
+        }
+    }
 }
