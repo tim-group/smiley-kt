@@ -1,12 +1,10 @@
 package com.timgroup.smileykt
 
-import org.apache.http.NameValuePair
 import org.apache.http.client.entity.UrlEncodedFormEntity
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.message.BasicNameValuePair
 import org.junit.Rule
 import org.junit.Test
-import java.util.*
 import kotlin.test.assertEquals
 
 class RecordHappinessServletIntegrationTest {
@@ -15,15 +13,15 @@ class RecordHappinessServletIntegrationTest {
 
     @Test
     fun `records happiness`() {
-        val request = HttpPost("/record-happiness")
-
-        val postParameters = ArrayList<NameValuePair>()
-        postParameters.add(BasicNameValuePair("email", "test@example.com"))
-        postParameters.add(BasicNameValuePair("happiness", "very happy"))
-        request.setEntity(UrlEncodedFormEntity(postParameters, "UTF-8"))
-
-        server.execute(request)
+        server.execute(HttpPost("/record-happiness").apply {
+            entity = mapOf(
+                    "email" to "test@example.com",
+                    "happiness" to "very happy").toFormEntity()
+        })
 
         assertEquals(200, server.response.statusLine.statusCode)
     }
+
+    private fun Map<String, String>.toFormEntity() =
+            UrlEncodedFormEntity(entries.map { (key, value) -> BasicNameValuePair(key, value) }, Charsets.UTF_8)
 }
