@@ -3,13 +3,17 @@ package com.timgroup.smileykt
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.entity.ContentType
 import org.apache.http.util.EntityUtils
+import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class TuckerIntegrationTest : IntegrationTest() {
+class TuckerIntegrationTest {
+    @get:Rule
+    val server = ServerRule()
+
     @Test
     fun `shows application health`() {
-        execute(HttpGet("/info/health"))
+        val response = server.execute(HttpGet("/info/health"))
         assertEquals(200, response.statusLine.statusCode)
         assertEquals("text/plain", ContentType.get(response.entity).mimeType)
         assertEquals("healthy", EntityUtils.toString(response.entity))
@@ -17,7 +21,7 @@ class TuckerIntegrationTest : IntegrationTest() {
 
     @Test
     fun `shows application stoppable`() {
-        execute(HttpGet("/info/stoppable"))
+        val response = server.execute(HttpGet("/info/stoppable"))
         assertEquals(200, response.statusLine.statusCode)
         assertEquals("text/plain", ContentType.get(response.entity).mimeType)
         assertEquals("safe", EntityUtils.toString(response.entity))
@@ -25,14 +29,14 @@ class TuckerIntegrationTest : IntegrationTest() {
 
     @Test
     fun `shows application version`() {
-        execute(HttpGet("/info/version"))
+        val response = server.execute(HttpGet("/info/version"))
         assertEquals(200, response.statusLine.statusCode)
         assertEquals("text/plain", ContentType.get(response.entity).mimeType)
     }
 
     @Test
     fun `shows application status`() {
-        execute(HttpGet("/info/status.json"))
+        val response = server.execute(HttpGet("/info/status.json"))
         assertEquals(200, response.statusLine.statusCode)
         assertEquals("application/json", ContentType.get(response.entity).mimeType)
     }
