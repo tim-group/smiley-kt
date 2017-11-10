@@ -37,7 +37,8 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
     override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
         resp.contentType = "text/plain"
         resp.writer.use { writer ->
-            eventCategoryReader.readCategoryForwards("happiness")
+            eventCategoryReader.readCategoryForwards("happiness").use { stream ->
+                stream
                     .map { resolvedEvent ->
                         HappinessObj(resolvedEvent.eventRecord().streamId().id(),
                                 String(resolvedEvent.eventRecord().data()))
@@ -45,6 +46,7 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
                     .forEach { (email, happiness) ->
                         writer.println("$email $happiness")
                     }
+            }
         }
     }
 
