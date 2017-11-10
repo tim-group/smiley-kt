@@ -18,8 +18,11 @@ import java.time.Clock
 class ServerRule : ExternalResource() {
     lateinit var app: App
 
+    val clock = Clock.systemDefaultZone()
+    val eventSource = InMemoryEventSource(JavaInMemoryEventStore(clock))
+
     override fun before() {
-        app = App(0, InMemoryEventSource(JavaInMemoryEventStore(Clock.systemDefaultZone())))
+        app = App(0, eventSource)
         app.start()
     }
 
@@ -42,11 +45,9 @@ class ServerRule : ExternalResource() {
 
     val httpContext = HttpClientContext()
 
-    lateinit var response: HttpResponse
-
     fun execute(request: HttpUriRequest): HttpResponse {
-        httpClient.execute(request, { rawResponse ->
-            response = BasicHttpResponse(rawResponse.statusLine).apply {
+        return httpClient.execute(request, { rawResponse ->
+            BasicHttpResponse(rawResponse.statusLine).apply {
                 rawResponse.allHeaders.forEach {
                     addHeader(it)
                 }
@@ -55,6 +56,5 @@ class ServerRule : ExternalResource() {
                 }
             }
         }, httpContext)
-        return response
     }
 }
