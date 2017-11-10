@@ -46,9 +46,12 @@ class RecordHappinessServletIntegrationTest {
                 newEvent("HappinessReceived", "happy".toByteArray()),
                 newEvent("HappinessReceived", "sad".toByteArray())
         ))
+        server.eventSource.writeStream().write(streamId("happiness", "zzzz@example.com"), listOf(
+                newEvent("HappinessReceived", "happy".toByteArray())
+        ))
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
-            assertEquals("test@example.com sad\n", entity.readText())
+            assertEquals("test@example.com sad\nzzzz@example.com happy\n", entity.readText().sortLines())
         }
     }
 
@@ -103,4 +106,5 @@ class RecordHappinessServletIntegrationTest {
             UrlEncodedFormEntity(entries.map { (key, value) -> BasicNameValuePair(key, value) }, Charsets.UTF_8)
 
     private fun HttpEntity.readText() = EntityUtils.toString(this)
+    private fun String.sortLines() = split("\n").filter { it.isNotBlank() }.sorted().joinToString("\n")
 }
