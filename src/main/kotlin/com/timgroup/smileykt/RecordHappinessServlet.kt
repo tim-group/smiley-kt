@@ -50,10 +50,10 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
 
     private fun String.toMimeType(): String {
         val sepOffset = indexOf(';')
-        if (sepOffset < 0)
-            return toLowerCase()
+        return if (sepOffset < 0)
+            toLowerCase()
         else
-            return substring(0, sepOffset).toLowerCase()
+            substring(0, sepOffset).toLowerCase()
     }
 
     private fun recordHappiness(happinessObj: HappinessObj) {
