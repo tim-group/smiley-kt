@@ -23,7 +23,13 @@ object Launcher {
         System.setProperty("log.directory", "log")
 
         val port = properties.getProperty("port").toInt()
-        val app = App(port, FlatFilesystemEventSource(Paths.get("events"), Clock.systemDefaultZone(), ".json"))
+
+        val eventsDirectory = Paths.get(properties.getProperty("events.directory"))
+        if (!Files.isDirectory(eventsDirectory)) {
+            Files.createDirectories(eventsDirectory)
+        }
+
+        val app = App(port, FlatFilesystemEventSource(eventsDirectory, Clock.systemDefaultZone(), ".txt"))
         app.start()
 
         Runtime.getRuntime().addShutdownHook(Thread(Runnable {
