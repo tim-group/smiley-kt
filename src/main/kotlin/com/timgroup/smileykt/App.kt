@@ -1,11 +1,12 @@
 package com.timgroup.smileykt
 
+import com.timgroup.eventstore.api.EventSource
 import com.timgroup.tucker.info.component.JarVersionComponent
 import com.timgroup.tucker.info.status.StatusPageGenerator
 
-class App(port: Int) {
+class App(port: Int, eventSource: EventSource) {
     val statusPage = StatusPageGenerator("smiley-kt", JarVersionComponent(App::class.java))
-    val jettyService = JettyService(port, statusPage)
+    val jettyService = JettyService(port, statusPage, eventSource)
 
     fun start() {
         jettyService.start()

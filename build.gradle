@@ -30,6 +30,8 @@ dependencies {
   compile "com.timgroup:Tucker:autobump"
   compile "com.timgroup:tim-logger:autobump"
   compile "com.timgroup:tim-structured-events:autobump"
+  compile "com.timgroup:eventstore-api_2.12:autobump"
+  compile "com.timgroup:eventstore-filesystem_2.12:autobump"
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
   compile "io.dropwizard.metrics:metrics-core:3.2.3"
@@ -45,6 +47,7 @@ dependencies {
   testCompile "org.hamcrest:hamcrest-core:1.3"
   testCompile "org.hamcrest:hamcrest-library:1.3"
   testCompile "com.timgroup:tim-structured-events-testing:autobump"
+  testCompile "com.timgroup:eventstore-memory_2.12:autobump"
   testCompile 'org.apache.httpcomponents:httpclient:4.4.1'
   testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 

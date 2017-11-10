@@ -1,5 +1,7 @@
 package com.timgroup.smileykt
 
+import com.timgroup.eventstore.memory.InMemoryEventSource
+import com.timgroup.eventstore.memory.JavaInMemoryEventStore
 import org.apache.http.HttpHost
 import org.apache.http.HttpResponse
 import org.apache.http.client.methods.HttpUriRequest
@@ -11,12 +13,13 @@ import org.apache.http.impl.client.HttpClients
 import org.apache.http.message.BasicHttpResponse
 import org.apache.http.util.EntityUtils
 import org.junit.rules.ExternalResource
+import java.time.Clock
 
 class ServerRule : ExternalResource() {
     lateinit var app: App
 
     override fun before() {
-        app = App(0)
+        app = App(0, InMemoryEventSource(JavaInMemoryEventStore(Clock.systemDefaultZone())))
         app.start()
     }
 

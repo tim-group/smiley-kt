@@ -2,13 +2,14 @@ package com.timgroup.smileykt
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.timgroup.eventstore.api.EventSource
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 data class HappinessObj(val email: String, val happiness: String)
 
-class RecordHappinessServlet : HttpServlet() {
+class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
 
     val happinesses = mutableMapOf<String, String>()
     val mapper = jacksonObjectMapper()

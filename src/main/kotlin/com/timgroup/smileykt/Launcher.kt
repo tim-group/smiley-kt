@@ -1,8 +1,10 @@
 package com.timgroup.smileykt
 
+import com.timgroup.eventstore.filesystem.FlatFilesystemEventSource
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.Properties
+import java.time.Clock
+import java.util.*
 
 object Launcher {
     @JvmStatic
@@ -21,7 +23,7 @@ object Launcher {
         System.setProperty("log.directory", "log")
 
         val port = properties.getProperty("port").toInt()
-        val app = App(port)
+        val app = App(port, FlatFilesystemEventSource(Paths.get("events"), Clock.systemDefaultZone(), ".json"))
         app.start()
 
         Runtime.getRuntime().addShutdownHook(Thread(Runnable {
