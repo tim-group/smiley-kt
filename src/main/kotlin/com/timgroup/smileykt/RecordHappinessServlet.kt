@@ -15,21 +15,22 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
     val mapper = jacksonObjectMapper()
 
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
-        if (req.contentType.toMimeType() == "application/x-www-form-urlencoded") {
-            val email: String = req.getParameter("email") ?: return resp.sendError(400, "Email must be supplied")
-            val happiness: String = req.getParameter("happiness") ?: return resp.sendError(400, "Happiness must be supplied")
-            happinesses[email] = happiness
-            println(happinesses)
-            resp.status = HttpServletResponse.SC_NO_CONTENT
-        } else if (req.contentType.toMimeType() == "application/json") {
+        when (req.contentType.toMimeType()) {
+            "application/x-www-form-urlencoded" -> {
+                val email: String = req.getParameter("email") ?: return resp.sendError(400, "Email must be supplied")
+                val happiness: String = req.getParameter("happiness") ?: return resp.sendError(400, "Happiness must be supplied")
 
-            val happiness: HappinessObj = mapper.readValue(req.inputStream)
+                recordHappiness(HappinessObj(email, happiness))
 
-            happinesses[happiness.email] = happiness.happiness
-            println(happinesses)
-            resp.status = HttpServletResponse.SC_NO_CONTENT
-        } else {
-            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE)
+                resp.status = HttpServletResponse.SC_NO_CONTENT
+            }
+            "application/json" -> {
+
+                recordHappiness(mapper.readValue(req.inputStream))
+
+                resp.status = HttpServletResponse.SC_NO_CONTENT
+            }
+            else -> resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE)
         }
     }
 
@@ -48,5 +49,10 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
             return toLowerCase()
         else
             return substring(0, sepOffset).toLowerCase()
+    }
+
+    private fun recordHappiness(happinessObj: HappinessObj) {
+        happinesses[happinessObj.email] = happinessObj.happiness
+        println(happinesses)
     }
 }
