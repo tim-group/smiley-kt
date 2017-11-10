@@ -1,5 +1,7 @@
 package com.timgroup.smileykt
 
+import com.timgroup.eventstore.api.NewEvent.newEvent
+import com.timgroup.eventstore.api.StreamId.streamId
 import org.apache.http.HttpEntity
 import org.apache.http.HttpStatus
 import org.apache.http.client.entity.UrlEncodedFormEntity
@@ -9,6 +11,7 @@ import org.apache.http.entity.ContentType
 import org.apache.http.entity.StringEntity
 import org.apache.http.message.BasicNameValuePair
 import org.apache.http.util.EntityUtils
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -26,6 +29,30 @@ class RecordHappinessServletIntegrationTest {
     }
 
     @Test
+    fun `gets happiness`() {
+        server.eventSource.writeStream().write(streamId("happiness", "test@example.com"), listOf(
+                newEvent("HappinessReceived", "happy".toByteArray())
+        ))
+        server.execute(HttpGet("/happiness")).apply {
+            assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
+            assertEquals("test@example.com happy\n", entity.readText())
+        }
+    }
+
+    @Ignore
+    @Test
+    fun `aggregates happiness of single user`() {
+        server.eventSource.writeStream().write(streamId("happiness", "test@example.com"), listOf(
+                newEvent("HappinessReceived", "happy".toByteArray()),
+                newEvent("HappinessReceived", "sad".toByteArray())
+        ))
+        server.execute(HttpGet("/happiness")).apply {
+            assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
+            assertEquals("test@example.com sad\n", entity.readText())
+        }
+    }
+
+    @Test
     fun `records happiness`() {
         server.execute(HttpPost("/happiness").apply {
             entity = mapOf(
@@ -34,6 +61,10 @@ class RecordHappinessServletIntegrationTest {
         }).apply {
             assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.statusCode)
         }
+
+        // FIXME
+//        assertEquals(listOf<ResolvedEvent>(),
+//                server.eventSource.readStream().readStreamForwards(streamId("happiness", "test@example.com")).collect(toList()))
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
@@ -48,6 +79,10 @@ class RecordHappinessServletIntegrationTest {
         }).apply {
             assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.statusCode)
         }
+
+        // FIXME
+//        assertEquals(listOf<ResolvedEvent>(),
+//                server.eventSource.readStream().readStreamForwards(streamId("happiness", "test@example.com")).collect(toList()))
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
