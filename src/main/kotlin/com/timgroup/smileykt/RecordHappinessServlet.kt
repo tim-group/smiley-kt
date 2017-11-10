@@ -3,9 +3,7 @@ package com.timgroup.smileykt
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.timgroup.eventstore.api.EventSource
-import com.timgroup.eventstore.api.NewEvent
 import com.timgroup.eventstore.api.NewEvent.newEvent
-import com.timgroup.eventstore.api.StreamId
 import com.timgroup.eventstore.api.StreamId.streamId
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
