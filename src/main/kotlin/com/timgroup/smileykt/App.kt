@@ -5,8 +5,8 @@ import com.timgroup.tucker.info.component.JarVersionComponent
 import com.timgroup.tucker.info.status.StatusPageGenerator
 
 class App(port: Int, eventSource: EventSource) {
-    val statusPage = StatusPageGenerator("smiley-kt", JarVersionComponent(App::class.java))
-    val jettyService = JettyService(port, statusPage, eventSource)
+    private val statusPage = StatusPageGenerator("smiley-kt", JarVersionComponent(App::class.java))
+    private val jettyService = JettyService(port, statusPage, eventSource)
 
     fun start() {
         jettyService.start()
