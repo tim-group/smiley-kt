@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-data class HappinessObj(val email: String, val happiness: String)
-
 class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
 
     val eventCategoryReader = eventSource.readCategory()
@@ -62,4 +60,6 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
         eventStreamWriter.write(streamId("happiness", happinessObj.email),
                 listOf(newEvent("HappinessReceived", happinessObj.happiness.toByteArray())))
     }
+
+    data class HappinessObj(val email: String, val happiness: String)
 }
