@@ -9,7 +9,6 @@ import org.apache.http.entity.ContentType
 import org.apache.http.entity.StringEntity
 import org.apache.http.message.BasicNameValuePair
 import org.apache.http.util.EntityUtils
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -43,7 +42,6 @@ class RecordHappinessServletIntegrationTest {
     }
 
     @Test
-    @Ignore
     fun `records happiness by posting JSON`() {
         server.execute(HttpPost("/happiness").apply {
             entity = StringEntity("""{"email":"test@example.com", "happiness":"very happy"}""", ContentType.APPLICATION_JSON)

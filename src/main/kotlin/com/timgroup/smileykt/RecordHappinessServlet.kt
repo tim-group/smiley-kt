@@ -1,12 +1,17 @@
 package com.timgroup.smileykt
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+data class HappinessObj(val email: String, val happiness: String)
+
 class RecordHappinessServlet : HttpServlet() {
 
     val happinesses = mutableMapOf<String, String>()
+    val mapper = jacksonObjectMapper()
 
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
         if (req.contentType.toMimeType() == "application/x-www-form-urlencoded") {
@@ -15,8 +20,14 @@ class RecordHappinessServlet : HttpServlet() {
             happinesses[email] = happiness
             println(happinesses)
             resp.status = HttpServletResponse.SC_NO_CONTENT
-        }
-        else {
+        } else if (req.contentType.toMimeType() == "application/json") {
+
+            val happiness: HappinessObj = mapper.readValue(req.inputStream)
+
+            happinesses[happiness.email] = happiness.happiness
+            println(happinesses)
+            resp.status = HttpServletResponse.SC_NO_CONTENT
+        } else {
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE)
         }
     }
