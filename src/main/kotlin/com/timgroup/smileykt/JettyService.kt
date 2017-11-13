@@ -7,6 +7,9 @@ import org.eclipse.jetty.server.Slf4jRequestLog
 import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
+import org.eclipse.jetty.util.resource.PathResource
+import org.eclipse.jetty.util.resource.ResourceCollection
+import java.nio.file.Paths
 
 class JettyService(port: Int, appStatus: AppStatus, eventSource: EventSource) {
     private val server = Server(port).apply {
@@ -16,7 +19,10 @@ class JettyService(port: Int, appStatus: AppStatus, eventSource: EventSource) {
             addServlet(ServletHolder(appStatus.createServlet()), "/info/*")
             addServlet(DefaultServlet::class.java, "/*")
             addServlet(ServletHolder(recordHappinessServlet), "/happiness")
-            resourceBase = "src/main/web"
+            baseResource = ResourceCollection(
+                    PathResource(Paths.get("src/main/web")),
+                    PathResource(Paths.get("webui/build/classes/kotlin/main"))
+            )
         }
     }
 

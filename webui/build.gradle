@@ -1,0 +1,21 @@
+apply plugin: 'org.jetbrains.kotlin.platform.js'
+
+repositories {
+    maven {
+        name "nexus"
+        url "http://repo.net.local/nexus/content/groups/public"
+    }
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+}
+
+compileKotlin2Js {
+//    kotlinOptions.moduleKind = "umd"
+    kotlinOptions.sourceMap = true
+//    kotlinOptions.noStdlib = false
+    kotlinOptions.verbose = true
+//    kotlinOptions.outputFile = "${buildDir}/web/output.js"
+}
