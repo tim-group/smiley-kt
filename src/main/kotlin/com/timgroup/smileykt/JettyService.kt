@@ -21,7 +21,7 @@ class JettyService(port: Int, appStatus: AppStatus, eventSource: EventSource) {
             addServlet(ServletHolder(recordHappinessServlet), "/happiness")
             baseResource = ResourceCollection(
                     PathResource(Paths.get("src/main/web")),
-                    PathResource(Paths.get("webui/build/classes/kotlin/main"))
+                    PathResource(Paths.get("webui/build/web"))
             )
         }
     }
