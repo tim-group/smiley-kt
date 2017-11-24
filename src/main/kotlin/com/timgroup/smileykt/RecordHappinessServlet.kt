@@ -1,7 +1,5 @@
 package com.timgroup.smileykt
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.timgroup.eventstore.api.EventSource
 import com.timgroup.eventstore.api.NewEvent.newEvent
 import com.timgroup.eventstore.api.StreamId.streamId
@@ -13,18 +11,17 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
 
     private val eventCategoryReader = eventSource.readCategory()
     private val eventStreamWriter = eventSource.writeStream()
-    private val mapper = jacksonObjectMapper()
 
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
         when (req.contentType.toMimeType()) {
             "application/x-www-form-urlencoded" -> {
                 val email: String = req.getParameter("email") ?: return resp.sendError(400, "Email must be supplied")
                 val happiness: String = req.getParameter("happiness") ?: return resp.sendError(400, "Happiness must be supplied")
-                recordHappiness(HappinessObj(email, happiness))
+                recordHappiness(Happiness(email, happiness))
                 resp.status = HttpServletResponse.SC_NO_CONTENT
             }
             "application/json" -> {
-                recordHappiness(mapper.readValue(req.inputStream))
+                recordHappiness(decode(req.inputStream))
                 resp.status = HttpServletResponse.SC_NO_CONTENT
             }
             else -> resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE)
@@ -37,7 +34,7 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
             eventCategoryReader.readCategoryForwards("happiness").use { stream ->
                 stream
                     .map { resolvedEvent ->
-                        HappinessObj(resolvedEvent.eventRecord().streamId().id(),
+                        Happiness(resolvedEvent.eventRecord().streamId().id(),
                                 String(resolvedEvent.eventRecord().data()))
                     }
                     .forEach { (email, happiness) ->
@@ -55,10 +52,9 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
             substring(0, sepOffset).toLowerCase()
     }
 
-    private fun recordHappiness(happinessObj: HappinessObj) {
+    private fun recordHappiness(happinessObj: Happiness) {
         eventStreamWriter.write(streamId("happiness", happinessObj.email),
                 listOf(newEvent("HappinessReceived", happinessObj.happiness.toByteArray())))
     }
 
-    data class HappinessObj(val email: String, val happiness: String)
 }
