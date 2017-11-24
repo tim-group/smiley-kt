@@ -11,10 +11,9 @@ import javax.servlet.http.HttpServletResponse
 
 class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
 
-    val eventCategoryReader = eventSource.readCategory()
-    val eventStreamWriter = eventSource.writeStream()
-
-    val mapper = jacksonObjectMapper()
+    private val eventCategoryReader = eventSource.readCategory()
+    private val eventStreamWriter = eventSource.writeStream()
+    private val mapper = jacksonObjectMapper()
 
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
         when (req.contentType.toMimeType()) {
