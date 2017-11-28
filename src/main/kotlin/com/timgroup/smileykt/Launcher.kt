@@ -4,9 +4,10 @@ import com.timgroup.eventstore.filesystem.FlatFilesystemEventSource
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.Clock
-import java.util.Properties
+import java.util.*
 
 object Launcher {
+
     @JvmStatic
     fun main(args: Array<String>) {
         if (args.size != 1) {
@@ -15,9 +16,7 @@ object Launcher {
         }
 
         val properties = Properties().apply {
-            Files.newInputStream(Paths.get(args[0])).use { stream ->
-                load(stream)
-            }
+            Files.newInputStream(Paths.get(args[0])).use { load(it) }
         }
 
         System.setProperty("log.directory", "log")
@@ -29,12 +28,9 @@ object Launcher {
             Files.createDirectories(eventsDirectory)
         }
 
-        val clock = Clock.systemDefaultZone()
-        val app = App(port, clock, FlatFilesystemEventSource(eventsDirectory, clock, ".txt"))
-        app.start()
-
-        Runtime.getRuntime().addShutdownHook(Thread(Runnable {
-            app.stop()
-        }, "shutdown"))
+        App(port, FlatFilesystemEventSource(eventsDirectory, Clock.systemDefaultZone(), ".txt")).run {
+            start()
+            Runtime.getRuntime().addShutdownHook(Thread({ stop() }, "shutdown"))
+        }
     }
 }

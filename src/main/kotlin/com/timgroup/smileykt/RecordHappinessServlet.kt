@@ -33,24 +33,18 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
         resp.writer.use { writer ->
             eventCategoryReader.readCategoryForwards("happiness").use { stream ->
                 stream
-                    .map { resolvedEvent ->
-                        Happiness(resolvedEvent.eventRecord().streamId().id(),
-                                String(resolvedEvent.eventRecord().data()))
-                    }
-                    .forEach { (email, happiness) ->
-                        writer.println("$email $happiness")
-                    }
+                        .map { resolvedEvent ->
+                            Happiness(resolvedEvent.eventRecord().streamId().id(),
+                                    String(resolvedEvent.eventRecord().data()))
+                        }
+                        .forEach { (email, happiness) ->
+                            writer.println("$email $happiness")
+                        }
             }
         }
     }
 
-    private fun String.toMimeType(): String {
-        val sepOffset = indexOf(';')
-        return if (sepOffset < 0)
-            toLowerCase()
-        else
-            substring(0, sepOffset).toLowerCase()
-    }
+    private fun String.toMimeType() = split(";")[0].toLowerCase()
 
     private fun recordHappiness(happinessObj: Happiness) {
         eventStreamWriter.write(streamId("happiness", happinessObj.email),
