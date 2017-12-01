@@ -5,6 +5,8 @@ import org.w3c.xhr.XMLHttpRequest
 import kotlin.browser.document
 
 fun main(args: Array<String>) {
+    console.log("FIRE IT UP")
+
     document.getElementById("submit")!!.addEventListener("click", { e: Event ->
         e.preventDefault()
 
