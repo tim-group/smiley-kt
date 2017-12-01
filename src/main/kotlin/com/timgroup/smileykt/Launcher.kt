@@ -4,7 +4,7 @@ import com.timgroup.eventstore.filesystem.FlatFilesystemEventSource
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.Clock
-import java.util.*
+import java.util.Properties
 
 object Launcher {
     @JvmStatic
@@ -29,7 +29,8 @@ object Launcher {
             Files.createDirectories(eventsDirectory)
         }
 
-        val app = App(port, FlatFilesystemEventSource(eventsDirectory, Clock.systemDefaultZone(), ".txt"))
+        val clock = Clock.systemDefaultZone()
+        val app = App(port, clock, FlatFilesystemEventSource(eventsDirectory, clock, ".txt"))
         app.start()
 
         Runtime.getRuntime().addShutdownHook(Thread(Runnable {

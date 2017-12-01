@@ -1,11 +1,10 @@
 package com.timgroup.smileykt
 
 import com.timgroup.eventstore.api.EventSource
-import com.timgroup.tucker.info.component.JarVersionComponent
-import com.timgroup.tucker.info.status.StatusPageGenerator
+import java.time.Clock
 
-class App(port: Int, eventSource: EventSource) {
-    private val statusPage = StatusPageGenerator("smiley-kt", JarVersionComponent(App::class.java))
+class App(port: Int, clock: Clock, eventSource: EventSource) {
+    private val statusPage = AppStatus("smiley-kt", clock)
     private val jettyService = JettyService(port, statusPage, eventSource)
 
     fun start() {

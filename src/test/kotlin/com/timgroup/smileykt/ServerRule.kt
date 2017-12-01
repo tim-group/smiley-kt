@@ -22,7 +22,7 @@ class ServerRule : ExternalResource() {
     val eventSource = InMemoryEventSource(JavaInMemoryEventStore(clock))
 
     override fun before() {
-        app = App(0, eventSource)
+        app = App(0, clock, eventSource)
         app.start()
     }
 
