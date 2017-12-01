@@ -12,6 +12,8 @@ application {
     mainClassName = "com.timgroup.smileykt.Launcher"
 }
 
+(tasks["run"] as JavaExec).args("config.properties")
+
 tasks.withType<JavaCompile> {
     sourceCompatibility = "1.8"
     targetCompatibility = "1.8"
