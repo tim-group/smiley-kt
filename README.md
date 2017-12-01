@@ -1,8 +1,10 @@
-# Smiley Kotlin App (Niko Niko)
+Smiley Kotlin App (Niko Niko)
+=============================
 
 This is a learning project undertaken by the TIM team as a vehicle for learning Kotlin.
 
-## Tasks
+Tasks
+-----
 
 * Deal with aggregating events into users happiness.
   * If they submit happiness twice (on the same day), GET should return just the last one.
