@@ -28,7 +28,8 @@ object Launcher {
             Files.createDirectories(eventsDirectory)
         }
 
-        App(port, FlatFilesystemEventSource(eventsDirectory, Clock.systemDefaultZone(), ".txt")).run {
+        val clock = Clock.systemDefaultZone()
+        App(port, clock, FlatFilesystemEventSource(eventsDirectory, clock, ".txt")).run {
             start()
             Runtime.getRuntime().addShutdownHook(Thread({ stop() }, "shutdown"))
         }
