@@ -18,7 +18,7 @@ class AppStatus(
         private val basicComponents: List<Component> = emptyList(),
         private val asyncComponents: List<AsyncComponent> = emptyList()
 ) {
-    val statusPageGenerator = StatusPageGenerator(appName, JarVersionComponent(this.javaClass), clock).apply {
+    private val statusPageGenerator = StatusPageGenerator(appName, JarVersionComponent(this.javaClass), clock).apply {
         basicComponents.forEach(this::addComponent)
         asyncComponents.forEach(this::addComponent)
     }
