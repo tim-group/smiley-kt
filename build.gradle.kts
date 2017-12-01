@@ -12,7 +12,15 @@ application {
     mainClassName = "com.timgroup.smileykt.Launcher"
 }
 
-(tasks["run"] as JavaExec).args("config.properties")
+tasks {
+    "run"(JavaExec::class) {
+        args("config.properties")
+    }
+
+    "test" {
+        dependsOn(":webui:assemble")
+    }
+}
 
 tasks.withType<JavaCompile> {
     sourceCompatibility = "1.8"
