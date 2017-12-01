@@ -1,6 +1,6 @@
 plugins {
     application
-    kotlin("jvm") version "1.1.61"
+    kotlin("jvm") version "1.2.0"
 }
 
 apply {
@@ -40,8 +40,8 @@ dependencies {
     compile("com.timgroup:tim-structured-events:autobump")
     compile("com.timgroup:eventstore-api_2.12:autobump")
     compile("com.timgroup:eventstore-filesystem_2.12:autobump")
-    compile(kotlin("stdlib"))
-    compile(kotlin("stdlib-jre8"))
+    compile(kotlin("stdlib-jdk8"))
+    compile(kotlin("reflect"))
     compile("io.dropwizard.metrics:metrics-core:3.2.3")
     compile("io.dropwizard.metrics:metrics-jvm:3.2.3")
     compile("io.dropwizard.metrics:metrics-graphite:3.2.3")
