@@ -1,5 +1,6 @@
 package com.timgroup.smileykt
 
+import com.fasterxml.jackson.databind.JsonMappingException
 import com.timgroup.eventstore.api.EventSource
 import com.timgroup.eventstore.api.NewEvent.newEvent
 import com.timgroup.eventstore.api.StreamId.streamId
@@ -16,12 +17,17 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
         when (req.contentType.toMimeType()) {
             "application/x-www-form-urlencoded" -> {
                 val email: String = req.getParameter("email") ?: return resp.sendError(400, "Email must be supplied")
-                val emotion: String = req.getParameter("emotion") ?: return resp.sendError(400, "Happiness must be supplied")
-                recordHappiness(Happiness(email, Emotion.valueOf(emotion)))
+                val emotionString: String = req.getParameter("emotion") ?: return resp.sendError(400, "Happiness must be supplied")
+                val emotion = Emotion.valueOfOrNull(emotionString) ?: return resp.sendError(400, "Unknown emotion " + emotionString)
+                recordHappiness(Happiness(email, emotion))
                 resp.status = HttpServletResponse.SC_NO_CONTENT
             }
             "application/json" -> {
-                recordHappiness(decode(req.inputStream))
+                try {
+                    recordHappiness(decode(req.inputStream))
+                } catch (e: JsonMappingException) {
+                    return resp.sendError(400, e.message)
+                }
                 resp.status = HttpServletResponse.SC_NO_CONTENT
             }
             else -> resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE)

@@ -102,6 +102,26 @@ class RecordHappinessServletIntegrationTest {
         }
     }
 
+    @Test
+    fun `rejects happiness not in specified list in form data`() {
+        server.execute(HttpPost("/happiness").apply {
+            entity = mapOf(
+                    "email" to "test@example.com",
+                    "emotion" to "NOT AT ALL HAPPY").toFormEntity()
+        }).apply {
+            assertEquals(HttpStatus.SC_BAD_REQUEST, statusLine.statusCode)
+        }
+    }
+
+    @Test
+    fun `rejects happiness not in specified list in JSON`() {
+        server.execute(HttpPost("/happiness").apply {
+            entity = StringEntity("""{"email":"test@example.com", "emotion":"NOT AT ALL HAPPY"}""", ContentType.APPLICATION_JSON)
+        }).apply {
+            assertEquals(HttpStatus.SC_BAD_REQUEST, statusLine.statusCode)
+        }
+    }
+
     private fun Map<String, String>.toFormEntity() =
             UrlEncodedFormEntity(entries.map { (key, value) -> BasicNameValuePair(key, value) }, Charsets.UTF_8)
 
