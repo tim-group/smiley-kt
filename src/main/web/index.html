@@ -2,7 +2,7 @@
 
 <form id="form" method="post" action="happiness">
     <div> Email: <input id="email" type="text" name="email"> </div>
-    <div> Happiness: <input id="happiness" type="text" name="happiness"> </div>
+    <div> Happiness: <input id="emotion" type="text" name="emotion"> </div>
     <input id="submit" type="submit" />
 </form>
 
@@ -11,8 +11,8 @@
     submitButtonElt.onclick = function(e) {
         e.preventDefault();
         var email = document.getElementById("email").value;
-        var happiness = document.getElementById("happiness").value;
-        var doc = JSON.stringify({ email: email, happiness: happiness });
+        var emotion = document.getElementById("emotion").value;
+        var doc = JSON.stringify({ email: email, emotion: emotion });
         console.log("submit form", doc);
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/happiness");

@@ -16,8 +16,8 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
         when (req.contentType.toMimeType()) {
             "application/x-www-form-urlencoded" -> {
                 val email: String = req.getParameter("email") ?: return resp.sendError(400, "Email must be supplied")
-                val happiness: String = req.getParameter("happiness") ?: return resp.sendError(400, "Happiness must be supplied")
-                recordHappiness(Happiness(email, happiness))
+                val emotion: String = req.getParameter("emotion") ?: return resp.sendError(400, "Happiness must be supplied")
+                recordHappiness(Happiness(email, Emotion.valueOf(emotion)))
                 resp.status = HttpServletResponse.SC_NO_CONTENT
             }
             "application/json" -> {
@@ -35,10 +35,10 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
                 stream
                         .map { resolvedEvent ->
                             Happiness(resolvedEvent.eventRecord().streamId().id(),
-                                    String(resolvedEvent.eventRecord().data()))
+                                    Emotion.valueOf(String(resolvedEvent.eventRecord().data())))
                         }
-                        .forEach { (email, happiness) ->
-                            writer.println("$email $happiness")
+                        .forEach { (email, emotion) ->
+                            writer.println("$email $emotion")
                         }
             }
         }
@@ -48,7 +48,7 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
 
     private fun recordHappiness(happinessObj: Happiness) {
         eventStreamWriter.write(streamId("happiness", happinessObj.email),
-                listOf(newEvent("HappinessReceived", happinessObj.happiness.toByteArray())))
+                listOf(newEvent("HappinessReceived", happinessObj.emotion.toString().toByteArray())))
     }
 
 }

@@ -31,11 +31,11 @@ class RecordHappinessServletIntegrationTest {
     @Test
     fun `gets happiness`() {
         server.eventSource.writeStream().write(streamId("happiness", "test@example.com"), listOf(
-                newEvent("HappinessReceived", "happy".toByteArray())
+                newEvent("HappinessReceived", Emotion.HAPPY.toByteArray())
         ))
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
-            assertEquals("test@example.com happy\n", entity.readText())
+            assertEquals("test@example.com HAPPY\n", entity.readText())
         }
     }
 
@@ -43,15 +43,15 @@ class RecordHappinessServletIntegrationTest {
     @Test
     fun `aggregates happiness of single user`() {
         server.eventSource.writeStream().write(streamId("happiness", "test@example.com"), listOf(
-                newEvent("HappinessReceived", "happy".toByteArray()),
-                newEvent("HappinessReceived", "sad".toByteArray())
+                newEvent("HappinessReceived", Emotion.HAPPY.toByteArray()),
+                newEvent("HappinessReceived", Emotion.SAD.toByteArray())
         ))
         server.eventSource.writeStream().write(streamId("happiness", "zzzz@example.com"), listOf(
-                newEvent("HappinessReceived", "happy".toByteArray())
+                newEvent("HappinessReceived", Emotion.HAPPY.toByteArray())
         ))
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
-            assertEquals("test@example.com sad\nzzzz@example.com happy\n", entity.readText().sortLines())
+            assertEquals("test@example.com SAD\nzzzz@example.com HAPPY\n", entity.readText().sortLines())
         }
     }
 
@@ -60,7 +60,7 @@ class RecordHappinessServletIntegrationTest {
         server.execute(HttpPost("/happiness").apply {
             entity = mapOf(
                     "email" to "test@example.com",
-                    "happiness" to "very happy").toFormEntity()
+                    "emotion" to "ECSTATIC").toFormEntity()
         }).apply {
             assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.statusCode)
         }
@@ -71,14 +71,14 @@ class RecordHappinessServletIntegrationTest {
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
-            assertEquals("test@example.com very happy\n", entity.readText())
+            assertEquals("test@example.com ECSTATIC\n", entity.readText())
         }
     }
 
     @Test
     fun `records happiness by posting JSON`() {
         server.execute(HttpPost("/happiness").apply {
-            entity = StringEntity("""{"email":"test@example.com", "happiness":"very happy"}""", ContentType.APPLICATION_JSON)
+            entity = StringEntity("""{"email":"test@example.com", "emotion":"ECSTATIC"}""", ContentType.APPLICATION_JSON)
         }).apply {
             assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.statusCode)
         }
@@ -89,14 +89,14 @@ class RecordHappinessServletIntegrationTest {
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
-            assertEquals("test@example.com very happy\n", entity.readText())
+            assertEquals("test@example.com ECSTATIC\n", entity.readText())
         }
     }
 
     @Test
     fun `rejects happiness in unsupported format`() {
         server.execute(HttpPost("/happiness").apply {
-            entity = StringEntity("""<record-happiness><email>test@example.com</email><happiness>very happy</happiness></record-happiness>""", ContentType.APPLICATION_XML)
+            entity = StringEntity("""<record-happiness><email>test@example.com</email><happiness>ECSTATIC</happiness></record-happiness>""", ContentType.APPLICATION_XML)
         }).apply {
             assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, statusLine.statusCode)
         }
