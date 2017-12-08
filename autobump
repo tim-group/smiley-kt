@@ -1,7 +1,7 @@
 com.timgroup:Tucker:1.0.1489
 com.timgroup:tim-logger:1.5.1082
 com.timgroup:eventstore-api_2.12:0.0.1518
-com.timgroup:eventstore-memory_2.12:0.0.1518
-com.timgroup:eventstore-filesystem_2.12:0.0.1518
+com.timgroup:eventstore-memory_2.12:0.0.1520
+com.timgroup:eventstore-filesystem_2.12:0.0.1519
 com.timgroup:tim-structured-events:0.4.1230
 com.timgroup:tim-structured-events-testing:0.4.1230
