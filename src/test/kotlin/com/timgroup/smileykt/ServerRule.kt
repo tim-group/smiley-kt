@@ -14,11 +14,13 @@ import org.apache.http.message.BasicHttpResponse
 import org.apache.http.util.EntityUtils
 import org.junit.rules.ExternalResource
 import java.time.Clock
+import java.time.Instant
+import java.time.ZoneOffset
 
 class ServerRule : ExternalResource() {
     lateinit var app: App
 
-    val clock = Clock.systemDefaultZone()
+    val clock = Clock.fixed(Instant.parse("2017-12-08T12:13:05Z"), ZoneOffset.UTC)
     val eventSource = InMemoryEventSource(JavaInMemoryEventStore(clock))
 
     override fun before() {

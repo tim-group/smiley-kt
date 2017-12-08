@@ -1,5 +1,6 @@
 package com.timgroup.smileykt
 
+import com.timgroup.eventstore.api.EventRecord.eventRecord
 import com.timgroup.eventstore.api.NewEvent.newEvent
 import com.timgroup.eventstore.api.StreamId.streamId
 import org.apache.http.HttpEntity
@@ -13,6 +14,7 @@ import org.apache.http.message.BasicNameValuePair
 import org.apache.http.util.EntityUtils
 import org.junit.Rule
 import org.junit.Test
+import java.util.stream.Collectors.toList
 import kotlin.test.assertEquals
 
 class RecordHappinessServletIntegrationTest {
@@ -63,9 +65,9 @@ class RecordHappinessServletIntegrationTest {
             assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.statusCode)
         }
 
-        // FIXME
-//        assertEquals(listOf<ResolvedEvent>(),
-//                server.eventSource.readStream().readStreamForwards(streamId("happiness", "test@example.com")).collect(toList()))
+        val streamId = streamId("happiness", "test@example.com")
+        assertEquals(listOf(happinessReceivedEvent("test@example.com", Emotion.ECSTATIC)),
+        server.eventSource.readStream().readStreamForwards(streamId).map { re -> re.eventRecord() }.collect(toList()))
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
@@ -81,9 +83,9 @@ class RecordHappinessServletIntegrationTest {
             assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.statusCode)
         }
 
-        // FIXME
-//        assertEquals(listOf<ResolvedEvent>(),
-//                server.eventSource.readStream().readStreamForwards(streamId("happiness", "test@example.com")).collect(toList()))
+        val streamId = streamId("happiness", "test@example.com")
+        assertEquals(listOf(happinessReceivedEvent("test@example.com", Emotion.ECSTATIC)),
+                server.eventSource.readStream().readStreamForwards(streamId).map { re -> re.eventRecord() }.collect(toList()))
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
@@ -125,4 +127,6 @@ class RecordHappinessServletIntegrationTest {
 
     private fun HttpEntity.readText() = EntityUtils.toString(this)
     private fun String.sortLines() = split("\n").filter { it.isNotBlank() }.sorted().joinToString("\n")
+
+    private fun happinessReceivedEvent(email: String, emotion: Emotion) = eventRecord(server.clock.instant(), streamId("happiness", email), 0L, "HappinessReceived", emotion.toByteArray(), ByteArray(0))
 }

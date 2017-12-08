@@ -5,7 +5,6 @@ This is a learning project undertaken by the TIM team as a vehicle for learning 
 
 Tasks
 -----
-
 * Support users' happiness on specific dates.
 * Refactor to have an EventCodecs class like most other apps.
   * Should have something like EventCodecs.serialise() and EventCodecs.deserialise() and classes for each event
