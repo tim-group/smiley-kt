@@ -38,14 +38,15 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
         resp.contentType = "text/plain"
         resp.writer.use { writer ->
             eventCategoryReader.readCategoryForwards("happiness").use { stream ->
-                stream
-                        .map { resolvedEvent ->
-                            Happiness(resolvedEvent.eventRecord().streamId().id(),
-                                    Emotion.valueOf(String(resolvedEvent.eventRecord().data())))
-                        }
-                        .forEach { (email, emotion) ->
-                            writer.println("$email $emotion")
-                        }
+                val emotions = mutableMapOf<String, Emotion>()
+                stream.forEach { resolvedEvent ->
+                    val user = resolvedEvent.eventRecord().streamId().id()
+                    val emotion = Emotion.valueOf(String(resolvedEvent.eventRecord().data()))
+                    emotions[user] = emotion
+                }
+                emotions.forEach { (email, emotion) ->
+                    writer.println("$email $emotion")
+                }
             }
         }
     }

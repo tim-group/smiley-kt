@@ -6,9 +6,6 @@ This is a learning project undertaken by the TIM team as a vehicle for learning 
 Tasks
 -----
 
-* Deal with aggregating events into users happiness.
-  * If they submit happiness twice (on the same day), GET should return just the last one.
-  * See existing ignored test in RecordHSIT
 * Support users' happiness on specific dates.
 * Refactor to have an EventCodecs class like most other apps.
   * Should have something like EventCodecs.serialise() and EventCodecs.deserialise() and classes for each event

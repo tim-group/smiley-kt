@@ -11,7 +11,6 @@ import org.apache.http.entity.ContentType
 import org.apache.http.entity.StringEntity
 import org.apache.http.message.BasicNameValuePair
 import org.apache.http.util.EntityUtils
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -39,7 +38,6 @@ class RecordHappinessServletIntegrationTest {
         }
     }
 
-    @Ignore
     @Test
     fun `aggregates happiness of single user`() {
         server.eventSource.writeStream().write(streamId("happiness", "test@example.com"), listOf(
@@ -51,7 +49,7 @@ class RecordHappinessServletIntegrationTest {
         ))
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
-            assertEquals("test@example.com SAD\nzzzz@example.com HAPPY\n", entity.readText().sortLines())
+            assertEquals("test@example.com SAD\nzzzz@example.com HAPPY", entity.readText().sortLines())
         }
     }
 
