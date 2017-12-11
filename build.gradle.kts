@@ -66,7 +66,7 @@ dependencies {
     testCompile("org.apache.httpcomponents:httpclient:4.4.1")
     testCompile(kotlin("test-junit"))
 
-    runtime("ch.qos.logback:logback-classic:1.2.2")
+    runtime("ch.qos.logback:logback-classic:1.2.3")
 }
 
 buildscript {
