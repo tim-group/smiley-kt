@@ -20,6 +20,15 @@ tasks {
     "test" {
         dependsOn(":webui:assemble")
     }
+
+    val sourcesJar by creating(Jar::class) {
+        classifier = "sources"
+        from(java.sourceSets["main"].allSource)
+    }
+
+    "assemble" {
+        dependsOn(sourcesJar)
+    }
 }
 
 tasks.withType<JavaCompile> {
