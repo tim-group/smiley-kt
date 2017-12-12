@@ -58,13 +58,12 @@ dependencies {
     compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.2")
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.2")
 
-    testCompile("junit:junit:4.12")
-    testCompile("org.hamcrest:hamcrest-core:1.3")
-    testCompile("org.hamcrest:hamcrest-library:1.3")
+    testCompile(kotlin("test-junit"))
+    testCompile("com.natpryce:hamkrest:1.4.2.2")
+    testCompile("org.araqnid:hamkrest-json:1.0.3")
     testCompile("com.timgroup:tim-structured-events-testing:autobump")
     testCompile("com.timgroup:eventstore-memory:autobump")
     testCompile("org.apache.httpcomponents:httpclient:4.4.1")
-    testCompile(kotlin("test-junit"))
 
     runtime("ch.qos.logback:logback-classic:1.2.3")
 }
