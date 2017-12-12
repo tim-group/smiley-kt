@@ -56,9 +56,9 @@ class RecordHappinessServletIntegrationTest {
     @Test
     fun `records happiness`() {
         server.execute(HttpPost("/happiness").apply {
-            entity = mapOf(
+            entity = formEntity(
                     "email" to "test@example.com",
-                    "emotion" to "ECSTATIC").toFormEntity()
+                    "emotion" to "ECSTATIC")
         }).apply {
             assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.statusCode)
         }
@@ -103,9 +103,9 @@ class RecordHappinessServletIntegrationTest {
     @Test
     fun `rejects happiness not in specified list in form data`() {
         server.execute(HttpPost("/happiness").apply {
-            entity = mapOf(
+            entity = formEntity(
                     "email" to "test@example.com",
-                    "emotion" to "NOT AT ALL HAPPY").toFormEntity()
+                    "emotion" to "NOT AT ALL HAPPY")
         }).apply {
             assertEquals(HttpStatus.SC_BAD_REQUEST, statusLine.statusCode)
         }
@@ -120,7 +120,7 @@ class RecordHappinessServletIntegrationTest {
         }
     }
 
-    private fun Map<String, String>.toFormEntity() =
+    private fun formEntity(vararg entries: Pair<String, String>): UrlEncodedFormEntity =
             UrlEncodedFormEntity(entries.map { (key, value) -> BasicNameValuePair(key, value) }, Charsets.UTF_8)
 
     private fun String.sortLines() = split("\n").filter { it.isNotBlank() }.sorted().joinToString("\n")
