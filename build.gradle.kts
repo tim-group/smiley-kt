@@ -21,6 +21,14 @@ tasks {
         dependsOn(":webui:assemble")
     }
 
+    "distZip" {
+        enabled = false
+    }
+
+    "distTar" {
+        enabled = false
+    }
+
     val sourcesJar by creating(Jar::class) {
         classifier = "sources"
         from(java.sourceSets["main"].allSource)
