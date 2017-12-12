@@ -1,11 +1,17 @@
 package com.timgroup.smileykt
 
+import com.natpryce.hamkrest.anything
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
+import com.natpryce.hamkrest.has
+import com.natpryce.hamkrest.present
+import org.apache.http.HttpEntity
 import org.apache.http.client.methods.HttpGet
-import org.apache.http.entity.ContentType
-import org.apache.http.util.EntityUtils
+import org.araqnid.hamkrest.json.json
+import org.araqnid.hamkrest.json.jsonArray
+import org.araqnid.hamkrest.json.jsonObject
 import org.junit.Rule
 import org.junit.Test
-import kotlin.test.assertEquals
 
 class TuckerIntegrationTest {
     @get:Rule
@@ -14,31 +20,40 @@ class TuckerIntegrationTest {
     @Test
     fun `shows application health`() {
         val response = server.execute(HttpGet("/info/health"))
-        assertEquals(200, response.statusLine.statusCode)
-        assertEquals("text/plain", ContentType.get(response.entity).mimeType)
-        assertEquals("healthy", EntityUtils.toString(response.entity))
+        assertThat(response.statusLine.statusCode, equalTo(200))
+        assertThat(response.entity, has(HttpEntity::mimeType, present(equalTo("text/plain"))))
+        assertThat(response.entity, has(HttpEntity::readText, present(equalTo("healthy"))))
     }
 
     @Test
     fun `shows application stoppable`() {
         val response = server.execute(HttpGet("/info/stoppable"))
-        assertEquals(200, response.statusLine.statusCode)
-        assertEquals("text/plain", ContentType.get(response.entity).mimeType)
-        assertEquals("safe", EntityUtils.toString(response.entity))
+        assertThat(response.statusLine.statusCode, equalTo(200))
+        assertThat(response.entity, has(HttpEntity::mimeType, present(equalTo("text/plain"))))
+        assertThat(response.entity, has(HttpEntity::readText, present(equalTo("safe"))))
     }
 
     @Test
     fun `shows application version`() {
         val response = server.execute(HttpGet("/info/version"))
-        assertEquals(200, response.statusLine.statusCode)
-        assertEquals("text/plain", ContentType.get(response.entity).mimeType)
+        assertThat(response.statusLine.statusCode, equalTo(200))
+        assertThat(response.entity, has(HttpEntity::mimeType, present(equalTo("text/plain"))))
+        assertThat(response.entity, has(HttpEntity::readText, present(anything)))
     }
 
     @Test
     fun `shows application status`() {
         val response = server.execute(HttpGet("/info/status.json"))
-        assertEquals(200, response.statusLine.statusCode)
-        assertEquals("application/json", ContentType.get(response.entity).mimeType)
+        assertThat(response.statusLine.statusCode, equalTo(200))
+        assertThat(response.entity, has(HttpEntity::mimeType, present(equalTo("application/json"))))
+        assertThat(response.entity, has(HttpEntity::readText, present(json(jsonObject()
+                .withProperty("id", "smiley-kt")
+                .withProperty("status", "ok")
+                .withProperty("health", "healthy")
+                .withProperty("components", jsonArray().of(
+                        jsonObject().withProperty("id", "version").withProperty("status", "info").withAnyOtherProperties())
+                )
+                .withAnyOtherProperties()
+        ))))
     }
 }
-

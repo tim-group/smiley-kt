@@ -3,7 +3,6 @@ package com.timgroup.smileykt
 import com.timgroup.eventstore.api.EventRecord.eventRecord
 import com.timgroup.eventstore.api.NewEvent.newEvent
 import com.timgroup.eventstore.api.StreamId.streamId
-import org.apache.http.HttpEntity
 import org.apache.http.HttpStatus
 import org.apache.http.client.entity.UrlEncodedFormEntity
 import org.apache.http.client.methods.HttpGet
@@ -11,7 +10,6 @@ import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.StringEntity
 import org.apache.http.message.BasicNameValuePair
-import org.apache.http.util.EntityUtils
 import org.junit.Rule
 import org.junit.Test
 import java.util.stream.Collectors.toList
@@ -51,7 +49,7 @@ class RecordHappinessServletIntegrationTest {
         ))
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
-            assertEquals("test@example.com SAD\nzzzz@example.com HAPPY", entity.readText().sortLines())
+            assertEquals("test@example.com SAD\nzzzz@example.com HAPPY", entity.readText()!!.sortLines())
         }
     }
 
@@ -125,7 +123,6 @@ class RecordHappinessServletIntegrationTest {
     private fun Map<String, String>.toFormEntity() =
             UrlEncodedFormEntity(entries.map { (key, value) -> BasicNameValuePair(key, value) }, Charsets.UTF_8)
 
-    private fun HttpEntity.readText() = EntityUtils.toString(this)
     private fun String.sortLines() = split("\n").filter { it.isNotBlank() }.sorted().joinToString("\n")
 
     private fun happinessReceivedEvent(email: String, emotion: Emotion) = eventRecord(server.clock.instant(), streamId("happiness", email), 0L, "HappinessReceived", emotion.toByteArray(), ByteArray(0))
