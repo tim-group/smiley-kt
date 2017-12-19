@@ -3,5 +3,5 @@ com.timgroup:tim-logger:1.5.1083
 com.timgroup:eventstore-api:0.0.1529
 com.timgroup:eventstore-memory:0.0.1529
 com.timgroup:eventstore-filesystem:0.0.1529
-com.timgroup:tim-structured-events:0.4.1231
-com.timgroup:tim-structured-events-testing:0.4.1231
+com.timgroup:tim-structured-events:0.4.1232
+com.timgroup:tim-structured-events-testing:0.4.1232
