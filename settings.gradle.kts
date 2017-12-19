@@ -1,2 +1,2 @@
 rootProject.name = "smiley-kt"
-include "webui"
+include("webui")
