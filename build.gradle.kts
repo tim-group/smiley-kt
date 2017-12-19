@@ -52,6 +52,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 }
 
 repositories {
+    jcenter()
     maven(url = "http://repo.net.local/nexus/content/groups/public")
 }
 
