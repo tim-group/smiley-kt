@@ -1,11 +1,8 @@
 plugins {
     application
     kotlin("jvm") version "1.2.0"
-}
-
-apply {
-    plugin("com.timgroup.autobumper")
-    plugin("com.timgroup.jarmangit")
+    id("com.timgroup.autobumper") version "1.1.1027"
+    id("com.timgroup.jarmangit") version "1.1.84"
 }
 
 application {
@@ -83,15 +80,4 @@ dependencies {
     testCompile("org.apache.httpcomponents:httpclient:4.4.1")
 
     runtime("ch.qos.logback:logback-classic:1.2.3")
-}
-
-buildscript {
-    repositories {
-        maven(url = "http://repo.net.local/nexus/content/groups/public")
-    }
-
-    dependencies {
-        classpath("com.timgroup:gradle-autobumper:1.1.+")
-        classpath("com.timgroup:gradle-jarmangit:1.1.+")
-    }
 }
