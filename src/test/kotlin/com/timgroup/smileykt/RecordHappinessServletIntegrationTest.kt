@@ -34,7 +34,7 @@ class RecordHappinessServletIntegrationTest {
         ))
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
-            assertEquals("test@example.com HAPPY\n", entity.readText())
+            assertEquals("2017-12-08 test@example.com HAPPY\n", entity.readText())
         }
     }
 
@@ -49,7 +49,7 @@ class RecordHappinessServletIntegrationTest {
         ))
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
-            assertEquals("test@example.com SAD\nzzzz@example.com HAPPY", entity.readText()!!.sortLines())
+            assertEquals("2017-12-08 test@example.com SAD\n2017-12-08 zzzz@example.com HAPPY", entity.readText()!!.sortLines())
         }
     }
 
@@ -69,7 +69,7 @@ class RecordHappinessServletIntegrationTest {
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
-            assertEquals("test@example.com ECSTATIC\n", entity.readText())
+            assertEquals("2017-12-08 test@example.com ECSTATIC\n", entity.readText())
         }
     }
 
@@ -87,7 +87,7 @@ class RecordHappinessServletIntegrationTest {
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
-            assertEquals("test@example.com ECSTATIC\n", entity.readText())
+            assertEquals("2017-12-08 test@example.com ECSTATIC\n", entity.readText())
         }
     }
 

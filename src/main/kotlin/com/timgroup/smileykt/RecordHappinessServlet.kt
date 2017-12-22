@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonMappingException
 import com.timgroup.eventstore.api.EventSource
 import com.timgroup.eventstore.api.NewEvent.newEvent
 import com.timgroup.eventstore.api.StreamId.streamId
+import java.time.LocalDate
+import java.time.ZoneOffset
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -38,14 +40,18 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
         resp.contentType = "text/plain"
         resp.writer.use { writer ->
             eventCategoryReader.readCategoryForwards("happiness").use { stream ->
-                val emotions = mutableMapOf<String, Emotion>()
+                val emotions = mutableMapOf<String, MutableMap<LocalDate, Emotion>>()
                 stream.forEach { resolvedEvent ->
+                    val timestamp = resolvedEvent.eventRecord().timestamp();
+                    val date = timestamp.atOffset(ZoneOffset.UTC).toLocalDate()
                     val user = resolvedEvent.eventRecord().streamId().id()
                     val emotion = Emotion.valueOf(String(resolvedEvent.eventRecord().data()))
-                    emotions[user] = emotion
+                    emotions.computeIfAbsent(user, { mutableMapOf() })[date] = emotion
                 }
-                emotions.forEach { (email, emotion) ->
-                    writer.println("$email $emotion")
+                emotions.forEach { (email, emotionsByDate) ->
+                    emotionsByDate.forEach { (date, emotion) ->
+                        writer.println("$date $email $emotion")
+                    }
                 }
             }
         }
