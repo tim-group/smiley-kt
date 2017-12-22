@@ -12,6 +12,7 @@ import org.apache.http.entity.StringEntity
 import org.apache.http.message.BasicNameValuePair
 import org.junit.Rule
 import org.junit.Test
+import java.time.Instant
 import java.util.stream.Collectors.toList
 import kotlin.test.assertEquals
 
@@ -50,6 +51,24 @@ class RecordHappinessServletIntegrationTest {
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
             assertEquals("2017-12-08 test@example.com SAD\n2017-12-08 zzzz@example.com HAPPY", entity.readText()!!.sortLines())
+        }
+    }
+
+    @Test
+    fun `uses correct date`() {
+        server.eventSource.writeStream().write(streamId("happiness", "zzzz@example.com"), listOf(
+                newEvent("HappinessReceived", Emotion.HAPPY.toByteArray())
+        ))
+
+        server.clock.advanceTo(Instant.parse("2017-12-10T00:00:00Z"))
+
+        server.eventSource.writeStream().write(streamId("happiness", "aaaa@example.com"), listOf(
+                newEvent("HappinessReceived", Emotion.SUICIDAL.toByteArray())
+        ))
+
+        server.execute(HttpGet("/happiness")).apply {
+            assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
+            assertEquals("2017-12-08 zzzz@example.com HAPPY\n2017-12-10 aaaa@example.com SUICIDAL", entity.readText()!!.sortLines())
         }
     }
 
