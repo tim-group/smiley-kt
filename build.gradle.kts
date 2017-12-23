@@ -1,7 +1,6 @@
 plugins {
     application
     kotlin("jvm") version "1.2.10"
-    id("com.timgroup.autobumper") version "1.1.1027"
     id("com.timgroup.jarmangit") version "1.1.84"
 }
 
