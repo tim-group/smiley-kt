@@ -3,7 +3,7 @@ package com.timgroup.smileykt.events
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.timgroup.eventstore.api.EventRecord
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.timgroup.smileykt.Emotion
 import java.time.LocalDate
 
@@ -16,8 +16,8 @@ object EventCodecs {
         return objectMapper.writeValueAsBytes(happinessReceived)
     }
 
-    fun deserialize(serialized: EventRecord): HappinessReceived {
-        TODO()
+    fun deserialize(serialized: ByteArray): HappinessReceived {
+        return objectMapper.readValue(serialized)
     }
 }
 
