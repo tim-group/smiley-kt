@@ -60,8 +60,10 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
     private fun String.toMimeType() = split(";")[0].toLowerCase()
 
     private fun recordHappiness(happinessObj: Happiness) {
-        eventStreamWriter.write(streamId("happiness", happinessObj.email),
-                listOf(newEvent("HappinessReceived", happinessObj.emotion.toString().toByteArray())))
+        eventStreamWriter.write(
+                streamId("happiness", happinessObj.email),
+                listOf(newEvent("HappinessReceived", happinessObj.emotion.toString().toByteArray()))
+        )
     }
 
     data class Happiness(val email: String, val emotion: Emotion)
