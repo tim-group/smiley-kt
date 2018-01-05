@@ -6,7 +6,7 @@ import javax.servlet.ServletInputStream
 
 private val mapper = jacksonObjectMapper()
 
-fun decode(inputStream: ServletInputStream): Happiness {
+fun decode(inputStream: ServletInputStream): RecordHappinessServlet.Happiness {
     return mapper.readValue(inputStream)
 }
 

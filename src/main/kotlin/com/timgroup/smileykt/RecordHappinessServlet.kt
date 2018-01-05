@@ -42,7 +42,7 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
             eventCategoryReader.readCategoryForwards("happiness").use { stream ->
                 val emotions = mutableMapOf<String, MutableMap<LocalDate, Emotion>>()
                 stream.forEach { resolvedEvent ->
-                    val timestamp = resolvedEvent.eventRecord().timestamp();
+                    val timestamp = resolvedEvent.eventRecord().timestamp()
                     val date = timestamp.atOffset(ZoneOffset.UTC).toLocalDate()
                     val user = resolvedEvent.eventRecord().streamId().id()
                     val emotion = Emotion.valueOf(String(resolvedEvent.eventRecord().data()))
@@ -64,4 +64,6 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
                 listOf(newEvent("HappinessReceived", happinessObj.emotion.toString().toByteArray())))
     }
 
+    data class Happiness(val email: String, val emotion: Emotion)
 }
+
