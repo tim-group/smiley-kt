@@ -1,8 +1,8 @@
 package com.timgroup.smileykt
 
-import com.timgroup.eventstore.api.EventRecord.eventRecord
-import com.timgroup.eventstore.api.NewEvent.newEvent
 import com.timgroup.eventstore.api.StreamId.streamId
+import com.timgroup.smileykt.events.EventCodecs
+import com.timgroup.smileykt.events.HappinessReceived
 import org.apache.http.HttpStatus
 import org.apache.http.client.entity.UrlEncodedFormEntity
 import org.apache.http.client.methods.HttpGet
@@ -13,6 +13,7 @@ import org.apache.http.message.BasicNameValuePair
 import org.junit.Rule
 import org.junit.Test
 import java.time.Instant
+import java.time.LocalDate
 import java.util.stream.Collectors.toList
 import kotlin.test.assertEquals
 
@@ -31,7 +32,7 @@ class RecordHappinessServletIntegrationTest {
     @Test
     fun `gets happiness`() {
         server.eventSource.writeStream().write(streamId("happiness", "test@example.com"), listOf(
-                newEvent("HappinessReceived", Emotion.HAPPY.toByteArray())
+                EventCodecs.serializeEvent(HappinessReceived("test@example.com", LocalDate.parse("2017-12-08"), Emotion.HAPPY))
         ))
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
@@ -42,11 +43,11 @@ class RecordHappinessServletIntegrationTest {
     @Test
     fun `aggregates happiness of single user`() {
         server.eventSource.writeStream().write(streamId("happiness", "test@example.com"), listOf(
-                newEvent("HappinessReceived", Emotion.HAPPY.toByteArray()),
-                newEvent("HappinessReceived", Emotion.SAD.toByteArray())
+                EventCodecs.serializeEvent(HappinessReceived("test@example.com", LocalDate.parse("2017-12-08"), Emotion.HAPPY)),
+                EventCodecs.serializeEvent(HappinessReceived("test@example.com", LocalDate.parse("2017-12-08"), Emotion.SAD))
         ))
         server.eventSource.writeStream().write(streamId("happiness", "zzzz@example.com"), listOf(
-                newEvent("HappinessReceived", Emotion.HAPPY.toByteArray())
+                EventCodecs.serializeEvent(HappinessReceived("zzzz@example.com", LocalDate.parse("2017-12-08"), Emotion.HAPPY))
         ))
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
@@ -57,13 +58,13 @@ class RecordHappinessServletIntegrationTest {
     @Test
     fun `uses correct date`() {
         server.eventSource.writeStream().write(streamId("happiness", "zzzz@example.com"), listOf(
-                newEvent("HappinessReceived", Emotion.HAPPY.toByteArray())
+                EventCodecs.serializeEvent(HappinessReceived("zzzz@example.com", LocalDate.parse("2017-12-08"), Emotion.HAPPY))
         ))
 
         server.clock.advanceTo(Instant.parse("2017-12-10T00:00:00Z"))
 
         server.eventSource.writeStream().write(streamId("happiness", "aaaa@example.com"), listOf(
-                newEvent("HappinessReceived", Emotion.SUICIDAL.toByteArray())
+                EventCodecs.serializeEvent(HappinessReceived("aaaa@example.com", LocalDate.parse("2017-12-10"), Emotion.SUICIDAL))
         ))
 
         server.execute(HttpGet("/happiness")).apply {
@@ -83,8 +84,8 @@ class RecordHappinessServletIntegrationTest {
         }
 
         val streamId = streamId("happiness", "test@example.com")
-        assertEquals(listOf(happinessReceivedEvent("test@example.com", Emotion.ECSTATIC)),
-        server.eventSource.readStream().readStreamForwards(streamId).map { re -> re.eventRecord() }.collect(toList()))
+        assertEquals(listOf(HappinessReceived("test@example.com", LocalDate.parse("2017-12-08"), Emotion.ECSTATIC)),
+            server.eventSource.readStream().readStreamForwards(streamId).map { re -> EventCodecs.deserializeEvent(re.eventRecord()) }.collect(toList()))
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
@@ -101,8 +102,8 @@ class RecordHappinessServletIntegrationTest {
         }
 
         val streamId = streamId("happiness", "test@example.com")
-        assertEquals(listOf(happinessReceivedEvent("test@example.com", Emotion.ECSTATIC)),
-                server.eventSource.readStream().readStreamForwards(streamId).map { re -> re.eventRecord() }.collect(toList()))
+        assertEquals(listOf(HappinessReceived("test@example.com", LocalDate.parse("2017-12-08"), Emotion.ECSTATIC)),
+                server.eventSource.readStream().readStreamForwards(streamId).map { re -> EventCodecs.deserializeEvent(re.eventRecord()) }.collect(toList()))
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
@@ -143,6 +144,4 @@ class RecordHappinessServletIntegrationTest {
             UrlEncodedFormEntity(entries.map { (key, value) -> BasicNameValuePair(key, value) }, Charsets.UTF_8)
 
     private fun String.sortLines() = split("\n").filter { it.isNotBlank() }.sorted().joinToString("\n")
-
-    private fun happinessReceivedEvent(email: String, emotion: Emotion) = eventRecord(server.clock.instant(), streamId("happiness", email), 0L, "HappinessReceived", emotion.toByteArray(), ByteArray(0))
 }

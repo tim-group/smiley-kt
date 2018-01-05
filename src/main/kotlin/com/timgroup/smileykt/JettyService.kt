@@ -10,12 +10,13 @@ import org.eclipse.jetty.servlet.ServletHolder
 import org.eclipse.jetty.util.resource.PathResource
 import org.eclipse.jetty.util.resource.ResourceCollection
 import java.nio.file.Paths
+import java.time.Clock
 
-class JettyService(port: Int, appStatus: AppStatus, eventSource: EventSource) {
+class JettyService(port: Int, appStatus: AppStatus, eventSource: EventSource, clock: Clock) {
     private val server = Server(port).apply {
         requestLog = Slf4jRequestLog()
         handler = ServletContextHandler().apply {
-            val recordHappinessServlet = RecordHappinessServlet(eventSource)
+            val recordHappinessServlet = RecordHappinessServlet(eventSource, clock)
             addServlet(ServletHolder(appStatus.createServlet()), "/info/*")
             addServlet(DefaultServlet::class.java, "/*")
             addServlet(ServletHolder(recordHappinessServlet), "/happiness")

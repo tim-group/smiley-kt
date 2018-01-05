@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.timgroup.eventstore.api.EventRecord
+import com.timgroup.eventstore.api.NewEvent
 import com.timgroup.smileykt.Emotion
 import java.time.LocalDate
 
@@ -16,8 +18,17 @@ object EventCodecs {
         return objectMapper.writeValueAsBytes(happinessReceived)
     }
 
+    fun serializeEvent(happinessReceived: HappinessReceived): NewEvent {
+        return NewEvent.newEvent("HappinessReceived", serialize(happinessReceived))
+    }
+
     fun deserialize(serialized: ByteArray): HappinessReceived {
         return objectMapper.readValue(serialized)
+    }
+
+    fun deserializeEvent(serialized: EventRecord): HappinessReceived {
+        require(serialized.eventType() == "HappinessReceived")
+        return deserialize(serialized.data())
     }
 }
 

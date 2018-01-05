@@ -2,15 +2,16 @@ package com.timgroup.smileykt
 
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.timgroup.eventstore.api.EventSource
-import com.timgroup.eventstore.api.NewEvent.newEvent
 import com.timgroup.eventstore.api.StreamId.streamId
+import com.timgroup.smileykt.events.EventCodecs
+import com.timgroup.smileykt.events.HappinessReceived
+import java.time.Clock
 import java.time.LocalDate
-import java.time.ZoneOffset
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
+class RecordHappinessServlet(eventSource: EventSource, private val clock: Clock) : HttpServlet() {
 
     private val eventCategoryReader = eventSource.readCategory()
     private val eventStreamWriter = eventSource.writeStream()
@@ -42,11 +43,8 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
             eventCategoryReader.readCategoryForwards("happiness").use { stream ->
                 val emotions = mutableMapOf<String, MutableMap<LocalDate, Emotion>>()
                 stream.forEach { resolvedEvent ->
-                    val timestamp = resolvedEvent.eventRecord().timestamp()
-                    val date = timestamp.atOffset(ZoneOffset.UTC).toLocalDate()
-                    val user = resolvedEvent.eventRecord().streamId().id()
-                    val emotion = Emotion.valueOf(String(resolvedEvent.eventRecord().data()))
-                    emotions.computeIfAbsent(user, { mutableMapOf() })[date] = emotion
+                    val (email, date, emotion) = EventCodecs.deserializeEvent(resolvedEvent.eventRecord())
+                    emotions.computeIfAbsent(email, { mutableMapOf() })[date] = emotion
                 }
                 emotions.forEach { (email, emotionsByDate) ->
                     emotionsByDate.forEach { (date, emotion) ->
@@ -62,7 +60,7 @@ class RecordHappinessServlet(eventSource: EventSource) : HttpServlet() {
     private fun recordHappiness(happinessObj: Happiness) {
         eventStreamWriter.write(
                 streamId("happiness", happinessObj.email),
-                listOf(newEvent("HappinessReceived", happinessObj.emotion.toString().toByteArray()))
+                listOf(EventCodecs.serializeEvent(HappinessReceived(happinessObj.email, LocalDate.now(clock), happinessObj.emotion)))
         )
     }
 
