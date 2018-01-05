@@ -71,6 +71,7 @@ dependencies {
     compile("com.fasterxml.jackson.core:jackson-databind:2.9.2")
     compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.2")
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.2")
+    compile("com.google.guava:guava:23.5-jre")
 
     testCompile(kotlin("test-junit"))
     testCompile("com.natpryce:hamkrest:1.4.2.2")

@@ -41,15 +41,17 @@ class RecordHappinessServlet(eventSource: EventSource, private val clock: Clock)
         resp.contentType = "text/plain"
         resp.writer.use { writer ->
             eventCategoryReader.readCategoryForwards("happiness").use { stream ->
-                val emotions = mutableMapOf<String, MutableMap<LocalDate, Emotion>>()
-                stream.forEach { resolvedEvent ->
-                    val (email, date, emotion) = EventCodecs.deserializeEvent(resolvedEvent.eventRecord())
-                    emotions.computeIfAbsent(email, { mutableMapOf() })[date] = emotion
-                }
-                emotions.forEach { (email, emotionsByDate) ->
-                    emotionsByDate.forEach { (date, emotion) ->
-                        writer.println("$date $email $emotion")
+                val emotions = buildTable<String, LocalDate, Emotion> {
+                    stream.forEach { resolvedEvent ->
+                        val (email, date, emotion) = EventCodecs.deserializeEvent(resolvedEvent.eventRecord())
+                        put(email, date, emotion)
                     }
+                }
+                emotions.cellSet().forEach { cell ->
+                    val email = cell.rowKey
+                    val date = cell.columnKey
+                    val emotion = cell.value
+                    writer.println("$date $email $emotion")
                 }
             }
         }
