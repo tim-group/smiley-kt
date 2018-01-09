@@ -9,7 +9,6 @@ import com.timgroup.smileykt.events.EventCodecs
 import com.timgroup.smileykt.events.HappinessReceived
 import java.time.Clock
 import java.time.LocalDate
-import javax.servlet.ServletInputStream
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -32,7 +31,7 @@ class RecordHappinessServlet(eventSource: EventSource, private val clock: Clock)
             }
             "application/json" -> {
                 try {
-                    recordHappiness(decode(req.inputStream))
+                    recordHappiness(mapper.readValue(req.inputStream))
                 } catch (e: JsonMappingException) {
                     return resp.sendError(400, e.message)
                 }
@@ -60,10 +59,6 @@ class RecordHappinessServlet(eventSource: EventSource, private val clock: Clock)
                 }
             }
         }
-    }
-
-    private fun decode(inputStream: ServletInputStream): Happiness {
-        return mapper.readValue(inputStream)
     }
 
     private val HttpServletRequest.mimeType: String?
