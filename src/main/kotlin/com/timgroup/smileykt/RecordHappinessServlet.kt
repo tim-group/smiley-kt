@@ -62,7 +62,7 @@ class RecordHappinessServlet(eventSource: EventSource, private val clock: Clock)
         }
     }
 
-    private fun decode(inputStream: ServletInputStream): RecordHappinessServlet.Happiness {
+    private fun decode(inputStream: ServletInputStream): Happiness {
         return mapper.readValue(inputStream)
     }
 
