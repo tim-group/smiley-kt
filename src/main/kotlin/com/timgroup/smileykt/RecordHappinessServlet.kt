@@ -1,12 +1,15 @@
 package com.timgroup.smileykt
 
 import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.timgroup.eventstore.api.EventSource
 import com.timgroup.eventstore.api.StreamId.streamId
 import com.timgroup.smileykt.events.EventCodecs
 import com.timgroup.smileykt.events.HappinessReceived
 import java.time.Clock
 import java.time.LocalDate
+import javax.servlet.ServletInputStream
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -15,6 +18,8 @@ class RecordHappinessServlet(eventSource: EventSource, private val clock: Clock)
 
     private val eventCategoryReader = eventSource.readCategory()
     private val eventStreamWriter = eventSource.writeStream()
+
+    private val mapper = jacksonObjectMapper()
 
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
         when (req.contentType.toMimeType()) {
@@ -55,6 +60,10 @@ class RecordHappinessServlet(eventSource: EventSource, private val clock: Clock)
                 }
             }
         }
+    }
+
+    private fun decode(inputStream: ServletInputStream): RecordHappinessServlet.Happiness {
+        return mapper.readValue(inputStream)
     }
 
     private fun String.toMimeType() = split(";")[0].toLowerCase()
