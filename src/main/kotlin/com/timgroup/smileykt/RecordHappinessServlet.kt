@@ -22,7 +22,7 @@ class RecordHappinessServlet(eventSource: EventSource, private val clock: Clock)
     private val mapper = jacksonObjectMapper()
 
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
-        when (req.contentType.toMimeType()) {
+        when (req.mimeType) {
             "application/x-www-form-urlencoded" -> {
                 val email: String = req.getParameter("email") ?: return resp.sendError(400, "Email must be supplied")
                 val emotionString: String = req.getParameter("emotion") ?: return resp.sendError(400, "Happiness must be supplied")
@@ -66,7 +66,8 @@ class RecordHappinessServlet(eventSource: EventSource, private val clock: Clock)
         return mapper.readValue(inputStream)
     }
 
-    private fun String?.toMimeType() = this?.let { it.split(";")[0].toLowerCase() }
+    private val HttpServletRequest.mimeType: String?
+        get() = contentType?.let { it.split(";")[0].toLowerCase() }
 
     private fun recordHappiness(happinessObj: Happiness) {
         eventStreamWriter.write(
