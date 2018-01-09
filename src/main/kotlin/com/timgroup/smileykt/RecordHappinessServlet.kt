@@ -66,7 +66,7 @@ class RecordHappinessServlet(eventSource: EventSource, private val clock: Clock)
         return mapper.readValue(inputStream)
     }
 
-    private fun String.toMimeType() = split(";")[0].toLowerCase()
+    private fun String?.toMimeType() = this?.let { it.split(";")[0].toLowerCase() }
 
     private fun recordHappiness(happinessObj: Happiness) {
         eventStreamWriter.write(

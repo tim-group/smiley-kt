@@ -121,6 +121,13 @@ class RecordHappinessServletIntegrationTest {
     }
 
     @Test
+    fun `rejects happiness with no content-type`() {
+        server.execute(HttpPost("/happiness")).apply {
+            assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, statusLine.statusCode)
+        }
+    }
+
+    @Test
     fun `rejects happiness not in specified list in form data`() {
         server.execute(HttpPost("/happiness").apply {
             entity = formEntity(
