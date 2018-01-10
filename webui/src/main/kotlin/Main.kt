@@ -10,7 +10,7 @@ fun main(args: Array<String>) {
     document.getElementById("submit")!!.addEventListener("click", { e: Event ->
         e.preventDefault()
 
-        val data = HappinessData(document.inputElementValue("email"), document.inputElementValue("happiness"))
+        val data = HappinessData(document.inputElementValue("email"), document.inputElementValue("emotion"))
         console.log("submit form", data)
         val xhr = XMLHttpRequest()
         xhr.open("POST", "/happiness")
@@ -21,4 +21,4 @@ fun main(args: Array<String>) {
 
 private fun Document.inputElementValue(id: String): String = ((getElementById(id) ?: throw IllegalArgumentException("No such element: $id")) as HTMLInputElement).value
 
-data class HappinessData(val email: String, val happiness: String)
+data class HappinessData(val email: String, val emotion: String)
