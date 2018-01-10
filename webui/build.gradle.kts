@@ -21,6 +21,7 @@ tasks {
         kotlinOptions {
             outputFile = "${mainSourceSet.output.resourcesDir}/output.js"
             sourceMap = true
+            sourceMapEmbedSources = "always"
         }
     }
 
