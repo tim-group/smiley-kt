@@ -19,6 +19,6 @@ fun main(args: Array<String>) {
     })
 }
 
-private fun Document.inputElementValue(id: String): String = (getElementById(id) as HTMLInputElement).value
+private fun Document.inputElementValue(id: String): String = ((getElementById(id) ?: throw IllegalArgumentException("No such element: $id")) as HTMLInputElement).value
 
 data class HappinessData(val email: String, val happiness: String)
