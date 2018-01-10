@@ -47,6 +47,7 @@ tasks {
                 from(zipTree(kotlinStdLibJar))
                 into(outputDir)
                 include("**/*.js")
+                include("**/*.js.map")
                 exclude("META-INF/**")
             }
         }
@@ -68,6 +69,7 @@ tasks {
                 from(zipTree(kotlinCoroutinesJar))
                 into(outputDir)
                 include("**/*.js")
+                include("**/*.js.map")
                 exclude("META-INF/**")
             }
         }
