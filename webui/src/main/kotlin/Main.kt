@@ -1,24 +1,25 @@
+import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.launch
 import org.w3c.dom.Document
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
+import org.w3c.dom.events.EventTarget
 import kotlin.browser.document
 
 fun main(args: Array<String>) {
-    console.log("FIRE IT UP")
-
-    document.getElementById("submit")!!.addEventListener("click", { e: Event ->
-        e.preventDefault()
-
-        val data = HappinessData(document.inputElementValue("email"), document.inputElementValue("emotion"))
-        console.log("submit form", data)
-        launch {
-            val status = postJSON("/happiness", data)
-            console.log("posted input; status=$status")
-            for (id in listOf("email", "emotion")) {
-                (document.getElementById(id) as HTMLInputElement).value = ""
-            }
+    document.getElementById("submit")!!.onClick {
+        postJSON("/happiness",
+                HappinessData(document.inputElementValue("email"), document.inputElementValue("emotion")))
+        for (id in listOf("email", "emotion")) {
+            (document.getElementById(id) as HTMLInputElement).value = ""
         }
+    }
+}
+
+private fun EventTarget.onClick(block: suspend CoroutineScope.() -> Unit) {
+    addEventListener("click", { e: Event ->
+        e.preventDefault()
+        launch(block = block)
     })
 }
 
