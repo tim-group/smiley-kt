@@ -47,10 +47,7 @@ class RecordHappinessResources(eventSource: EventSource, private val clock: Cloc
                     put(email, date, emotion)
                 }
             }
-            emotions.cellSet().forEach { cell ->
-                val email = cell.rowKey
-                val date = cell.columnKey
-                val emotion = cell.value
+            emotions.forEach { email, date, emotion ->
                 writer.println("$date $email $emotion")
             }
         }
