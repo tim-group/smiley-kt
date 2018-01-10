@@ -1,9 +1,10 @@
+import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 
 // see https://github.com/gradle/kotlin-dsl/blob/master/samples/hello-js/build.gradle.kts for inspiration
 
-apply {
-    plugin("org.jetbrains.kotlin.platform.js")
+plugins {
+    id("kotlin2js")
 }
 
 repositories {
@@ -13,6 +14,10 @@ repositories {
 dependencies {
     "compile"(kotlin("stdlib-js"))
     "compile"("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:0.21")
+}
+
+kotlin {
+    experimental.coroutines = Coroutines.ENABLE
 }
 
 val mainSourceSet = the<JavaPluginConvention>().sourceSets["main"]!!

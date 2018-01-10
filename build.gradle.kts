@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.Coroutines
+
 plugins {
     application
     kotlin("jvm") version "1.2.10"
@@ -82,4 +84,8 @@ dependencies {
     testCompile("com.timgroup:clocks-testing:1.0.1080") // autobump
 
     runtime("ch.qos.logback:logback-classic:1.2.3")
+}
+
+kotlin {
+    experimental.coroutines = Coroutines.ENABLE
 }
