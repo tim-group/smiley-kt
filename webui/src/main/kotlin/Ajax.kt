@@ -4,15 +4,16 @@ import kotlin.coroutines.experimental.suspendCoroutine
 
 suspend fun postJSON(url: String, data: Any): Int {
     return suspendCoroutine { continuation ->
-        val xhr = XMLHttpRequest()
-        xhr.onreadystatechange = { _: Event ->
-            if (xhr.readyState == XMLHttpRequest.DONE) {
-                val status = xhr.status.toInt()
-                if (status in 200 until 300) {
-                    continuation.resume(status)
-                }
-                else {
-                    continuation.resumeWithException(RuntimeException("Failed to post to $url: ${xhr.status} ${xhr.statusText}"))
+        val xhr = XMLHttpRequest().apply {
+            onreadystatechange = { _: Event ->
+                if (readyState == XMLHttpRequest.DONE) {
+                    val statusCode = status.toInt()
+                    if (statusCode in 200 until 300) {
+                        continuation.resume(statusCode)
+                    }
+                    else {
+                        continuation.resumeWithException(RuntimeException("Failed to post to $url: $status $statusText"))
+                    }
                 }
             }
         }
