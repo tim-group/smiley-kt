@@ -41,7 +41,7 @@ class RecordHappinessResources(eventSource: EventSource, private val clock: Cloc
         val stringWriter = StringWriter()
         val writer = PrintWriter(stringWriter)
         eventCategoryReader.readCategoryForwards("happiness").use { stream ->
-            val emotions = buildTable<String, LocalDate, Emotion> {
+            val emotions = mutableTableOf<String, LocalDate, Emotion>().apply {
                 stream.forEach { resolvedEvent ->
                     val (email, date, emotion) = EventCodecs.deserializeEvent(resolvedEvent.eventRecord())
                     put(email, date, emotion)
