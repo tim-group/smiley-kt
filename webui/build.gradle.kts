@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     "compile"(kotlin("stdlib-js"))
+    "compile"("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:0.21")
 }
 
 val mainSourceSet = the<JavaPluginConvention>().sourceSets["main"]!!
@@ -46,11 +47,33 @@ tasks {
         }
     }
 
+    val unpackKotlinJsCoroutines by creating {
+        group = "build"
+        description = "Unpack the Kotlin coroutines library"
+        val outputDir = file("$buildDir/$name")
+        val compileClasspath = configurations["compileClasspath"]
+        inputs.property("compileClasspath", compileClasspath)
+        outputs.dir(outputDir)
+        doLast {
+            val kotlinCoroutinesJar = compileClasspath.single {
+                it.name.matches(Regex("kotlinx-coroutines-core-js.+\\.jar"))
+            }
+            copy {
+                includeEmptyDirs = false
+                from(zipTree(kotlinCoroutinesJar))
+                into(outputDir)
+                include("**/*.js")
+                exclude("META-INF/**")
+            }
+        }
+    }
+
     val assembleWeb by creating(Sync::class) {
         group = "build"
         description = "Assemble the web application"
         includeEmptyDirs = false
         from(unpackKotlinJsStdlib)
+        from(unpackKotlinJsCoroutines)
         from(mainSourceSet.output) {
             exclude("**/*.kjsm")
         }

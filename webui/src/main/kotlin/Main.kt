@@ -1,7 +1,7 @@
+import kotlinx.coroutines.experimental.launch
 import org.w3c.dom.Document
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
-import org.w3c.xhr.XMLHttpRequest
 import kotlin.browser.document
 
 fun main(args: Array<String>) {
@@ -12,10 +12,13 @@ fun main(args: Array<String>) {
 
         val data = HappinessData(document.inputElementValue("email"), document.inputElementValue("emotion"))
         console.log("submit form", data)
-        val xhr = XMLHttpRequest()
-        xhr.open("POST", "/happiness")
-        xhr.setRequestHeader("Content-Type", "application/json")
-        xhr.send(JSON.stringify(data))
+        launch {
+            val status = postJSON("/happiness", data)
+            console.log("posted input; status=$status")
+            for (id in listOf("email", "emotion")) {
+                (document.getElementById(id) as HTMLInputElement).value = ""
+            }
+        }
     })
 }
 
