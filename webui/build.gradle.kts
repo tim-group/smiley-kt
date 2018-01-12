@@ -26,6 +26,8 @@ tasks {
     "compileKotlin2Js"(Kotlin2JsCompile::class) {
         kotlinOptions {
             main = "call"
+            sourceMap = true
+            sourceMapEmbedSources = "always"
         }
     }
 
