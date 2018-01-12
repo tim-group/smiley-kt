@@ -37,6 +37,7 @@ tasks {
         description = "Assemble the web application"
         includeEmptyDirs = false
         from("$buildDir/classes/kotlin/main/min")
+        from("src/main/web")
         into("$buildDir/web")
         dependsOn("runDceKotlinJs")
     }

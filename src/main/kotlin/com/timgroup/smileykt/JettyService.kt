@@ -11,7 +11,6 @@ import org.eclipse.jetty.servlet.FilterHolder
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
 import org.eclipse.jetty.util.resource.PathResource
-import org.eclipse.jetty.util.resource.ResourceCollection
 import org.jboss.resteasy.plugins.server.servlet.Filter30Dispatcher
 import org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
 import org.jboss.resteasy.spi.ResteasyDeployment
@@ -36,10 +35,7 @@ class JettyService(port: Int, appStatus: AppStatus, eventSource: EventSource, cl
                     deployment.registry.addSingletonResource(RecordHappinessResources(eventSource, clock))
                 }
             })
-            baseResource = ResourceCollection(
-                    PathResource(Paths.get("src/main/web")),
-                    PathResource(Paths.get("webui/build/web"))
-            )
+            baseResource = PathResource(Paths.get("webui/build/web"))
         }
     }
 
