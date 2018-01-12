@@ -22,8 +22,6 @@ kotlin {
     experimental.coroutines = Coroutines.ENABLE
 }
 
-val mainSourceSet = the<JavaPluginConvention>().sourceSets["main"]!!
-
 tasks {
     "compileKotlin2Js"(Kotlin2JsCompile::class) {
         kotlinOptions {
