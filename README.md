@@ -5,8 +5,6 @@ This is a learning project undertaken by the TIM team as a vehicle for learning 
 
 Tasks
 -----
-* Use JAX-RS instead of directly writing a servlet.
+* Capture user's emotion using a drop-down rather than text input in the form
 * Pretty dashboard of users' happiness over the last few days
 * Periodically send an email (towards the end of each working day), prompting users to enter their happiness
-* Support users' happiness on specific dates.
-  * Take date as input in form submission rather than using current date?
