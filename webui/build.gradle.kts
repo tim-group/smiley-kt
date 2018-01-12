@@ -2,9 +2,11 @@ import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 
 // see https://github.com/gradle/kotlin-dsl/blob/master/samples/hello-js/build.gradle.kts for inspiration
+// see also https://github.com/Kotlin/kotlinx.coroutines/tree/master/js/example-frontend-js
+// and https://kotlinlang.org/docs/reference/javascript-dce.html
 
 plugins {
-    id("kotlin2js")
+    id("kotlin-dce-js")
 }
 
 repositories {
@@ -12,8 +14,8 @@ repositories {
 }
 
 dependencies {
-    "compile"(kotlin("stdlib-js"))
     "compile"("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:0.21")
+    "compile"("org.jetbrains.kotlinx:kotlinx-html-js:0.6.8")
 }
 
 kotlin {
@@ -25,66 +27,18 @@ val mainSourceSet = the<JavaPluginConvention>().sourceSets["main"]!!
 tasks {
     "compileKotlin2Js"(Kotlin2JsCompile::class) {
         kotlinOptions {
-            outputFile = "${mainSourceSet.output.resourcesDir}/output.js"
-            sourceMap = true
-            sourceMapEmbedSources = "always"
+            main = "call"
         }
     }
 
-    val unpackKotlinJsStdlib by creating {
-        group = "build"
-        description = "Unpack the Kotlin JavaScript standard library"
-        val outputDir = file("$buildDir/$name")
-        val compileClasspath = configurations["compileClasspath"]
-        inputs.property("compileClasspath", compileClasspath)
-        outputs.dir(outputDir)
-        doLast {
-            val kotlinStdLibJar = compileClasspath.single {
-                it.name.matches(Regex("kotlin-stdlib-js.+\\.jar"))
-            }
-            copy {
-                includeEmptyDirs = false
-                from(zipTree(kotlinStdLibJar))
-                into(outputDir)
-                include("**/*.js")
-                include("**/*.js.map")
-                exclude("META-INF/**")
-            }
-        }
-    }
-
-    val unpackKotlinJsCoroutines by creating {
-        group = "build"
-        description = "Unpack the Kotlin coroutines library"
-        val outputDir = file("$buildDir/$name")
-        val compileClasspath = configurations["compileClasspath"]
-        inputs.property("compileClasspath", compileClasspath)
-        outputs.dir(outputDir)
-        doLast {
-            val kotlinCoroutinesJar = compileClasspath.single {
-                it.name.matches(Regex("kotlinx-coroutines-core-js.+\\.jar"))
-            }
-            copy {
-                includeEmptyDirs = false
-                from(zipTree(kotlinCoroutinesJar))
-                into(outputDir)
-                include("**/*.js")
-                include("**/*.js.map")
-                exclude("META-INF/**")
-            }
-        }
-    }
 
     val assembleWeb by creating(Sync::class) {
         group = "build"
         description = "Assemble the web application"
         includeEmptyDirs = false
-        from(unpackKotlinJsStdlib)
-        from(unpackKotlinJsCoroutines)
-        from(mainSourceSet.output) {
-            exclude("**/*.kjsm")
-        }
+        from("$buildDir/classes/kotlin/main/min")
         into("$buildDir/web")
+        dependsOn("runDceKotlinJs")
     }
 
     "assemble" {

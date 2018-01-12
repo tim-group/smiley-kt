@@ -9,10 +9,14 @@ import kotlin.browser.document
 
 fun main(args: Array<String>) {
     document.getElementById("submit")!!.onClick {
-        postJSON("/happiness",
-                HappinessData(document.inputElementValue("email"), document.inputElementValue("emotion")))
-        for (id in listOf("email", "emotion")) {
-            (document.getElementById(id) as HTMLInputElement).value = ""
+        try {
+            postJSON("/happiness",
+                    HappinessData(document.inputElementValue("email"), document.inputElementValue("emotion")))
+            for (id in listOf("email", "emotion")) {
+                (document.getElementById(id) as HTMLInputElement).value = ""
+            }
+        } catch (e: RuntimeException) {
+            console.log("failed to post JSON: $e")
         }
     }
 }
