@@ -16,7 +16,7 @@ fun main(args: Array<String>) {
                 (document.getElementById(id) as HTMLInputElement).value = ""
             }
         } catch (e: RuntimeException) {
-            console.log("failed to post JSON: $e")
+            console.error("failed to post JSON", e)
         }
     }
 }
