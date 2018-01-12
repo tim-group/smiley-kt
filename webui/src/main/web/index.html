@@ -2,7 +2,14 @@
 
 <form id="form" method="post" action="happiness">
     <div> Email: <input id="email" type="text" name="email"> </div>
-    <div> Happiness: <input id="emotion" type="text" name="emotion"> </div>
+    <div> Happiness: <select id="emotion" name="emotion">
+        <option value=""></option>
+        <option value="ECSTATIC">Ecstatic</option>
+        <option value="HAPPY">Happy</option>
+        <option value="INDIFFERENT">Indifferent</option>
+        <option value="SAD">Sad</option>
+        <option value="SUICIDAL">Suicidal</option>
+    </select> </div>
     <input id="submit" type="submit" />
 </form>
 
