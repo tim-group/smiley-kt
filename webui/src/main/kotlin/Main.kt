@@ -1,5 +1,4 @@
 import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.launch
 import org.w3c.dom.Document
 import org.w3c.dom.HTMLInputElement
@@ -24,7 +23,7 @@ fun main(args: Array<String>) {
 private fun EventTarget.onClick(block: suspend CoroutineScope.() -> Unit) {
     addEventListener("click", { e: Event ->
         e.preventDefault()
-        launch(Unconfined, block = block)
+        launch(block = block)
     })
 }
 
