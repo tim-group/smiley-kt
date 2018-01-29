@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    "compile"("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:0.21.1")
+    "compile"("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:0.22")
     "compile"("org.jetbrains.kotlinx:kotlinx-html-js:0.6.8")
 }
 
