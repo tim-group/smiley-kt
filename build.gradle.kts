@@ -57,6 +57,10 @@ repositories {
     maven(url = "http://repo.net.local/nexus/content/groups/public")
 }
 
+val jacksonVersion by extra("2.9.4")
+val metricsVersion by extra("3.2.6")
+val jettyVersion by extra("9.4.8.v20171121")
+
 dependencies {
     compile("com.timgroup:Tucker:1.0.1494") // autobump
     compile("com.timgroup:tim-logger:1.5.1084") // autobump
@@ -65,16 +69,16 @@ dependencies {
     compile("com.timgroup:eventstore-filesystem:0.0.1548") // autobump
     compile(kotlin("stdlib-jdk8"))
     compile(kotlin("reflect"))
-    compile("io.dropwizard.metrics:metrics-core:3.2.3")
-    compile("io.dropwizard.metrics:metrics-jvm:3.2.3")
-    compile("io.dropwizard.metrics:metrics-graphite:3.2.3")
-    compile("org.eclipse.jetty:jetty-server:9.4.8.v20171121")
-    compile("org.eclipse.jetty:jetty-servlet:9.4.8.v20171121")
-    compile("com.fasterxml.jackson.core:jackson-databind:2.9.2")
-    compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.2")
-    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.2")
-    compile("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.2")
-    compile("com.google.guava:guava:23.5-jre")
+    compile("io.dropwizard.metrics:metrics-core:$metricsVersion")
+    compile("io.dropwizard.metrics:metrics-jvm:$metricsVersion")
+    compile("io.dropwizard.metrics:metrics-graphite:$metricsVersion")
+    compile("org.eclipse.jetty:jetty-server:$jettyVersion")
+    compile("org.eclipse.jetty:jetty-servlet:$jettyVersion")
+    compile("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+    compile("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+    compile("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion")
+    compile("com.google.guava:guava:23.6-jre")
     compile("org.jboss.resteasy:resteasy-jaxrs:3.1.2.Final")
 
     testCompile(kotlin("test-junit"))
