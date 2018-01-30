@@ -10,7 +10,6 @@ import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.StringEntity
 import org.apache.http.message.BasicNameValuePair
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import java.time.Instant
@@ -117,13 +116,6 @@ class RecordHappinessResourcesIntegrationTest {
         server.execute(HttpPost("/happiness").apply {
             entity = StringEntity("""<record-happiness><email>test@example.com</email><happiness>ECSTATIC</happiness></record-happiness>""", ContentType.APPLICATION_XML)
         }).apply {
-            assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, statusLine.statusCode)
-        }
-    }
-
-    @Test @Ignore
-    fun `rejects happiness with no content-type`() {
-        server.execute(HttpPost("/happiness")).apply {
             assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, statusLine.statusCode)
         }
     }
