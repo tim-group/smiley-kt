@@ -62,7 +62,7 @@ val metricsVersion by extra("3.2.6")
 val jettyVersion by extra("9.4.8.v20171121")
 
 dependencies {
-    compile("com.timgroup:Tucker:1.0.1494") // autobump
+    compile("com.timgroup:Tucker:1.0.1495") // autobump
     compile("com.timgroup:tim-logger:1.5.1084") // autobump
     compile("com.timgroup:tim-structured-events:0.4.1235") // autobump
     compile("com.timgroup:eventstore-api:0.0.1558") // autobump
