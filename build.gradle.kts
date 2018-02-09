@@ -78,7 +78,7 @@ dependencies {
     compile("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
     compile("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion")
-    compile("com.google.guava:guava:23.6-jre")
+    compile("com.google.guava:guava:24.0-jre")
     compile("org.jboss.resteasy:resteasy-jaxrs:3.1.2.Final")
 
     testCompile(kotlin("test-junit"))
