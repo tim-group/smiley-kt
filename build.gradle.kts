@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.Coroutines
 plugins {
     application
     kotlin("jvm") version "1.2.21"
-    id("com.timgroup.jarmangit") version "1.1.84"
+    id("com.timgroup.jarmangit") version "1.1.86"
 }
 
 application {
