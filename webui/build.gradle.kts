@@ -5,6 +5,8 @@ import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 // see also https://github.com/Kotlin/kotlinx.coroutines/tree/master/js/example-frontend-js
 // and https://kotlinlang.org/docs/reference/javascript-dce.html
 
+val kotlinCoroutinesVersion: String by rootProject.extra
+
 plugins {
     id("kotlin-dce-js")
 }
@@ -14,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    "compile"("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:0.22.2")
+    "compile"("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinCoroutinesVersion")
     "compile"("org.jetbrains.kotlinx:kotlinx-html-js:0.6.8")
 }
 
