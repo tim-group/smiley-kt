@@ -87,7 +87,7 @@ dependencies {
     testCompile("org.araqnid:hamkrest-json:1.0.3")
     testCompile("com.timgroup:tim-structured-events-testing:0.4.1235") // autobump
     testCompile("com.timgroup:eventstore-memory:0.0.1575") // autobump
-    testCompile("org.apache.httpcomponents:httpclient:4.4.1")
+    testCompile("org.apache.httpcomponents:httpclient:4.5.5")
     testCompile("com.timgroup:clocks-testing:1.0.1080") // autobump
 
     runtime("ch.qos.logback:logback-classic:1.2.3")
