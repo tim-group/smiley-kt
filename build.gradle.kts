@@ -81,6 +81,7 @@ dependencies {
     compile("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion")
     compile("com.google.guava:guava:24.0-jre")
     compile("org.jboss.resteasy:resteasy-jaxrs:3.1.2.Final")
+    compile("javax.mail:mail:1.4.6")
 
     testCompile(kotlin("test-junit"))
     testCompile("com.natpryce:hamkrest:1.4.2.2")
