@@ -1,0 +1,24 @@
+package com.timgroup.smileykt
+
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.containsSubstring
+import org.junit.Test
+import java.net.URI
+import java.time.LocalDate
+
+
+class HtmlEmailGeneratorTest {
+
+    val generator = HtmlEmailGenerator(URI("https://happiness.example.com/"))
+
+    @Test
+    fun `generates html to request bob submits happiness for Monday`() {
+        val emailHtml = generator.emailFor("bob@gmail.com", LocalDate.of(2018, 1, 11))
+        assertThat(emailHtml, containsSubstring("bob@gmail.com"))
+        assertThat(emailHtml, containsSubstring("2018-01-11"))
+        assertThat(emailHtml, containsSubstring("https://happiness.example.com/happiness?date=2018-01-11&email=bob@gmail.com&emotion=HAPPY"))
+        assertThat(emailHtml, containsSubstring("https://happiness.example.com/happiness?date=2018-01-11&email=bob@gmail.com&emotion=NEUTRAL"))
+        assertThat(emailHtml, containsSubstring("https://happiness.example.com/happiness?date=2018-01-11&email=bob@gmail.com&emotion=SAD"))
+    }
+
+}
