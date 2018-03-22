@@ -12,12 +12,12 @@ class EventCodecsTest {
 
     @Test
     fun `serialises a HappinessReceived event`() {
-        val happinessReceived = HappinessReceived(
+        val event = HappinessReceived(
                 email = "user@acuris.com",
                 date = LocalDate.of(2018, 1, 5),
                 emotion = Emotion.INDIFFERENT
         )
-        val serialized = EventCodecs.serialize(happinessReceived)
+        val serialized = EventCodecs.serialize(event)
 
         assertThat(serialized, bytesEquivalentTo("""{
             email:"user@acuris.com",
@@ -27,19 +27,48 @@ class EventCodecsTest {
     }
 
     @Test
-    fun `desrialises a json bytes into the HappinessReceived event`() {
-        val happinessReceived = HappinessReceived(
+    fun `deserialises a json bytes into the HappinessReceived event`() {
+        val event = HappinessReceived(
                 email = "user@acuris.com",
                 date = LocalDate.of(2018, 1, 5),
                 emotion = Emotion.INDIFFERENT
         )
 
-        val deserialized = EventCodecs.deserialize("""{
+        val deserialized = EventCodecs.deserialize("HappinessReceived", """{
             "email":"user@acuris.com",
             "date":"2018-01-05",
             "emotion":"INDIFFERENT"
          }""".toByteArray())
 
-        assertThat(deserialized, cast(equalTo(happinessReceived)))
+        assertThat(deserialized, cast(equalTo(event)))
+    }
+
+    @Test
+    fun `serialises a InvitationEmailSent event`() {
+        val event = InvitationEmailSent(
+                recipient = "user@acuris.com",
+                date = LocalDate.of(2018, 1, 5)
+        )
+        val serialized = EventCodecs.serialize(event)
+
+        assertThat(serialized, bytesEquivalentTo("""{
+            recipient:"user@acuris.com",
+            date:"2018-01-05"
+         }"""))
+    }
+
+    @Test
+    fun `deserialises a json bytes into the InvitationEmailSent event`() {
+        val event = InvitationEmailSent(
+                recipient = "user@acuris.com",
+                date = LocalDate.of(2018, 1, 5)
+        )
+
+        val deserialized = EventCodecs.deserialize("InvitationEmailSent", """{
+            "recipient":"user@acuris.com",
+            "date":"2018-01-05"
+         }""".toByteArray())
+
+        assertThat(deserialized, cast(equalTo(event)))
     }
 }

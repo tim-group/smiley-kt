@@ -1,9 +1,9 @@
 package com.timgroup.smileykt.events
 
+import com.fasterxml.jackson.databind.ObjectReader
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.timgroup.eventstore.api.EventRecord
 import com.timgroup.eventstore.api.NewEvent
 import com.timgroup.smileykt.Emotion
@@ -14,23 +14,24 @@ object EventCodecs {
             .registerModule(JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
 
-    fun serialize(happinessReceived: Event): ByteArray {
-        return objectMapper.writeValueAsBytes(happinessReceived)
-    }
+    fun serialize(data: Event): ByteArray = objectMapper.writeValueAsBytes(data)
 
-    fun serializeEvent(happinessReceived: Event): NewEvent {
-        return NewEvent.newEvent("HappinessReceived", serialize(happinessReceived))
-    }
+    fun serializeEvent(data: Event): NewEvent = NewEvent.newEvent("HappinessReceived", serialize(data))
 
-    fun deserialize(serialized: ByteArray): Event {
-        return objectMapper.readValue<HappinessReceived>(serialized)
-    }
+    fun deserialize(eventType: String, data: ByteArray): Event = readerFor(eventType).readValue(data)
 
-    fun deserializeEvent(serialized: EventRecord): Event {
-        require(serialized.eventType() == "HappinessReceived")
-        return deserialize(serialized.data())
+    fun deserializeEvent(eventRecord: EventRecord) = deserialize(eventRecord.eventType(), eventRecord.data())
+
+    private fun readerFor(eventType: String): ObjectReader {
+        val type = when (eventType) {
+            "HappinessReceived" -> HappinessReceived::class
+            "InvitationEmailSent" -> InvitationEmailSent::class
+            else -> throw IllegalArgumentException("Unsupported event type: $eventType")
+        }
+        return objectMapper.readerFor(type.java)
     }
 }
 
 interface Event
 data class HappinessReceived(val email: String, val date: LocalDate, val emotion: Emotion) : Event
+data class InvitationEmailSent(val recipient: String, val date: LocalDate) : Event

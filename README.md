@@ -9,5 +9,6 @@ Tasks
 * Periodically send an email (towards the end of each working day), prompting users to enter their happiness
   * List of emails we want to send to (edward)
   * Regular job to send out emails (edward)
+    * users might have different times of day
   * Testing it sends
   * Setting up the server
