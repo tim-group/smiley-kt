@@ -88,7 +88,7 @@ class HappinessResourcesIntegrationTest {
 
         val streamId = streamId("happiness", "test@example.com")
         assertEquals(listOf(HappinessReceived("test@example.com", LocalDate.parse("2018-01-31"), Emotion.ECSTATIC)),
-            server.eventSource.readStream().readStreamForwards(streamId).map { re -> EventCodecs.deserializeEvent(re.eventRecord()) }.collect(toList()))
+            server.eventSource.readStream().readStreamForwards(streamId).map { re -> EventCodecs.deserializeEvent(re.eventRecord()) as HappinessReceived }.collect(toList()))
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
@@ -106,7 +106,7 @@ class HappinessResourcesIntegrationTest {
 
         val streamId = streamId("happiness", "test@example.com")
         assertEquals(listOf(HappinessReceived("test@example.com", LocalDate.parse("2018-02-28"), Emotion.ECSTATIC)),
-                server.eventSource.readStream().readStreamForwards(streamId).map { re -> EventCodecs.deserializeEvent(re.eventRecord()) }.collect(toList()))
+                server.eventSource.readStream().readStreamForwards(streamId).map { re -> EventCodecs.deserializeEvent(re.eventRecord()) as HappinessReceived }.collect(toList()))
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
@@ -199,7 +199,7 @@ class HappinessResourcesIntegrationTest {
 
         val streamId = StreamId.streamId("happiness", "test@example.com")
         assertEquals(listOf(HappinessReceived("test@example.com", LocalDate.parse("2018-01-31"), Emotion.ECSTATIC)),
-                server.eventSource.readStream().readStreamForwards(streamId).map { re -> EventCodecs.deserializeEvent(re.eventRecord()) }.collect(
+                server.eventSource.readStream().readStreamForwards(streamId).map { re -> EventCodecs.deserializeEvent(re.eventRecord()) as HappinessReceived }.collect(
                         Collectors.toList()))
     }
 

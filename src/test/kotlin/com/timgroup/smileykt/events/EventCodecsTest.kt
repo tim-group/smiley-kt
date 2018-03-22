@@ -1,6 +1,7 @@
 package com.timgroup.smileykt.events
 
 import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.cast
 import com.natpryce.hamkrest.equalTo
 import com.timgroup.smileykt.Emotion
 import org.araqnid.hamkrest.json.bytesEquivalentTo
@@ -39,6 +40,6 @@ class EventCodecsTest {
             "emotion":"INDIFFERENT"
          }""".toByteArray())
 
-        assertThat(deserialized, equalTo(happinessReceived))
+        assertThat(deserialized, cast(equalTo(happinessReceived)))
     }
 }

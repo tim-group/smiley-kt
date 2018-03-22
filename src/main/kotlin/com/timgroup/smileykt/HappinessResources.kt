@@ -54,10 +54,14 @@ class HappinessResources(eventSource: EventSource) {
         val stringWriter = StringWriter()
         val writer = PrintWriter(stringWriter)
         eventCategoryReader.readCategoryForwards("happiness").use { stream ->
-            val emotions = mutableTableOf<String, LocalDate, Emotion>().apply {
-                stream.forEach { resolvedEvent ->
-                    val (email, date, emotion) = EventCodecs.deserializeEvent(resolvedEvent.eventRecord())
-                    put(email, date, emotion)
+            val emotions = mutableTableOf<String, LocalDate, Emotion>()
+            stream.forEach { resolvedEvent ->
+                val event = EventCodecs.deserializeEvent(resolvedEvent.eventRecord())
+                when (event) {
+                    is HappinessReceived -> {
+                        val (email, date, emotion) = event
+                        emotions.put(email, date, emotion)
+                    }
                 }
             }
             emotions.forEach { email, date, emotion ->

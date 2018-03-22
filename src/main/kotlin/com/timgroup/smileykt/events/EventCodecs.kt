@@ -14,22 +14,23 @@ object EventCodecs {
             .registerModule(JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
 
-    fun serialize(happinessReceived: HappinessReceived): ByteArray {
+    fun serialize(happinessReceived: Event): ByteArray {
         return objectMapper.writeValueAsBytes(happinessReceived)
     }
 
-    fun serializeEvent(happinessReceived: HappinessReceived): NewEvent {
+    fun serializeEvent(happinessReceived: Event): NewEvent {
         return NewEvent.newEvent("HappinessReceived", serialize(happinessReceived))
     }
 
-    fun deserialize(serialized: ByteArray): HappinessReceived {
-        return objectMapper.readValue(serialized)
+    fun deserialize(serialized: ByteArray): Event {
+        return objectMapper.readValue<HappinessReceived>(serialized)
     }
 
-    fun deserializeEvent(serialized: EventRecord): HappinessReceived {
+    fun deserializeEvent(serialized: EventRecord): Event {
         require(serialized.eventType() == "HappinessReceived")
         return deserialize(serialized.data())
     }
 }
 
-data class HappinessReceived(val email: String, val date: LocalDate, val emotion: Emotion)
+interface Event
+data class HappinessReceived(val email: String, val date: LocalDate, val emotion: Emotion) : Event
