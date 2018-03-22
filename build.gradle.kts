@@ -45,7 +45,9 @@ tasks {
 
     val shadowJar by getting(ShadowJar::class) {
         manifest {
-            attributes(mapOf("X-Java-Version" to "9", "Main-Class" to application.mainClassName))
+            attributes(mapOf(
+                    "X-Java-Version" to "9"
+            ))
         }
     }
 
@@ -67,6 +69,16 @@ tasks.withType<JavaCompile> {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes(mapOf(
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to project.version,
+                "Implementation-Vendor" to "TIM Group"
+        ))
     }
 }
 
