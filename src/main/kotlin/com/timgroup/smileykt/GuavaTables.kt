@@ -1,10 +1,12 @@
+@file:Suppress("unused")
+
 package com.timgroup.smileykt
 
 import com.google.common.collect.HashBasedTable
 import com.google.common.collect.ImmutableTable
 import com.google.common.collect.Table
 
-fun <R: Any, C: Any, V> emptyTable() = ImmutableTable.of<R, C, V>()
+fun <R: Any, C: Any, V> emptyTable(): ImmutableTable<R, C, V> = ImmutableTable.of<R, C, V>()
 
 fun <R: Any, C: Any, V> mutableTableOf(vararg triple: Triple<R, C, V>): Table<R, C, V> = HashBasedTable.create<R, C, V>().apply {
     triple.forEach {
