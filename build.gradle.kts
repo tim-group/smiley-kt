@@ -1,9 +1,11 @@
+import com.timgroup.gradle.productstore.ProductStorePublication
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 
 plugins {
     application
     kotlin("jvm") version "1.2.30"
     id("com.timgroup.jarmangit") version "1.1.86"
+    id("com.timgroup.productstore") version "1.0.3"
 }
 
 application {
@@ -96,4 +98,14 @@ dependencies {
 
 kotlin {
     experimental.coroutines = Coroutines.ENABLE
+}
+
+publishing {
+    (publications) {
+        "productStore"(ProductStorePublication::class) {
+            application = "smiley-kt"
+            artifact(tasks["shadowJar"])
+            from(components["java"])
+        }
+    }
 }
