@@ -79,7 +79,7 @@ dependencies {
     compile("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
     compile("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion")
-    compile("com.google.guava:guava:24.0-jre")
+    compile("com.google.guava:guava:24.1-jre")
     compile("org.jboss.resteasy:resteasy-jaxrs:3.1.2.Final")
     compile("javax.mail:mail:1.4.6")
 
