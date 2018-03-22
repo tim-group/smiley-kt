@@ -1,5 +1,6 @@
 package com.timgroup.smileykt
 
+import com.timgroup.eventstore.api.StreamId
 import com.timgroup.eventstore.api.StreamId.streamId
 import com.timgroup.smileykt.events.EventCodecs
 import com.timgroup.smileykt.events.HappinessReceived
@@ -14,10 +15,11 @@ import org.junit.Rule
 import org.junit.Test
 import java.time.Instant
 import java.time.LocalDate
+import java.util.stream.Collectors
 import java.util.stream.Collectors.toList
 import kotlin.test.assertEquals
 
-class RecordHappinessResourcesIntegrationTest {
+class HappinessResourcesIntegrationTest {
     @get:Rule
     val server = ServerRule()
 
@@ -167,6 +169,18 @@ class RecordHappinessResourcesIntegrationTest {
         }).apply {
             assertEquals(HttpStatus.SC_BAD_REQUEST, statusLine.statusCode)
         }
+    }
+
+    @Test
+    fun `submits happiness using a GET request`() {
+        server.execute(HttpGet("/submit_happiness?email=test@example.com&emotion=ECSTATIC&date=2018-01-31")).apply {
+            assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.statusCode)
+        }
+
+        val streamId = StreamId.streamId("happiness", "test@example.com")
+        assertEquals(listOf(HappinessReceived("test@example.com", LocalDate.parse("2018-01-31"), Emotion.ECSTATIC)),
+                server.eventSource.readStream().readStreamForwards(streamId).map { re -> EventCodecs.deserializeEvent(re.eventRecord()) }.collect(
+                        Collectors.toList()))
     }
 
     private fun formEntity(vararg entries: Pair<String, String>): UrlEncodedFormEntity =

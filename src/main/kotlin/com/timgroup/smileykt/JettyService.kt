@@ -36,7 +36,7 @@ class JettyService(port: Int, appStatus: AppStatus, eventSource: EventSource, cl
                     super.contextInitialized(event)
                     val deployment = event.servletContext.getAttribute(ResteasyDeployment::class.java.name) as ResteasyDeployment
                     deployment.providerFactory.register(JacksonJsonProvider(jacksonObjectMapper))
-                    deployment.registry.addSingletonResource(RecordHappinessResources(eventSource, clock))
+                    deployment.registry.addSingletonResource(HappinessResources(eventSource))
                 }
             })
             baseResource = PathResource(Paths.get("webui/build/web"))

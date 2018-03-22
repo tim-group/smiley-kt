@@ -16,9 +16,9 @@ class HtmlEmailGeneratorTest {
         val emailHtml = generator.emailFor("bob@gmail.com", LocalDate.of(2018, 1, 11))
         assertThat(emailHtml, containsSubstring("bob@gmail.com"))
         assertThat(emailHtml, containsSubstring("2018-01-11"))
-        assertThat(emailHtml, containsSubstring("https://happiness.example.com/happiness?date=2018-01-11&email=bob@gmail.com&emotion=HAPPY"))
-        assertThat(emailHtml, containsSubstring("https://happiness.example.com/happiness?date=2018-01-11&email=bob@gmail.com&emotion=NEUTRAL"))
-        assertThat(emailHtml, containsSubstring("https://happiness.example.com/happiness?date=2018-01-11&email=bob@gmail.com&emotion=SAD"))
+        assertThat(emailHtml, containsSubstring("https://happiness.example.com/submit_happiness?date=2018-01-11&email=bob@gmail.com&emotion=HAPPY"))
+        assertThat(emailHtml, containsSubstring("https://happiness.example.com/submit_happiness?date=2018-01-11&email=bob@gmail.com&emotion=NEUTRAL"))
+        assertThat(emailHtml, containsSubstring("https://happiness.example.com/submit_happiness?date=2018-01-11&email=bob@gmail.com&emotion=SAD"))
     }
 
 }

@@ -9,9 +9,9 @@ class HtmlEmailGenerator(val serverUri: URI) {
             <p>Hello $email</p>
 
             <ul>
-              <li><a href="${serverUri.resolve("happiness?date=$date&email=$email&emotion=HAPPY")}" title="happy"><img src="happy.gif" alt="happy"/></a></li>
-              <li><a href="${serverUri.resolve("happiness?date=$date&email=$email&emotion=NEUTRAL")}" title="neutral"><img src="neutral.gif" alt="neutral"/></a></li>
-              <li><a href="${serverUri.resolve("happiness?date=$date&email=$email&emotion=SAD")}" title="sad"><img src="sad.gif" alt="sad"/></a></li>
+              <li><a href="${serverUri.resolve("submit_happiness?date=$date&email=$email&emotion=HAPPY")}" title="happy"><img src="happy.gif" alt="happy"/></a></li>
+              <li><a href="${serverUri.resolve("submit_happiness?date=$date&email=$email&emotion=NEUTRAL")}" title="neutral"><img src="neutral.gif" alt="neutral"/></a></li>
+              <li><a href="${serverUri.resolve("submit_happiness?date=$date&email=$email&emotion=SAD")}" title="sad"><img src="sad.gif" alt="sad"/></a></li>
             </ul>
         """.trimIndent()
     }
