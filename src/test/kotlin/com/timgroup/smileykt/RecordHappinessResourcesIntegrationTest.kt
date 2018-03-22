@@ -78,36 +78,37 @@ class RecordHappinessResourcesIntegrationTest {
         server.execute(HttpPost("/happiness").apply {
             entity = formEntity(
                     "email" to "test@example.com",
-                    "emotion" to "ECSTATIC")
+                    "emotion" to "ECSTATIC",
+                    "date" to "2018-01-31")
         }).apply {
             assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.statusCode)
         }
 
         val streamId = streamId("happiness", "test@example.com")
-        assertEquals(listOf(HappinessReceived("test@example.com", LocalDate.parse("2017-12-08"), Emotion.ECSTATIC)),
+        assertEquals(listOf(HappinessReceived("test@example.com", LocalDate.parse("2018-01-31"), Emotion.ECSTATIC)),
             server.eventSource.readStream().readStreamForwards(streamId).map { re -> EventCodecs.deserializeEvent(re.eventRecord()) }.collect(toList()))
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
-            assertEquals("2017-12-08 test@example.com ECSTATIC\n", entity.readText())
+            assertEquals("2018-01-31 test@example.com ECSTATIC\n", entity.readText())
         }
     }
 
     @Test
     fun `records happiness by posting JSON`() {
         server.execute(HttpPost("/happiness").apply {
-            entity = StringEntity("""{"email":"test@example.com", "emotion":"ECSTATIC"}""", ContentType.APPLICATION_JSON)
+            entity = StringEntity("""{"email":"test@example.com", "emotion":"ECSTATIC", "date":"2018-02-28"}""", ContentType.APPLICATION_JSON)
         }).apply {
             assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.statusCode)
         }
 
         val streamId = streamId("happiness", "test@example.com")
-        assertEquals(listOf(HappinessReceived("test@example.com", LocalDate.parse("2017-12-08"), Emotion.ECSTATIC)),
+        assertEquals(listOf(HappinessReceived("test@example.com", LocalDate.parse("2018-02-28"), Emotion.ECSTATIC)),
                 server.eventSource.readStream().readStreamForwards(streamId).map { re -> EventCodecs.deserializeEvent(re.eventRecord()) }.collect(toList()))
 
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
-            assertEquals("2017-12-08 test@example.com ECSTATIC\n", entity.readText())
+            assertEquals("2018-02-28 test@example.com ECSTATIC\n", entity.readText())
         }
     }
 
@@ -129,6 +130,34 @@ class RecordHappinessResourcesIntegrationTest {
         }).apply {
             assertEquals(HttpStatus.SC_BAD_REQUEST, statusLine.statusCode)
         }
+    }
+
+    @Test
+    fun `rejects missing parameter in form data`() {
+        server.execute(HttpPost("/happiness").apply {
+            entity = formEntity(
+                    "email" to "test@example.com",
+                    "emotion" to "ECSTATIC")
+        }).apply {
+            assertEquals(HttpStatus.SC_BAD_REQUEST, statusLine.statusCode)
+        }
+
+        server.execute(HttpPost("/happiness").apply {
+            entity = formEntity(
+                    "email" to "test@example.com",
+                    "date" to "2018-06-30")
+        }).apply {
+            assertEquals(HttpStatus.SC_BAD_REQUEST, statusLine.statusCode)
+        }
+
+        server.execute(HttpPost("/happiness").apply {
+            entity = formEntity(
+                    "emotion" to "ECSTATIC",
+                    "date" to "2018-06-30")
+        }).apply {
+            assertEquals(HttpStatus.SC_BAD_REQUEST, statusLine.statusCode)
+        }
+
     }
 
     @Test

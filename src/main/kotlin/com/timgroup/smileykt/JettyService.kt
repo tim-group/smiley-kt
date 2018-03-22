@@ -1,5 +1,6 @@
 package com.timgroup.smileykt
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.timgroup.eventstore.api.EventSource
@@ -21,6 +22,9 @@ import javax.servlet.DispatcherType
 import javax.servlet.ServletContextEvent
 
 class JettyService(port: Int, appStatus: AppStatus, eventSource: EventSource, clock: Clock) {
+    private val jacksonObjectMapper = jacksonObjectMapper()
+            .registerModule(JavaTimeModule())
+
     private val server = Server(port).apply {
         requestLog = Slf4jRequestLog()
         handler = ServletContextHandler().apply {
@@ -31,7 +35,7 @@ class JettyService(port: Int, appStatus: AppStatus, eventSource: EventSource, cl
                 override fun contextInitialized(event: ServletContextEvent) {
                     super.contextInitialized(event)
                     val deployment = event.servletContext.getAttribute(ResteasyDeployment::class.java.name) as ResteasyDeployment
-                    deployment.providerFactory.register(JacksonJsonProvider(jacksonObjectMapper()))
+                    deployment.providerFactory.register(JacksonJsonProvider(jacksonObjectMapper))
                     deployment.registry.addSingletonResource(RecordHappinessResources(eventSource, clock))
                 }
             })
