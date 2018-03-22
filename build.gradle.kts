@@ -1,6 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.timgroup.gradle.productstore.ProductStorePublication
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
+import java.net.URI
 
 plugins {
     application
@@ -9,6 +10,12 @@ plugins {
     id("com.github.johnrengelman.shadow") version "2.0.2"
     id("com.timgroup.productstore") version "1.0.3"
 }
+
+val buildNumber: String? by extra(System.getenv("ORIGINAL_BUILD_NUMBER") ?: System.getenv("BUILD_NUMBER"))
+val githubUrl: URI by extra(URI("https://github.com/tim-group/smiley-kt"))
+
+group = "com.timgroup"
+if (buildNumber != null) version = "1.0.${buildNumber}"
 
 application {
     mainClassName = "com.timgroup.smileykt.Launcher"
