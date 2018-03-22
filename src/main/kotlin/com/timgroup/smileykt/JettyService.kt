@@ -3,6 +3,7 @@ package com.timgroup.smileykt
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.google.common.util.concurrent.AbstractIdleService
 import com.timgroup.eventstore.api.EventSource
 import org.eclipse.jetty.server.NetworkConnector
 import org.eclipse.jetty.server.Server
@@ -22,7 +23,7 @@ import javax.servlet.ServletContextEvent
 
 class JettyService(port: Int,
                    appStatus: AppStatus,
-                   eventSource: EventSource) {
+                   eventSource: EventSource) : AbstractIdleService() {
     private val jacksonObjectMapper = jacksonObjectMapper()
             .registerModule(JavaTimeModule())
 
@@ -44,11 +45,11 @@ class JettyService(port: Int,
         }
     }
 
-    fun start() {
+    override fun startUp() {
         server.start()
     }
 
-    fun stop() {
+    override fun shutDown() {
         server.stop()
     }
 
