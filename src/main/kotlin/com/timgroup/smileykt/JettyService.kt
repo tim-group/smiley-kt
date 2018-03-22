@@ -16,12 +16,13 @@ import org.jboss.resteasy.plugins.server.servlet.Filter30Dispatcher
 import org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
 import org.jboss.resteasy.spi.ResteasyDeployment
 import java.nio.file.Paths
-import java.time.Clock
 import java.util.*
 import javax.servlet.DispatcherType
 import javax.servlet.ServletContextEvent
 
-class JettyService(port: Int, appStatus: AppStatus, eventSource: EventSource, clock: Clock) {
+class JettyService(port: Int,
+                   appStatus: AppStatus,
+                   eventSource: EventSource) {
     private val jacksonObjectMapper = jacksonObjectMapper()
             .registerModule(JavaTimeModule())
 
