@@ -17,9 +17,10 @@ class EventCodecsTest {
                 date = LocalDate.of(2018, 1, 5),
                 emotion = Emotion.INDIFFERENT
         )
-        val serialized = EventCodecs.serialize(event)
+        val newEvent = EventCodecs.serializeEvent(event)
 
-        assertThat(serialized, bytesEquivalentTo("""{
+        assertThat(newEvent.type(), equalTo("HappinessReceived"))
+        assertThat(newEvent.data(), bytesEquivalentTo("""{
             email:"user@acuris.com",
             date:"2018-01-05",
             emotion:"INDIFFERENT"
@@ -49,9 +50,10 @@ class EventCodecsTest {
                 recipient = "user@acuris.com",
                 date = LocalDate.of(2018, 1, 5)
         )
-        val serialized = EventCodecs.serialize(event)
+        val newEvent = EventCodecs.serializeEvent(event)
 
-        assertThat(serialized, bytesEquivalentTo("""{
+        assertThat(newEvent.type(), equalTo("InvitationEmailSent"))
+        assertThat(newEvent.data(), bytesEquivalentTo("""{
             recipient:"user@acuris.com",
             date:"2018-01-05"
          }"""))

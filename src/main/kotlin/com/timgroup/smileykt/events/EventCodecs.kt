@@ -14,9 +14,9 @@ object EventCodecs {
             .registerModule(JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
 
-    fun serialize(data: Event): ByteArray = objectMapper.writeValueAsBytes(data)
-
-    fun serializeEvent(data: Event): NewEvent = NewEvent.newEvent("HappinessReceived", serialize(data))
+    fun serializeEvent(data: Event): NewEvent {
+        return NewEvent.newEvent(data.javaClass.simpleName, objectMapper.writeValueAsBytes(data))
+    }
 
     fun deserialize(eventType: String, data: ByteArray): Event = readerFor(eventType).readValue(data)
 
