@@ -159,7 +159,27 @@ class HappinessResourcesIntegrationTest {
         }).apply {
             assertEquals(HttpStatus.SC_BAD_REQUEST, statusLine.statusCode)
         }
+    }
 
+    @Test
+    fun `rejects missing field in JSON data`() {
+        server.execute(HttpPost("/happiness").apply {
+            entity = StringEntity("""{"email":"test@example.com", "emotion":"ECSTATIC"}""", ContentType.APPLICATION_JSON)
+        }).apply {
+            assertEquals(HttpStatus.SC_BAD_REQUEST, statusLine.statusCode)
+        }
+
+        server.execute(HttpPost("/happiness").apply {
+            entity = StringEntity("""{"email":"test@example.com", "date":"2018-02-28"}""", ContentType.APPLICATION_JSON)
+        }).apply {
+            assertEquals(HttpStatus.SC_BAD_REQUEST, statusLine.statusCode)
+        }
+
+        server.execute(HttpPost("/happiness").apply {
+            entity = StringEntity("""{"emotion":"ECSTATIC", "date":"2018-02-28"}""", ContentType.APPLICATION_JSON)
+        }).apply {
+            assertEquals(HttpStatus.SC_BAD_REQUEST, statusLine.statusCode)
+        }
     }
 
     @Test

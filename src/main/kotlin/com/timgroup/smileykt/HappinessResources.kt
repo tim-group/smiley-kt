@@ -27,7 +27,7 @@ class HappinessResources(eventSource: EventSource) {
     @POST
     @Consumes("application/json")
     fun recordHappinessFromJson(happinessObj: Happiness) {
-        recordHappiness(happinessObj)
+        recordHappiness(HappinessReceived(email = happinessObj.email, date = happinessObj.date, emotion = happinessObj.emotion))
     }
 
     @Path("happiness")
@@ -44,7 +44,7 @@ class HappinessResources(eventSource: EventSource) {
             throw BadRequestException(e)
         }
         val emotion = Emotion.valueOfOrNull(emotionString) ?: throw BadRequestException("Unknown emotion $emotionString")
-        recordHappiness(Happiness(email, emotion, date))
+        recordHappiness(HappinessReceived(email, date, emotion))
     }
 
     @Path("happiness")
@@ -80,13 +80,13 @@ class HappinessResources(eventSource: EventSource) {
             throw BadRequestException(e)
         }
         val emotion = Emotion.valueOfOrNull(emotionString) ?: throw BadRequestException("Unknown emotion $emotionString")
-        recordHappiness(Happiness(email, emotion, date))
+        recordHappiness(HappinessReceived(email, date, emotion))
     }
 
-    private fun recordHappiness(happinessObj: Happiness) {
+    private fun recordHappiness(happinessEvent: HappinessReceived) {
         eventStreamWriter.write(
-                streamId("happiness", happinessObj.email),
-                listOf(EventCodecs.serializeEvent(HappinessReceived(happinessObj.email, happinessObj.date, happinessObj.emotion)))
+                streamId("happiness", happinessEvent.email),
+                listOf(EventCodecs.serializeEvent(happinessEvent))
         )
     }
 
