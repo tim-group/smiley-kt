@@ -3,9 +3,12 @@ package com.timgroup.smileykt.events
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.cast
 import com.natpryce.hamkrest.equalTo
+import com.timgroup.eventstore.api.EventRecord
+import com.timgroup.eventstore.api.StreamId
 import com.timgroup.smileykt.Emotion
 import org.araqnid.hamkrest.json.bytesEquivalentTo
 import org.junit.Test
+import java.time.Instant
 import java.time.LocalDate
 
 class EventCodecsTest {
@@ -35,11 +38,11 @@ class EventCodecsTest {
                 emotion = Emotion.INDIFFERENT
         )
 
-        val deserialized = EventCodecs.deserialize("HappinessReceived", """{
+        val deserialized = EventCodecs.deserializeEvent(eventRecord("HappinessReceived", """{
             "email":"user@acuris.com",
             "date":"2018-01-05",
             "emotion":"INDIFFERENT"
-         }""".toByteArray())
+         }"""))
 
         assertThat(deserialized, cast(equalTo(event)))
     }
@@ -66,11 +69,20 @@ class EventCodecsTest {
                 date = LocalDate.of(2018, 1, 5)
         )
 
-        val deserialized = EventCodecs.deserialize("InvitationEmailSent", """{
+        val deserialized = EventCodecs.deserializeEvent(eventRecord("InvitationEmailSent", """{
             "recipient":"user@acuris.com",
             "date":"2018-01-05"
-         }""".toByteArray())
+         }"""))
 
         assertThat(deserialized, cast(equalTo(event)))
+    }
+
+    private fun eventRecord(type: String, data: String): EventRecord {
+        return EventRecord.eventRecord(Instant.EPOCH,
+                StreamId.streamId("any", "any"),
+                0L,
+                type,
+                data.toByteArray(),
+                byteArrayOf())
     }
 }

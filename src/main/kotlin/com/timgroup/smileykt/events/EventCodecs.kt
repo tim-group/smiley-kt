@@ -18,9 +18,9 @@ object EventCodecs {
         return NewEvent.newEvent(data.javaClass.simpleName, objectMapper.writeValueAsBytes(data))
     }
 
-    fun deserialize(eventType: String, data: ByteArray): Event = readerFor(eventType).readValue(data)
-
-    fun deserializeEvent(eventRecord: EventRecord) = deserialize(eventRecord.eventType(), eventRecord.data())
+    fun deserializeEvent(eventRecord: EventRecord): Event {
+        return readerFor(eventRecord.eventType()).readValue(eventRecord.data())
+    }
 
     private fun readerFor(eventType: String): ObjectReader {
         val type = when (eventType) {
