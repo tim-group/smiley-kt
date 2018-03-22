@@ -58,10 +58,7 @@ class HappinessResources(eventSource: EventSource) {
             stream.forEach { resolvedEvent ->
                 val event = EventCodecs.deserializeEvent(resolvedEvent.eventRecord())
                 when (event) {
-                    is HappinessReceived -> {
-                        val (email, date, emotion) = event
-                        emotions.put(email, date, emotion)
-                    }
+                    is HappinessReceived -> emotions.put(event.email, event.date, event.emotion)
                 }
             }
             emotions.forEach { email, date, emotion ->
