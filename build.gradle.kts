@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.timgroup.gradle.productstore.ProductStorePublication
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 
@@ -5,6 +6,7 @@ plugins {
     application
     kotlin("jvm") version "1.2.30"
     id("com.timgroup.jarmangit") version "1.1.86"
+    id("com.github.johnrengelman.shadow") version "2.0.2"
     id("com.timgroup.productstore") version "1.0.3"
 }
 
@@ -34,8 +36,15 @@ tasks {
         from(java.sourceSets["main"].allSource)
     }
 
+    val shadowJar by getting(ShadowJar::class) {
+        manifest {
+            attributes(mapOf("X-Java-Version" to "9", "Main-Class" to application.mainClassName))
+        }
+    }
+
     "assemble" {
         dependsOn(sourcesJar)
+        dependsOn(shadowJar)
     }
 }
 
