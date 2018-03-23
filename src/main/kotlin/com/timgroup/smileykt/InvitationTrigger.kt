@@ -22,13 +22,18 @@ class InvitationTrigger(
             val localDateTime = now.atZone(ZoneId.systemDefault()).toLocalDateTime()
             val nextInvitationDate = localDateTime.toInvitationDate()
             val lastInvitationDate = userInvitationsRepository.latestInvitationSentTo(user.emailAddress) ?: initialDate
-            if (nextInvitationDate > lastInvitationDate) {
-                if (nextInvitationDate.dayOfWeek !in (DayOfWeek.SATURDAY .. DayOfWeek.SUNDAY)) {
-                    output.add(InvitationToSend(user.emailAddress, nextInvitationDate))
-                }
+            if (nextInvitationDate > lastInvitationDate && filter(nextInvitationDate)) {
+                output.add(InvitationToSend(user.emailAddress, nextInvitationDate))
             }
         }
         return output
+    }
+
+    private fun filter(date: LocalDate): Boolean {
+        if (date.dayOfWeek in (DayOfWeek.SATURDAY .. DayOfWeek.SUNDAY))
+            return false
+
+        return true
     }
 
     data class InvitationToSend(val emailAddress: String, val date: LocalDate)
