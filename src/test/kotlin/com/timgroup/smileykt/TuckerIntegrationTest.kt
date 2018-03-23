@@ -1,6 +1,6 @@
 package com.timgroup.smileykt
 
-import com.natpryce.hamkrest.anything
+import com.natpryce.hamkrest.and
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.has
@@ -19,41 +19,45 @@ class TuckerIntegrationTest {
 
     @Test
     fun `shows application health`() {
-        val response = server.execute(HttpGet("/info/health"))
-        assertThat(response.statusLine.statusCode, equalTo(200))
-        assertThat(response.entity, has(HttpEntity::mimeType, present(equalTo("text/plain"))))
-        assertThat(response.entity, has(HttpEntity::readText, present(equalTo("healthy"))))
+        server.execute(HttpGet("/info/health")).apply {
+            assertThat(statusLine.statusCode, equalTo(200))
+            assertThat(entity, has(HttpEntity::mimeType, equalTo("text/plain")))
+            assertThat(entity, has(HttpEntity::readText, equalTo("healthy")))
+        }
     }
 
     @Test
     fun `shows application stoppable`() {
-        val response = server.execute(HttpGet("/info/stoppable"))
-        assertThat(response.statusLine.statusCode, equalTo(200))
-        assertThat(response.entity, has(HttpEntity::mimeType, present(equalTo("text/plain"))))
-        assertThat(response.entity, has(HttpEntity::readText, present(equalTo("safe"))))
+        server.execute(HttpGet("/info/stoppable")).apply {
+            assertThat(statusLine.statusCode, equalTo(200))
+            assertThat(entity, has(HttpEntity::mimeType, equalTo("text/plain")))
+            assertThat(entity, has(HttpEntity::readText, equalTo("safe")))
+        }
     }
 
     @Test
     fun `shows application version`() {
-        val response = server.execute(HttpGet("/info/version"))
-        assertThat(response.statusLine.statusCode, equalTo(200))
-        assertThat(response.entity, has(HttpEntity::mimeType, present(equalTo("text/plain"))))
-        assertThat(response.entity, has(HttpEntity::readText, present(anything)))
+        server.execute(HttpGet("/info/version")).apply {
+            assertThat(statusLine.statusCode, equalTo(200))
+            assertThat(entity, has(HttpEntity::mimeType, equalTo("text/plain")))
+            assertThat(entity, has(HttpEntity::readText, present()))
+        }
     }
 
     @Test
     fun `shows application status`() {
-        val response = server.execute(HttpGet("/info/status.json"))
-        assertThat(response.statusLine.statusCode, equalTo(200))
-        assertThat(response.entity, has(HttpEntity::mimeType, present(equalTo("application/json"))))
-        assertThat(response.entity, has(HttpEntity::readText, present(json(jsonObject()
-                .withProperty("id", "smiley-kt")
-                .withProperty("status", "ok")
-                .withProperty("health", "healthy")
-                .withProperty("components", jsonArray().including(
-                        jsonObject().withProperty("id", "version").withProperty("status", "info").withAnyOtherProperties())
-                )
-                .withAnyOtherProperties()
-        ))))
+        server.execute(HttpGet("/info/status.json")).apply {
+            assertThat(statusLine.statusCode, equalTo(200))
+            assertThat(entity, has(HttpEntity::mimeType, equalTo("application/json"))
+                                and has(HttpEntity::readText, present(json(jsonObject()
+                    .withProperty("id", "smiley-kt")
+                    .withProperty("status", "ok")
+                    .withProperty("health", "healthy")
+                    .withProperty("components", jsonArray().including(
+                            jsonObject().withProperty("id", "version").withProperty("status", "info").withAnyOtherProperties())
+                    )
+                    .withAnyOtherProperties()
+            ))))
+        }
     }
 }
