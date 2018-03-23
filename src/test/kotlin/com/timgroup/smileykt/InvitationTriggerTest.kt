@@ -23,7 +23,7 @@ class InvitationTriggerTest {
                 UserDefinition("abc@example.com")
         ))
 
-        assertThat(capture(trigger), equalTo(emptyList()))
+        assertThat(trigger.launch(), equalTo(emptyList()))
     }
 
     @Test
@@ -36,7 +36,7 @@ class InvitationTriggerTest {
 
         clock.advanceTo(Instant.parse("2017-12-08T18:00:00Z"))
 
-        assertThat(capture(trigger), equalTo(listOf(
+        assertThat(trigger.launch(), equalTo(listOf(
                 InvitationToSend("abc@example.com", LocalDate.parse("2017-12-08"))
         )))
     }
@@ -55,7 +55,7 @@ class InvitationTriggerTest {
                 EventCodecs.serializeEvent(InvitationEmailSent("abc@example.com", LocalDate.parse("2017-12-08")))
         ))
 
-        assertThat(capture(trigger), equalTo(emptyList()))
+        assertThat(trigger.launch(), equalTo(emptyList()))
     }
 
     @Test
@@ -71,12 +71,8 @@ class InvitationTriggerTest {
 
         clock.advanceTo(Instant.parse("2017-12-08T18:00:00Z"))
 
-        assertThat(capture(trigger), equalTo(listOf(
+        assertThat(trigger.launch(), equalTo(listOf(
                 InvitationToSend("abc@example.com", LocalDate.parse("2017-12-08"))
         )))
-    }
-
-    private fun capture(trigger: InvitationTrigger): List<InvitationToSend> {
-        return trigger.launch()
     }
 }
