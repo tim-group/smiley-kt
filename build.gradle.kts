@@ -27,7 +27,7 @@ tasks {
     }
 
     "test" {
-        dependsOn(":webui:assemble")
+        dependsOn(":webui:assembleWeb")
     }
 
     "distZip" {
@@ -49,6 +49,14 @@ tasks {
                     "X-Java-Version" to "9"
             ))
         }
+        from("webui/build/web") {
+            into("www")
+        }
+        from("webui/build/resource_manifest") {
+            into("www")
+        }
+        dependsOn(":webui:assembleWeb")
+        dependsOn(":webui:resourceManifest")
     }
 
     "assemble" {

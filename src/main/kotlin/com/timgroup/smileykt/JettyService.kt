@@ -12,11 +12,9 @@ import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.servlet.FilterHolder
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
-import org.eclipse.jetty.util.resource.PathResource
 import org.jboss.resteasy.plugins.server.servlet.Filter30Dispatcher
 import org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
 import org.jboss.resteasy.spi.ResteasyDeployment
-import java.nio.file.Paths
 import java.util.*
 import javax.servlet.DispatcherType
 import javax.servlet.ServletContextEvent
@@ -31,7 +29,10 @@ class JettyService(port: Int,
         requestLog = Slf4jRequestLog()
         handler = ServletContextHandler().apply {
             addServlet(ServletHolder(appStatus.createServlet()), "/info/*")
-            addServlet(DefaultServlet::class.java, "/*")
+            addServlet(ServletHolder(DefaultServlet::class.java).apply {
+                setInitParameter("precompressed", "true")
+                setInitParameter("etags", "true")
+            }, "/")
             addFilter(FilterHolder(Filter30Dispatcher()), "/*", EnumSet.of(DispatcherType.REQUEST))
             addEventListener(object : ResteasyBootstrap() {
                 override fun contextInitialized(event: ServletContextEvent) {
@@ -41,7 +42,10 @@ class JettyService(port: Int,
                     deployment.registry.addSingletonResource(HappinessResources(eventSource))
                 }
             })
-            baseResource = PathResource(Paths.get("webui/build/web"))
+            if (javaClass.getResource("/www/.MANIFEST") != null)
+                baseResource = embeddedResourcesFromManifest("www/", javaClass.classLoader).asDocumentRoot()
+            else
+                resourceBase = "webui/build/web"
         }
     }
 
