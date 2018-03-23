@@ -12,20 +12,29 @@ class InvitationTrigger(
         private val clock: Clock,
         private val users: Set<UserDefinition>
 ) {
-    private val invitationTime: LocalTime = LocalTime.parse("17:00")
-    private val initialDate: LocalDate = LocalDateTime.now(clock).let { localDateTime ->
-        if (localDateTime.toLocalTime() > invitationTime) localDateTime.toLocalDate().plusDays(1) else localDateTime.toLocalDate()
-    }
+    private val initialDate: LocalDate = LocalDateTime.now(clock).toInvitationDate()
 
     fun launch(launcher: (LocalDate, String) -> Unit) {
         val now = Instant.now(clock)
         users.forEach { user ->
             val localDateTime = now.atZone(ZoneId.systemDefault()).toLocalDateTime()
-            val nextInvitationDate = if (localDateTime.toLocalTime() > invitationTime) localDateTime.toLocalDate().plusDays(1) else localDateTime.toLocalDate()
+            val nextInvitationDate = localDateTime.toInvitationDate()
             val lastInvitationDate = userInvitationsRepository.latestInvitationSentTo(user.emailAddress) ?: initialDate
             if (nextInvitationDate > lastInvitationDate) {
                 launcher(nextInvitationDate, user.emailAddress)
             }
         }
     }
+}
+
+internal val invitationTime: LocalTime = LocalTime.parse("17:00")
+
+fun LocalDateTime.toInvitationDate(): LocalDate {
+    val time = toLocalTime()
+    val date = toLocalDate()
+
+    return if (time < invitationTime)
+        date.minusDays(1)
+    else
+        date
 }
