@@ -1,6 +1,7 @@
 package com.timgroup.smileykt
 
 import java.time.Clock
+import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -22,7 +23,9 @@ class InvitationTrigger(
             val nextInvitationDate = localDateTime.toInvitationDate()
             val lastInvitationDate = userInvitationsRepository.latestInvitationSentTo(user.emailAddress) ?: initialDate
             if (nextInvitationDate > lastInvitationDate) {
-                output.add(InvitationToSend(user.emailAddress, nextInvitationDate))
+                if (nextInvitationDate.dayOfWeek !in (DayOfWeek.SATURDAY .. DayOfWeek.SUNDAY)) {
+                    output.add(InvitationToSend(user.emailAddress, nextInvitationDate))
+                }
             }
         }
         return output
