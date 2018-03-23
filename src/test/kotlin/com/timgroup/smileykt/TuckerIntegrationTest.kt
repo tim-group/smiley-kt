@@ -50,7 +50,7 @@ class TuckerIntegrationTest {
                 .withProperty("id", "smiley-kt")
                 .withProperty("status", "ok")
                 .withProperty("health", "healthy")
-                .withProperty("components", jsonArray().of(
+                .withProperty("components", jsonArray().including(
                         jsonObject().withProperty("id", "version").withProperty("status", "info").withAnyOtherProperties())
                 )
                 .withAnyOtherProperties()
