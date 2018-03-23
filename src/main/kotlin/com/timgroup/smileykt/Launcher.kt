@@ -29,11 +29,7 @@ object Launcher {
             Files.createDirectories(eventsDirectory)
         }
 
-        val users = properties.getStringValue("users").run {
-            split(Regex("(,|\\s)\\s*")).map {
-                UserDefinition(emailAddress = it)
-            }
-        }.toSet()
+        val users = parseUserDefinitions(properties.getStringValue("users"))
 
         val frontEndUri = properties.getStringValue("frontEndUri").let { URI(it) }
 

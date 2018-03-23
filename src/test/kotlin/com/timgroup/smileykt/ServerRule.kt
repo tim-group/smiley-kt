@@ -26,9 +26,11 @@ class ServerRule : ExternalResource() {
     val clock = ManualClock(Instant.parse("2017-12-08T12:13:05Z"), ZoneOffset.UTC)
     val eventSource = InMemoryEventSource(JavaInMemoryEventStore(clock))
     val emailSink = EmailSink(clock)
+    val users = setOf(UserDefinition("abc@example.com", timeZone = ZoneOffset.UTC))
+    val frontEndUri = URI("https://smiley.example.com/")
 
     override fun before() {
-        app = App(0, clock, eventSource, setOf(UserDefinition("abc@example.com")), emailSink, URI("https://smiley.example.com/"))
+        app = App(0, clock, eventSource, users, emailSink, frontEndUri)
         app.start()
     }
 

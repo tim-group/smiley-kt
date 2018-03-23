@@ -4,10 +4,9 @@ import java.time.Clock
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.MonthDay
-import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.*
 
 class InvitationTrigger(
@@ -15,14 +14,14 @@ class InvitationTrigger(
         private val clock: Clock,
         private val users: Set<UserDefinition>
 ) {
-    private val initialDate: LocalDate = LocalDateTime.now(clock).toInvitationDate()
+    private val initialDate: LocalDate = ZonedDateTime.now(clock).toInvitationDate()
 
     fun launch(): List<InvitationToSend> {
         val now = Instant.now(clock)
         val output = arrayListOf<InvitationToSend>()
         users.forEach { user ->
-            val localDateTime = now.atZone(ZoneId.systemDefault()).toLocalDateTime()
-            val nextInvitationDate = localDateTime.toInvitationDate()
+            val zonedDateTime = now.atZone(user.timeZone)
+            val nextInvitationDate = zonedDateTime.toInvitationDate()
             val lastInvitationDate = userInvitationsRepository.latestInvitationSentTo(user.emailAddress) ?: initialDate
             if (nextInvitationDate > lastInvitationDate && filter(nextInvitationDate)) {
                 output.add(InvitationToSend(user.emailAddress, nextInvitationDate))
@@ -48,7 +47,7 @@ internal val nonWorkingDaysOfWeek: Set<DayOfWeek> = EnumSet.of(DayOfWeek.SATURDA
 internal val nonWorkingDaysOfYear: Set<MonthDay> = listOf("--12-25", "--12-26").map(MonthDay::parse).toSet()
 internal val invitationTime: LocalTime = LocalTime.parse("17:00")
 
-internal fun LocalDateTime.toInvitationDate(): LocalDate {
+internal fun ZonedDateTime.toInvitationDate(): LocalDate {
     val time = toLocalTime()
     val date = toLocalDate()
 
