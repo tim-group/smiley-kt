@@ -1,6 +1,7 @@
 package com.timgroup.smileykt
 
 import com.timgroup.eventstore.filesystem.FlatFilesystemEventSource
+import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.Clock
@@ -34,8 +35,17 @@ object Launcher {
             }
         }.toSet()
 
+        val frontEndUri = properties.getStringValue("frontEndUri").let { URI(it) }
+
         val clock = Clock.systemDefaultZone()
-        App(port, clock, FlatFilesystemEventSource(eventsDirectory, clock, ".txt"), users).run {
+        App(
+                port,
+                clock,
+                FlatFilesystemEventSource(eventsDirectory, clock, ".txt"),
+                users,
+                DummyEmailer,
+                frontEndUri
+        ).run {
             start()
             Runtime.getRuntime().addShutdownHook(Thread({ stop() }, "shutdown"))
         }

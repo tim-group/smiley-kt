@@ -7,7 +7,7 @@ import com.timgroup.tucker.info.component.JvmVersionComponent
 import java.net.URI
 import java.time.Clock
 
-class App(port: Int, clock: Clock, eventSource: EventSource, users: Set<UserDefinition>) {
+class App(port: Int, clock: Clock, eventSource: EventSource, users: Set<UserDefinition>, emailer: Emailer, frontEndUri: URI) {
     private val statusPage = AppStatus("smiley-kt", clock, basicComponents = listOf(
             JvmVersionComponent(),
             Component.supplyInfo("kotlinVersion", "Kotlin Version") { KotlinVersion.CURRENT.toString() }
@@ -17,7 +17,8 @@ class App(port: Int, clock: Clock, eventSource: EventSource, users: Set<UserDefi
             UserInvitationsRepository(eventSource),
             clock,
             users,
-            HtmlEmailGenerator(URI("http://smiley.timgroup.com/"))
+            HtmlEmailGenerator(frontEndUri),
+            emailer
     )
     private val serviceManager = ServiceManager(listOf(jettyService, invitationService))
 

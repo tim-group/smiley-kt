@@ -14,17 +14,21 @@ import org.apache.http.impl.client.HttpClients
 import org.apache.http.message.BasicHttpResponse
 import org.apache.http.util.EntityUtils
 import org.junit.rules.ExternalResource
+import java.net.URI
+import java.time.Clock
 import java.time.Instant
 import java.time.ZoneOffset
+import java.util.concurrent.CopyOnWriteArrayList
 
 class ServerRule : ExternalResource() {
     lateinit var app: App
 
     val clock = ManualClock(Instant.parse("2017-12-08T12:13:05Z"), ZoneOffset.UTC)
     val eventSource = InMemoryEventSource(JavaInMemoryEventStore(clock))
+    val emailSink = EmailSink(clock)
 
     override fun before() {
-        app = App(0, clock, eventSource, setOf(UserDefinition("abc@example.com")))
+        app = App(0, clock, eventSource, setOf(UserDefinition("abc@example.com")), emailSink, URI("https://smiley.example.com/"))
         app.start()
     }
 
@@ -35,7 +39,6 @@ class ServerRule : ExternalResource() {
 
     val port
         get() = app.port
-
 
     val httpClient = HttpClients.custom()
             .setRoutePlanner { target, _, _ ->
@@ -58,5 +61,18 @@ class ServerRule : ExternalResource() {
                 }
             }
         }, httpContext)
+    }
+
+    class EmailSink(private val clock: Clock) : Emailer {
+        private val emailsSent = CopyOnWriteArrayList<Email>()
+
+        val emails: List<EmailSink.Email>
+            get() = emailsSent
+
+        override fun sendHtmlEmail(subject: String, htmlBody: String, toAddress: String) {
+            emailsSent += Email(Instant.now(clock), subject, htmlBody, toAddress)
+        }
+
+        data class Email(val date: Instant, val subject: String, val htmlBody: String, val toAddress: String)
     }
 }

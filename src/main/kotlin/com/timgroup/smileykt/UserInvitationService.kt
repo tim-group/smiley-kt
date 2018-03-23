@@ -8,7 +8,8 @@ class UserInvitationService(
         userInvitationsRepository: UserInvitationsRepository,
         clock: Clock,
         users: Set<UserDefinition>,
-        private val emailGenerator: HtmlEmailGenerator
+        private val emailGenerator: HtmlEmailGenerator,
+        private val emailer: Emailer
 ) : AbstractScheduledService() {
     private val trigger = InvitationTrigger(userInvitationsRepository, clock, users)
 
@@ -17,7 +18,7 @@ class UserInvitationService(
     override fun runOneIteration() {
         trigger.launch().forEach { (emailAddress, date) ->
             val emailContent = emailGenerator.emailFor(emailAddress, date)
-            println("send invitation for $date to $emailAddress -\n$emailContent\n\n")
+            emailer.sendHtmlEmail("Tell us your feeling for today", emailContent, emailAddress)
         }
     }
 }

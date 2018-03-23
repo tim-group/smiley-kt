@@ -14,7 +14,7 @@ import javax.mail.Address
 import javax.mail.Message
 import javax.mail.internet.InternetAddress
 
-class EmailerTest {
+class JavaMailEmailerTest {
     private val senderAddress = randomAddress()
     private val testSession = buildTestJavaMailSession(Properties().apply {
         setProperty("mail.smtp.from", senderAddress)
@@ -27,7 +27,7 @@ class EmailerTest {
         val to = randomAddress()
         val subject = randomString()
         val body = randomString()
-        val emailer = Emailer(testSession)
+        val emailer = JavaMailEmailer(testSession)
         emailer.sendHtmlEmail(subject, body, to)
         assertThat(sentMessage(), present(
                 has(JavaMailTestTransport.MessagePacket::recipients, equalTo(setOf<Address>(InternetAddress(to))))
