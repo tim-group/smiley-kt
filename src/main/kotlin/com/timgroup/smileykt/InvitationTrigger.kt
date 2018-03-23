@@ -8,6 +8,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.MonthDay
 import java.time.ZoneId
+import java.util.*
 
 class InvitationTrigger(
         private val userInvitationsRepository: UserInvitationsRepository,
@@ -31,10 +32,10 @@ class InvitationTrigger(
     }
 
     private fun filter(date: LocalDate): Boolean {
-        if (date.dayOfWeek in (DayOfWeek.SATURDAY .. DayOfWeek.SUNDAY))
+        if (date.dayOfWeek in nonWorkingDaysOfWeek)
             return false
 
-        if (MonthDay.from(date) in nonWorkingDays)
+        if (MonthDay.from(date) in nonWorkingDaysOfYear)
             return false
 
         return true
@@ -43,7 +44,8 @@ class InvitationTrigger(
     data class InvitationToSend(val emailAddress: String, val date: LocalDate)
 }
 
-internal val nonWorkingDays: Set<MonthDay> = listOf("--12-25", "--12-26").map(MonthDay::parse).toSet()
+internal val nonWorkingDaysOfWeek: Set<DayOfWeek> = EnumSet.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+internal val nonWorkingDaysOfYear: Set<MonthDay> = listOf("--12-25", "--12-26").map(MonthDay::parse).toSet()
 internal val invitationTime: LocalTime = LocalTime.parse("17:00")
 
 internal fun LocalDateTime.toInvitationDate(): LocalDate {
