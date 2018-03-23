@@ -18,7 +18,7 @@ class EventCodecsTest {
         val event = HappinessReceived(
                 email = "user@acuris.com",
                 date = LocalDate.of(2018, 1, 5),
-                emotion = Emotion.INDIFFERENT
+                emotion = Emotion.NEUTRAL
         )
         val newEvent = EventCodecs.serializeEvent(event)
 
@@ -26,7 +26,7 @@ class EventCodecsTest {
         assertThat(newEvent.data(), bytesEquivalentTo("""{
             email:"user@acuris.com",
             date:"2018-01-05",
-            emotion:"INDIFFERENT"
+            emotion:"NEUTRAL"
          }"""))
     }
 
@@ -35,13 +35,13 @@ class EventCodecsTest {
         val event = HappinessReceived(
                 email = "user@acuris.com",
                 date = LocalDate.of(2018, 1, 5),
-                emotion = Emotion.INDIFFERENT
+                emotion = Emotion.NEUTRAL
         )
 
         val deserialized = EventCodecs.deserializeEvent(eventRecord("HappinessReceived", """{
             "email":"user@acuris.com",
             "date":"2018-01-05",
-            "emotion":"INDIFFERENT"
+            "emotion":"NEUTRAL"
          }"""))
 
         assertThat(deserialized, cast(equalTo(event)))

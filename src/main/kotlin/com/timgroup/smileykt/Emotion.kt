@@ -1,7 +1,7 @@
 package com.timgroup.smileykt
 
 enum class Emotion {
-    ECSTATIC, HAPPY, INDIFFERENT, SAD, SUICIDAL;
+    HAPPY, NEUTRAL, SAD;
     companion object {
         fun valueOfOrNull(str: String): Emotion? {
             return try {
