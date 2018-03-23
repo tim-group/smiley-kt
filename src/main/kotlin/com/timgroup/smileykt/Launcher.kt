@@ -21,17 +21,25 @@ object Launcher {
 
         System.setProperty("log.directory", "log")
 
-        val port = properties.getProperty("port").toInt()
+        val port = properties.getStringValue("port").toInt()
 
-        val eventsDirectory = Paths.get(properties.getProperty("events.directory"))
+        val eventsDirectory = Paths.get(properties.getStringValue("events.directory"))
         if (!Files.isDirectory(eventsDirectory)) {
             Files.createDirectories(eventsDirectory)
         }
 
+        val users = properties.getStringValue("users").run {
+            split(Regex("(,|\\s)\\s*")).map {
+                UserDefinition(emailAddress = it)
+            }
+        }.toSet()
+
         val clock = Clock.systemDefaultZone()
-        App(port, clock, FlatFilesystemEventSource(eventsDirectory, clock, ".txt")).run {
+        App(port, clock, FlatFilesystemEventSource(eventsDirectory, clock, ".txt"), users).run {
             start()
             Runtime.getRuntime().addShutdownHook(Thread({ stop() }, "shutdown"))
         }
     }
+
+    private fun Properties.getStringValue(name: String): String = getProperty(name) ?: throw RuntimeException("Property '$name' not specified")
 }

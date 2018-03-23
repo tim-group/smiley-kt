@@ -14,8 +14,6 @@ import org.apache.http.impl.client.HttpClients
 import org.apache.http.message.BasicHttpResponse
 import org.apache.http.util.EntityUtils
 import org.junit.rules.ExternalResource
-import java.time.Clock
-import java.time.Clock.fixed
 import java.time.Instant
 import java.time.ZoneOffset
 
@@ -26,7 +24,7 @@ class ServerRule : ExternalResource() {
     val eventSource = InMemoryEventSource(JavaInMemoryEventStore(clock))
 
     override fun before() {
-        app = App(0, clock, eventSource)
+        app = App(0, clock, eventSource, setOf(UserDefinition("abc@example.com")))
         app.start()
     }
 
