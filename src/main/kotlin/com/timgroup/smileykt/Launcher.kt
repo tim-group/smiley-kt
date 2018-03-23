@@ -31,7 +31,7 @@ object Launcher {
 
         val users = parseUserDefinitions(properties.getStringValue("users"))
 
-        val frontEndUri = properties.getStringValue("frontEndUri").let { URI(it) }
+        val frontEndUri = URI(properties.getStringValue("frontEndUri"))
 
         val clock = Clock.systemDefaultZone()
         App(
