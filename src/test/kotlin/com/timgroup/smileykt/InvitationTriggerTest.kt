@@ -6,6 +6,7 @@ import com.timgroup.clocks.testing.ManualClock
 import com.timgroup.eventstore.api.StreamId.streamId
 import com.timgroup.eventstore.memory.InMemoryEventSource
 import com.timgroup.eventstore.memory.JavaInMemoryEventStore
+import com.timgroup.smileykt.InvitationTrigger.InvitationToSend
 import com.timgroup.smileykt.events.EventCodecs
 import com.timgroup.smileykt.events.InvitationEmailSent
 import org.junit.Test
@@ -36,7 +37,7 @@ class InvitationTriggerTest {
         clock.advanceTo(Instant.parse("2017-12-08T18:00:00Z"))
 
         assertThat(capture(trigger), equalTo(listOf(
-                LocalDate.parse("2017-12-08") to "abc@example.com"
+                InvitationToSend("abc@example.com", LocalDate.parse("2017-12-08"))
         )))
     }
 
@@ -71,13 +72,11 @@ class InvitationTriggerTest {
         clock.advanceTo(Instant.parse("2017-12-08T18:00:00Z"))
 
         assertThat(capture(trigger), equalTo(listOf(
-                LocalDate.parse("2017-12-08") to "abc@example.com"
+                InvitationToSend("abc@example.com", LocalDate.parse("2017-12-08"))
         )))
     }
 
-    private fun capture(trigger: InvitationTrigger): List<Pair<LocalDate, String>> {
-        val captured = mutableListOf<Pair<LocalDate, String>>()
-        trigger.launch { date, emailAddress -> captured += date to emailAddress }
-        return captured
+    private fun capture(trigger: InvitationTrigger): List<InvitationToSend> {
+        return trigger.launch()
     }
 }

@@ -15,7 +15,7 @@ class UserInvitationService(
     override fun scheduler(): Scheduler = Scheduler.newFixedDelaySchedule(0, 1, TimeUnit.MINUTES)
 
     override fun runOneIteration() {
-        trigger.launch { date, emailAddress ->
+        trigger.launch().forEach { (emailAddress, date) ->
             val emailContent = emailGenerator.emailFor(emailAddress, date)
             println("send invitation for $date to $emailAddress -\n$emailContent\n\n")
         }
