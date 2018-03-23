@@ -6,8 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.timgroup.eventstore.api.EventRecord
 import com.timgroup.eventstore.api.NewEvent
-import com.timgroup.smileykt.Emotion
-import java.time.LocalDate
 
 object EventCodecs {
     private val objectMapper = jacksonObjectMapper()
@@ -31,7 +29,3 @@ object EventCodecs {
         return objectMapper.readerFor(type.java)
     }
 }
-
-sealed class Event
-data class HappinessReceived(val email: String, val date: LocalDate, val emotion: Emotion) : Event()
-data class InvitationEmailSent(val recipient: String, val date: LocalDate) : Event()
