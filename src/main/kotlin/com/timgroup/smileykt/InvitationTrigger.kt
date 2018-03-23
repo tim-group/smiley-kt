@@ -6,6 +6,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.MonthDay
 import java.time.ZoneId
 
 class InvitationTrigger(
@@ -33,12 +34,16 @@ class InvitationTrigger(
         if (date.dayOfWeek in (DayOfWeek.SATURDAY .. DayOfWeek.SUNDAY))
             return false
 
+        if (MonthDay.from(date) in nonWorkingDays)
+            return false
+
         return true
     }
 
     data class InvitationToSend(val emailAddress: String, val date: LocalDate)
 }
 
+internal val nonWorkingDays: Set<MonthDay> = listOf("--12-25", "--12-26").map(MonthDay::parse).toSet()
 internal val invitationTime: LocalTime = LocalTime.parse("17:00")
 
 internal fun LocalDateTime.toInvitationDate(): LocalDate {

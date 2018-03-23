@@ -98,4 +98,26 @@ class InvitationTriggerTest {
                 InvitationToSend("abc@example.com", LocalDate.parse("2017-12-11")) // Monday
         )))
     }
+
+    @Test
+    fun `does not send email for certain well-known dates`() {
+        val clock = ManualClock(Instant.parse("2013-12-24T12:00:00Z"), ZoneOffset.UTC) // Tuesday before send time
+        val eventSource = InMemoryEventSource(JavaInMemoryEventStore(clock))
+        val trigger = InvitationTrigger(UserInvitationsRepository(eventSource), clock, setOf(
+                UserDefinition("abc@example.com")
+        ))
+
+        clock.advanceTo(Instant.parse("2013-12-24T17:05:00Z")) // after send time
+
+        val sent = arrayListOf<InvitationToSend>()
+        for (n in 0..3) {
+            sent += trigger.launch()
+            clock.bump(1, ChronoUnit.DAYS)
+        }
+
+        assertThat(sent, equalTo(listOf(
+                InvitationToSend("abc@example.com", LocalDate.parse("2013-12-24")), // Tuesday
+                InvitationToSend("abc@example.com", LocalDate.parse("2013-12-27")) // Thursday
+        )))
+    }
 }
