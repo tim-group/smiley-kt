@@ -2,13 +2,18 @@ package com.timgroup.smileykt
 
 import com.google.common.util.concurrent.ServiceManager
 import com.timgroup.eventstore.api.EventSource
+import java.net.URI
 import java.time.Clock
 
 class App(port: Int, clock: Clock, eventSource: EventSource) {
     private val statusPage = AppStatus("smiley-kt", clock)
     private val jettyService = JettyService(port, statusPage, eventSource)
-    private val userInvitationsRepository = UserInvitationsRepository(eventSource)
-    private val invitationService = UserInvitationService(userInvitationsRepository, clock, emptySet())
+    private val invitationService = UserInvitationService(
+            UserInvitationsRepository(eventSource),
+            clock,
+            emptySet(),
+            HtmlEmailGenerator(URI("http://smiley.timgroup.com/"))
+    )
     private val serviceManager = ServiceManager(listOf(jettyService, invitationService))
 
     fun start() {

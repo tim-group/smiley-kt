@@ -7,7 +7,8 @@ import java.util.concurrent.TimeUnit
 class UserInvitationService(
         userInvitationsRepository: UserInvitationsRepository,
         clock: Clock,
-        users: Set<UserDefinition>
+        users: Set<UserDefinition>,
+        private val emailGenerator: HtmlEmailGenerator
 ) : AbstractScheduledService() {
     private val trigger = InvitationTrigger(userInvitationsRepository, clock, users)
 
@@ -15,7 +16,8 @@ class UserInvitationService(
 
     override fun runOneIteration() {
         trigger.launch { date, emailAddress ->
-            println("send invitation for $date to $emailAddress")
+            val emailContent = emailGenerator.emailFor(emailAddress, date)
+            println("send invitation for $date to $emailAddress -\n$emailContent\n\n")
         }
     }
 }
