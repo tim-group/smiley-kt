@@ -5,7 +5,7 @@ import java.time.Clock
 import java.util.concurrent.TimeUnit
 
 class UserInvitationService(
-        userInvitationsRepository: UserInvitationsRepository,
+        private val userInvitationsRepository: UserInvitationsRepository,
         clock: Clock,
         users: Set<UserDefinition>,
         private val emailGenerator: HtmlEmailGenerator,
@@ -19,6 +19,7 @@ class UserInvitationService(
         trigger.launch().forEach { (emailAddress, date) ->
             val emailContent = emailGenerator.emailFor(emailAddress, date)
             emailer.sendHtmlEmail("Tell us your feeling for today", emailContent, emailAddress)
+            userInvitationsRepository.registerInvitationSent(emailAddress, date)
         }
     }
 }
