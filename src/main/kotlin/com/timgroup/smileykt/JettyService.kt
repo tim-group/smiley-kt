@@ -7,11 +7,13 @@ import com.google.common.util.concurrent.AbstractIdleService
 import com.timgroup.eventstore.api.EventSource
 import org.eclipse.jetty.server.NetworkConnector
 import org.eclipse.jetty.server.Server
+import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.server.Slf4jRequestLog
 import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.servlet.FilterHolder
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
+import org.eclipse.jetty.util.thread.QueuedThreadPool
 import org.jboss.resteasy.plugins.server.servlet.Filter30Dispatcher
 import org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
 import org.jboss.resteasy.spi.ResteasyDeployment
@@ -25,7 +27,14 @@ class JettyService(port: Int,
     private val jacksonObjectMapper = jacksonObjectMapper()
             .registerModule(JavaTimeModule())
 
-    private val server = Server(port).apply {
+    private val threadPool = QueuedThreadPool().apply {
+        name = "Jetty"
+    }
+
+    private val server = Server(threadPool).apply {
+        addConnector(ServerConnector(this).apply {
+            this.port = port
+        })
         requestLog = Slf4jRequestLog().apply {
             ignorePaths = arrayOf("/info/*", "/favicon.ico")
         }
