@@ -26,7 +26,9 @@ class JettyService(port: Int,
             .registerModule(JavaTimeModule())
 
     private val server = Server(port).apply {
-        requestLog = Slf4jRequestLog()
+        requestLog = Slf4jRequestLog().apply {
+            ignorePaths = arrayOf("/info/*", "/favicon.ico")
+        }
         handler = ServletContextHandler().apply {
             addServlet(ServletHolder(appStatus.createServlet()), "/info/*")
             addServlet(ServletHolder(DefaultServlet::class.java).apply {
