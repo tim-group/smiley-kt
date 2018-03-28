@@ -3,6 +3,7 @@ package com.timgroup.smileykt
 import org.slf4j.LoggerFactory
 import java.net.URI
 import java.util.*
+import javax.mail.Address
 import javax.mail.Message
 import javax.mail.Session
 import javax.mail.Transport
@@ -30,12 +31,8 @@ object DummyEmailer : Emailer {
     }
 }
 
-class JavaMailEmailer(private val session: Session = defaultSession) : Emailer {
+class JavaMailEmailer(private val session: Session, private val fromAddress: Address) : Emailer {
     companion object {
-        val defaultSession: Session = Session.getDefaultInstance(Properties().apply {
-            setProperty("mail.smtp.host", "localhost")
-        })
-
         private fun resourceUri(name: String): URI {
             return JavaMailEmailer::class.java.getResource(name)?.toURI() ?: throw IllegalArgumentException("Resource not found: $name")
         }
@@ -48,6 +45,7 @@ class JavaMailEmailer(private val session: Session = defaultSession) : Emailer {
         attachments.forEach { it.addTo(multipartBody) }
 
         val message = MimeMessage(session)
+        message.setFrom(fromAddress)
         message.addRecipient(Message.RecipientType.TO, InternetAddress(toAddress))
         message.setSubject(subject, "utf-8")
         message.setContent(multipartBody)
@@ -85,7 +83,7 @@ internal fun MimeMultipart.addAttachment(content: ByteArray, id: String, baseMim
 object JavaMailDemo {
     @JvmStatic
     fun main(args: Array<String>) {
-        JavaMailEmailer(Session.getInstance(System.getProperties())).sendHtmlEmail("this is a test of the JavaMailEmailer", """
+        JavaMailEmailer(Session.getInstance(System.getProperties()), InternetAddress("ignore@example.com")).sendHtmlEmail("this is a test of the JavaMailEmailer", """
             <p> This is a test of the JavaMailEmailer </p>
 
             <p> Try including an attachment: </p>

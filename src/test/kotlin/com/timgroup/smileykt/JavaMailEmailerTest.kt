@@ -31,12 +31,14 @@ class JavaMailEmailerTest {
         val to = randomAddress()
         val subject = randomString()
         val body = randomString()
-        val emailer = JavaMailEmailer(testSession)
+        val from = randomAddress()
+        val emailer = JavaMailEmailer(testSession, InternetAddress(from))
         emailer.sendHtmlEmail(subject, body, to)
         assertThat(sentMessage, present(
                 has(JavaMailTestTransport.MessagePacket::recipients, equalTo(setOf<Address>(InternetAddress(to))))
                 and has(JavaMailTestTransport.MessagePacket::message,
                         has(Message::getSubject, equalTo(subject))
+                        and has(Message::getFrom, arrayContainingInOrder<Address>(InternetAddress(from)))
                         and has(Message::getAllRecipients, arrayContainingInOrder<Address>(InternetAddress(to)))
                         and has(Message::getContentType, startsWith("multipart/related"))
                         and has(Message::getContent, isA<MimeMultipart>()))

@@ -7,6 +7,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.Clock
 import java.util.*
+import javax.mail.internet.InternetAddress
 
 object Launcher {
 
@@ -40,7 +41,7 @@ object Launcher {
         val clock = Clock.systemDefaultZone()
 
         val emailer = if (properties.contains("mail.smtp.host")) DummyEmailer
-        else JavaMailEmailer(javax.mail.Session.getInstance(properties))
+        else JavaMailEmailer(javax.mail.Session.getInstance(properties), InternetAddress(properties.getStringValue("email.from")))
 
         App(
                 port,
