@@ -116,6 +116,7 @@ dependencies {
     compile("io.dropwizard.metrics:metrics-core:$metricsVersion")
     compile("io.dropwizard.metrics:metrics-jvm:$metricsVersion")
     compile("io.dropwizard.metrics:metrics-graphite:$metricsVersion")
+    compile("io.dropwizard.metrics:metrics-jetty9:$metricsVersion")
     compile("org.eclipse.jetty:jetty-server:$jettyVersion")
     compile("org.eclipse.jetty:jetty-servlet:$jettyVersion")
     compile("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
