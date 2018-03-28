@@ -55,6 +55,7 @@ class JettyService(port: Int,
                     val deployment = event.servletContext.getAttribute(ResteasyDeployment::class.java.name) as ResteasyDeployment
                     deployment.providerFactory.register(JacksonJsonProvider(jacksonObjectMapper))
                     deployment.registry.addSingletonResource(HappinessResources(eventSource))
+                    deployment.registry.addSingletonResource(MetricsResource(metrics))
                 }
             })
             if (javaClass.getResource("/www/.MANIFEST") != null)

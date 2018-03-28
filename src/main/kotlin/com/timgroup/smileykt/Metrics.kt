@@ -12,12 +12,19 @@ import com.google.common.util.concurrent.AbstractIdleService
 import com.google.common.util.concurrent.Service
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.io.OutputStreamWriter
+import java.io.PrintWriter
 import java.lang.management.ManagementFactory
 import java.net.InetSocketAddress
 import java.net.URI
+import java.nio.charset.StandardCharsets.UTF_8
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.ws.rs.GET
+import javax.ws.rs.Path
+import javax.ws.rs.Produces
+import javax.ws.rs.core.StreamingOutput
 
 data class Metrics(val registry: MetricRegistry, val reporterService: Service)
 
@@ -74,5 +81,30 @@ class GraphiteReporterService(
 
     override fun shutDown() {
         reporter.stop()
+    }
+}
+
+@Path("/info/metrics")
+class MetricsResource(private val registry: MetricRegistry) {
+    @GET
+    @Produces("text/plain; charset=UTF-8")
+    fun show() = StreamingOutput { out ->
+        PrintWriter(OutputStreamWriter(out, UTF_8)).use { output ->
+            registry.gauges.forEach { name, gauge ->
+                output.println("gauge\t$name\t${gauge.value}")
+            }
+            registry.counters.forEach { name, counter ->
+                output.println("counter\t$name\t${counter.count}")
+            }
+            registry.histograms.forEach { name, histogram ->
+                output.println("histogram\t$name\t${histogram.count}\t${histogram.snapshot.values}")
+            }
+            registry.meters.forEach { name, metered ->
+                output.println("metered\t$name\t${metered.count}\t1m=${metered.oneMinuteRate}")
+            }
+            registry.timers.forEach { name, timer ->
+                output.println("timer\t$name\t${timer.count}\t${timer.snapshot.values}")
+            }
+        }
     }
 }
