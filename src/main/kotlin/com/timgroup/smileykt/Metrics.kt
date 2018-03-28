@@ -25,6 +25,7 @@ import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.StreamingOutput
+import kotlin.math.roundToLong
 
 data class Metrics(val registry: MetricRegistry, val reporterService: Service)
 
@@ -103,7 +104,7 @@ class MetricsResource(private val registry: MetricRegistry) {
                 output.println("metered\t$name\t${metered.count}\t1m=${metered.oneMinuteRate}")
             }
             registry.timers.forEach { name, timer ->
-                output.println("timer\t$name\t${timer.count}\t${timer.snapshot.values}")
+                output.println("timer\t$name\t${timer.count}\t1m=${timer.oneMinuteRate}\tmean=${Duration.ofNanos(timer.snapshot.mean.roundToLong())}")
             }
         }
     }
