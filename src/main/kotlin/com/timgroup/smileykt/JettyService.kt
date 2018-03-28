@@ -24,6 +24,7 @@ import org.eclipse.jetty.servlet.ServletHolder
 import org.jboss.resteasy.plugins.server.servlet.Filter30Dispatcher
 import org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
 import org.jboss.resteasy.spi.ResteasyDeployment
+import java.net.URI
 import java.util.*
 import javax.servlet.DispatcherType
 import javax.servlet.ServletContextEvent
@@ -31,7 +32,8 @@ import javax.servlet.ServletContextEvent
 class JettyService(port: Int,
                    appStatus: AppStatus,
                    eventSource: EventSource,
-                   metrics: MetricRegistry) : AbstractIdleService() {
+                   metrics: MetricRegistry,
+                   frontEndUri: URI) : AbstractIdleService() {
     private val jacksonObjectMapper = jacksonObjectMapper()
             .registerModule(JavaTimeModule())
 
@@ -59,7 +61,7 @@ class JettyService(port: Int,
                     super.contextInitialized(event)
                     val deployment = event.servletContext.getAttribute(ResteasyDeployment::class.java.name) as ResteasyDeployment
                     deployment.providerFactory.register(JacksonJsonProvider(jacksonObjectMapper))
-                    deployment.registry.addSingletonResource(HappinessResources(eventSource))
+                    deployment.registry.addSingletonResource(HappinessResources(eventSource, frontEndUri))
                     deployment.registry.addSingletonResource(MetricsResource(metrics))
                 }
             })

@@ -186,7 +186,8 @@ class HappinessResourcesIntegrationTest {
     @Test
     fun `submits happiness using a GET request`() {
         server.execute(HttpGet("/submit_happiness?email=test@example.com&emotion=HAPPY&date=2018-01-31")).apply {
-            assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.statusCode)
+            assertEquals(HttpStatus.SC_SEE_OTHER, statusLine.statusCode)
+            assertEquals(server.frontEndUri.toString(), getFirstHeader("Location")?.value)
         }
 
         val streamId = StreamId.streamId("happiness", "test@example.com")

@@ -6,6 +6,7 @@ import com.timgroup.smileykt.events.EventCodecs
 import com.timgroup.smileykt.events.HappinessReceived
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.net.URI
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 import javax.ws.rs.BadRequestException
@@ -19,7 +20,7 @@ import javax.ws.rs.QueryParam
 import javax.ws.rs.core.Response
 
 @Path("")
-class HappinessResources(eventSource: EventSource) {
+class HappinessResources(eventSource: EventSource, private val frontEndUri: URI) {
 
     private val eventCategoryReader = eventSource.readCategory()
     private val eventStreamWriter = eventSource.writeStream()
@@ -74,7 +75,7 @@ class HappinessResources(eventSource: EventSource) {
 
     @Path("submit_happiness")
     @GET
-    fun submitHappiness(@QueryParam("email") email: String?, @QueryParam("emotion") emotionString: String?, @QueryParam( "date") formDate: String?) {
+    fun submitHappiness(@QueryParam("email") email: String?, @QueryParam("emotion") emotionString: String?, @QueryParam( "date") formDate: String?): Response {
         if (emotionString == null) throw BadRequestException("'emotion' not specified")
         if (email == null) throw BadRequestException("'email' not specified")
         if (formDate == null) throw BadRequestException("'date' not specified")
@@ -86,6 +87,8 @@ class HappinessResources(eventSource: EventSource) {
         }
         val emotion = Emotion.valueOfOrNull(emotionString) ?: throw BadRequestException("Unknown emotion $emotionString")
         recordHappiness(HappinessReceived(email, date, emotion))
+
+        return Response.seeOther(frontEndUri).build()
     }
 
     private fun recordHappiness(happinessEvent: HappinessReceived) {

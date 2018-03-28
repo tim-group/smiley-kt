@@ -50,6 +50,7 @@ class ServerRule : ExternalResource() {
                 check(target == null || target == serverTarget) { "Off-server access to $target not permitted" }
                 HttpRoute(serverTarget)
             }
+            .disableRedirectHandling()
             .build()
 
     val httpContext = HttpClientContext()
