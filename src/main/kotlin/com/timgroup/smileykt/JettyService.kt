@@ -1,16 +1,19 @@
 package com.timgroup.smileykt
 
 import com.codahale.metrics.MetricRegistry
+import com.codahale.metrics.jetty9.InstrumentedHandler
 import com.codahale.metrics.jetty9.InstrumentedQueuedThreadPool
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.common.util.concurrent.AbstractIdleService
 import com.timgroup.eventstore.api.EventSource
+import org.eclipse.jetty.server.Handler
 import org.eclipse.jetty.server.NetworkConnector
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.server.Slf4jRequestLog
+import org.eclipse.jetty.server.handler.HandlerWrapper
 import org.eclipse.jetty.server.handler.gzip.GzipHandler
 import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.servlet.FilterHolder
@@ -62,7 +65,7 @@ class JettyService(port: Int,
                 baseResource = embeddedResourcesFromManifest("www/", javaClass.classLoader).asDocumentRoot()
             else
                 resourceBase = "webui/build/web"
-        }
+        }.wrapWith(InstrumentedHandler(metrics, "jetty"))
     }
 
     override fun startUp() {
@@ -78,4 +81,9 @@ class JettyService(port: Int,
             check(server.isRunning)
             return (server.connectors[0] as NetworkConnector).localPort
         }
+
+    private fun Handler.wrapWith(wrapper: HandlerWrapper): Handler {
+        wrapper.handler = this
+        return wrapper
+    }
 }
