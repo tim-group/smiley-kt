@@ -40,6 +40,7 @@ class HappinessResourcesIntegrationTest {
         server.execute(HttpGet("/happiness")).apply {
             assertEquals(HttpStatus.SC_OK, statusLine.statusCode)
             assertEquals("2017-12-08 test@example.com HAPPY\n", entity.readText())
+            assertEquals("*", getFirstHeader("Access-Control-Allow-Origin")?.value)
         }
     }
 

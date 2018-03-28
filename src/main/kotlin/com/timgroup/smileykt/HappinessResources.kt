@@ -16,6 +16,7 @@ import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.QueryParam
+import javax.ws.rs.core.Response
 
 @Path("")
 class HappinessResources(eventSource: EventSource) {
@@ -50,7 +51,7 @@ class HappinessResources(eventSource: EventSource) {
     @Path("happiness")
     @GET
     @Produces("text/plain")
-    fun getHappiness(): String {
+    fun getHappiness(): Response {
         val stringWriter = StringWriter()
         val writer = PrintWriter(stringWriter)
         eventCategoryReader.readCategoryForwards("happiness").use { stream ->
@@ -65,7 +66,10 @@ class HappinessResources(eventSource: EventSource) {
                 writer.println("$date $email $emotion")
             }
         }
-        return stringWriter.toString()
+        return Response.ok()
+                .entity(stringWriter.toString())
+                .header("Access-Control-Allow-Origin", "*")
+                .build()
     }
 
     @Path("submit_happiness")
