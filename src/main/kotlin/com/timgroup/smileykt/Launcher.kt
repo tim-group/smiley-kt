@@ -38,12 +38,16 @@ object Launcher {
         val frontEndUri = URI(properties.getStringValue("frontEndUri"))
 
         val clock = Clock.systemDefaultZone()
+
+        val emailer = if (properties.contains("mail.smtp.from")) DummyEmailer
+        else JavaMailEmailer(javax.mail.Session.getInstance(properties))
+
         App(
                 port,
                 clock,
                 FlatFilesystemEventSource(eventsDirectory, clock, ".txt"),
                 users,
-                DummyEmailer,
+                emailer,
                 frontEndUri,
                 metrics
         ).run {
