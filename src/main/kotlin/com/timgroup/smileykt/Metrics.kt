@@ -21,12 +21,9 @@ import java.util.concurrent.TimeUnit
 
 data class Metrics(val registry: MetricRegistry, val reporterService: Service)
 
-fun createMetrics(config: Properties): Metrics {
-    val registry = defaultMetricsRegistry()
-    return Metrics(registry, metricsReporterService(config, registry))
-}
+fun createMetrics(config: Properties) = defaultMetricsRegistry().let { Metrics(it, metricsReporterService(config, it)) }
 
-fun defaultMetricsRegistry(): MetricRegistry = MetricRegistry().apply {
+fun defaultMetricsRegistry() = MetricRegistry().apply {
     register("jvm", JvmAttributeGaugeSet())
     register("jvm.fd_usage", FileDescriptorRatioGauge())
     register("jvm.gc", GarbageCollectorMetricSet())
