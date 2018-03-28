@@ -19,6 +19,9 @@ class HtmlEmailGeneratorTest {
         assertThat(emailHtml, containsSubstring("https://happiness.example.com/submit_happiness?date=2018-01-11&email=bob@gmail.com&emotion=HAPPY"))
         assertThat(emailHtml, containsSubstring("https://happiness.example.com/submit_happiness?date=2018-01-11&email=bob@gmail.com&emotion=NEUTRAL"))
         assertThat(emailHtml, containsSubstring("https://happiness.example.com/submit_happiness?date=2018-01-11&email=bob@gmail.com&emotion=SAD"))
+        assertThat(emailHtml, containsSubstring("cid:happy-face"))
+        assertThat(emailHtml, containsSubstring("cid:neutral-face"))
+        assertThat(emailHtml, containsSubstring("cid:sad-face"))
     }
 
 }

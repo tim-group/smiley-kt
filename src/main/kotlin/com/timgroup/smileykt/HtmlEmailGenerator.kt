@@ -3,17 +3,28 @@ package com.timgroup.smileykt
 import java.net.URI
 import java.time.LocalDate
 
-class HtmlEmailGenerator(val serverUri: URI) {
+class HtmlEmailGenerator(private val serverUri: URI) {
     fun emailFor(email: String, date: LocalDate): String {
-        return """
-            <p>Hello $email</p>
+        return buildString {
+            append("""
+                <body>
+                <p>Hello $email</p>
 
-            <ul>
-              <li><a href="${serverUri.resolve("submit_happiness?date=$date&email=$email&emotion=HAPPY")}" title="happy"><img src="happy.gif" alt="happy"/></a></li>
-              <li><a href="${serverUri.resolve("submit_happiness?date=$date&email=$email&emotion=NEUTRAL")}" title="neutral"><img src="neutral.gif" alt="neutral"/></a></li>
-              <li><a href="${serverUri.resolve("submit_happiness?date=$date&email=$email&emotion=SAD")}" title="sad"><img src="sad.gif" alt="sad"/></a></li>
-            </ul>
-        """.trimIndent()
+                <p>How are you feeling today?</p>
+
+                <p>
+            """.trimIndent())
+
+            Emotion.values().map { emotion -> emotion.name }.forEach { emotion ->
+                append("""
+                    <a href="${serverUri.resolve("submit_happiness?date=$date&email=$email&emotion=$emotion")}" title="${emotion.toLowerCase()}"><img src="cid:${emotion.toLowerCase()}-face" alt="${emotion.toLowerCase()}"/></a>
+                """.trimIndent())
+            }
+
+            append("""
+                </p>
+                </body>
+            """.trimIndent())
+        }
     }
-
 }

@@ -30,6 +30,11 @@ class JavaMailTestTransport(session: Session, urlName: URLName) : Transport(sess
     private val packetSink: Queue<MessagePacket> = autovivifySessionMessages(session)
 
     override fun sendMessage(msg: Message, addresses: Array<out Address>) {
+        println("*** message sent via JavaMail:")
+        println("")
+        msg.writeTo(System.out)
+        println("")
+
         packetSink.add(MessagePacket(msg, addresses.toSet()))
     }
 
