@@ -26,6 +26,10 @@ tasks {
         args("config.properties")
     }
 
+    "runShadow"(JavaExec::class) {
+        args("config.properties")
+    }
+
     "test" {
         dependsOn(":webui:assembleWeb")
     }
