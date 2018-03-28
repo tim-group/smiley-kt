@@ -7,7 +7,7 @@ plugins {
     application
     kotlin("jvm") version "1.2.31"
     id("com.timgroup.jarmangit") version "1.1.86"
-    id("com.github.johnrengelman.shadow") version "2.0.2"
+    id("com.github.johnrengelman.shadow") version "2.0.3"
     id("com.timgroup.productstore") version "1.0.3"
 }
 
