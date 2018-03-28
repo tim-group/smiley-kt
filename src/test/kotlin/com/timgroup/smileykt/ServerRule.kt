@@ -1,5 +1,6 @@
 package com.timgroup.smileykt
 
+import com.codahale.metrics.MetricRegistry
 import com.timgroup.clocks.testing.ManualClock
 import com.timgroup.eventstore.memory.InMemoryEventSource
 import com.timgroup.eventstore.memory.JavaInMemoryEventStore
@@ -28,9 +29,10 @@ class ServerRule : ExternalResource() {
     val emailSink = EmailSink(clock)
     val users = setOf(UserDefinition("abc@example.com", timeZone = ZoneOffset.UTC))
     val frontEndUri = URI("https://smiley.example.com/")
+    val metrics = MetricRegistry()
 
     override fun before() {
-        app = App(0, clock, eventSource, users, emailSink, frontEndUri)
+        app = App(0, clock, eventSource, users, emailSink, frontEndUri, Metrics(metrics, NoMetrics()))
         app.start()
     }
 

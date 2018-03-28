@@ -9,7 +9,15 @@ import java.time.Clock
 import java.time.ZoneId
 import java.time.ZoneOffset
 
-class App(port: Int, clock: Clock, eventSource: EventSource, users: Set<UserDefinition>, emailer: Emailer, frontEndUri: URI) {
+class App(
+        port: Int,
+        clock: Clock,
+        eventSource: EventSource,
+        users: Set<UserDefinition>,
+        emailer: Emailer,
+        frontEndUri: URI,
+        metrics: Metrics
+) {
     private val statusPage = AppStatus("smiley-kt", clock, basicComponents = listOf(
             JvmVersionComponent(),
             Component.supplyInfo("kotlinVersion", "Kotlin Version") { KotlinVersion.CURRENT.toString() }
@@ -22,7 +30,7 @@ class App(port: Int, clock: Clock, eventSource: EventSource, users: Set<UserDefi
             HtmlEmailGenerator(frontEndUri),
             emailer
     )
-    private val serviceManager = ServiceManager(listOf(jettyService, invitationService))
+    private val serviceManager = ServiceManager(listOf(jettyService, invitationService, metrics.reporterService))
 
     fun start() {
         serviceManager.startAsync().awaitHealthy()

@@ -1,6 +1,7 @@
 package com.timgroup.smileykt
 
 import com.timgroup.eventstore.filesystem.FlatFilesystemEventSource
+import com.timgroup.logger.FilebeatAppender
 import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -20,7 +21,10 @@ object Launcher {
             Files.newInputStream(Paths.get(args[0])).use { load(it) }
         }
 
-        System.setProperty("log.directory", "log")
+        setUpTimezone()
+        setUpLogging(properties)
+
+        val metrics = createMetrics(properties)
 
         val port = properties.getStringValue("port").toInt()
 
@@ -40,12 +44,22 @@ object Launcher {
                 FlatFilesystemEventSource(eventsDirectory, clock, ".txt"),
                 users,
                 DummyEmailer,
-                frontEndUri
+                frontEndUri,
+                metrics
         ).run {
             start()
             Runtime.getRuntime().addShutdownHook(Thread({ stop() }, "shutdown"))
         }
     }
 
-    private fun Properties.getStringValue(name: String): String = getProperty(name) ?: throw RuntimeException("Property '$name' not specified")
+    private fun setUpTimezone() {
+        System.setProperty("user.timezone", "GMT")
+        TimeZone.setDefault(null)
+    }
+
+    private fun setUpLogging(config: Properties) {
+        FilebeatAppender.configureLoggingProperties(config, Launcher::class.java)
+    }
 }
+
+internal fun Properties.getStringValue(name: String): String = getProperty(name) ?: throw RuntimeException("Property '$name' not specified")
