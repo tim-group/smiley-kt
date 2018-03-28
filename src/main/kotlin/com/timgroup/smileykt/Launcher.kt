@@ -39,7 +39,7 @@ object Launcher {
 
         val clock = Clock.systemDefaultZone()
 
-        val emailer = if (properties.contains("mail.smtp.from")) DummyEmailer
+        val emailer = if (properties.contains("mail.smtp.host")) DummyEmailer
         else JavaMailEmailer(javax.mail.Session.getInstance(properties))
 
         App(
