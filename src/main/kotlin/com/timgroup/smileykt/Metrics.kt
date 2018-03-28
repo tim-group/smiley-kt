@@ -1,11 +1,11 @@
 package com.timgroup.smileykt
 
-import com.codahale.metrics.JvmAttributeGaugeSet
 import com.codahale.metrics.MetricRegistry
 import com.codahale.metrics.graphite.Graphite
 import com.codahale.metrics.graphite.GraphiteReporter
 import com.codahale.metrics.jvm.FileDescriptorRatioGauge
 import com.codahale.metrics.jvm.GarbageCollectorMetricSet
+import com.codahale.metrics.jvm.JvmAttributeGaugeSet
 import com.codahale.metrics.jvm.MemoryUsageGaugeSet
 import com.codahale.metrics.jvm.ThreadStatesGaugeSet
 import com.google.common.util.concurrent.AbstractIdleService

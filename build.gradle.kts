@@ -101,7 +101,7 @@ repositories {
 }
 
 val jacksonVersion by extra("2.9.4")
-val metricsVersion by extra("3.2.6")
+val metricsVersion by extra("4.0.2")
 val jettyVersion by extra("9.4.8.v20171121")
 val kotlinCoroutinesVersion by extra("0.22.3")
 
