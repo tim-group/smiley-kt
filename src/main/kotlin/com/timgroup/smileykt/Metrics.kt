@@ -43,7 +43,8 @@ fun metricsReporterService(config: Properties, registry: MetricRegistry): Servic
     val host = config.getStringValue("graphite.host")
     val port = config.getStringValue("graphite.port").toInt()
     val prefix = config.getStringValue("graphite.prefix")
-    return GraphiteReporterService(URI("graphite://$host:$port"), prefix, registry)
+    val interval = Duration.ofSeconds(config.getStringValue("graphite.period").toLong())
+    return GraphiteReporterService(URI("graphite://$host:$port"), prefix, registry, interval)
 }
 
 class NoMetrics : AbstractIdleService() {
