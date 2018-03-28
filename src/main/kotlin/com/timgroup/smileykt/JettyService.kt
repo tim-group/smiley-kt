@@ -1,6 +1,7 @@
 package com.timgroup.smileykt
 
 import com.codahale.metrics.MetricRegistry
+import com.codahale.metrics.jetty9.InstrumentedConnectionFactory
 import com.codahale.metrics.jetty9.InstrumentedHandler
 import com.codahale.metrics.jetty9.InstrumentedQueuedThreadPool
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.common.util.concurrent.AbstractIdleService
 import com.timgroup.eventstore.api.EventSource
 import org.eclipse.jetty.server.Handler
+import org.eclipse.jetty.server.HttpConnectionFactory
 import org.eclipse.jetty.server.NetworkConnector
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
@@ -38,7 +40,7 @@ class JettyService(port: Int,
     }
 
     private val server = Server(threadPool).apply {
-        addConnector(ServerConnector(this).apply {
+        addConnector(ServerConnector(this, InstrumentedConnectionFactory(HttpConnectionFactory(), metrics.timer("jetty-http.connections"))).apply {
             this.port = port
         })
         requestLog = Slf4jRequestLog().apply {
