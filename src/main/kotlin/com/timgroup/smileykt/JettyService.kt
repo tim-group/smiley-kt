@@ -10,6 +10,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.common.util.concurrent.AbstractIdleService
 import com.timgroup.eventstore.api.EventSource
 import org.eclipse.jetty.server.Handler
+import org.eclipse.jetty.server.HttpConfiguration
 import org.eclipse.jetty.server.HttpConnectionFactory
 import org.eclipse.jetty.server.NetworkConnector
 import org.eclipse.jetty.server.Server
@@ -41,8 +42,12 @@ class JettyService(port: Int,
         name = "Jetty"
     }
 
+    private val httpConfiguration = HttpConfiguration().apply {
+        requestHeaderSize = 16384
+    }
+
     private val server = Server(threadPool).apply {
-        addConnector(ServerConnector(this, InstrumentedConnectionFactory(HttpConnectionFactory(), metrics.timer("jetty-http.connections"))).apply {
+        addConnector(ServerConnector(this, InstrumentedConnectionFactory(HttpConnectionFactory(httpConfiguration), metrics.timer("jetty-http.connections"))).apply {
             this.port = port
         })
         requestLog = Slf4jRequestLog().apply {
