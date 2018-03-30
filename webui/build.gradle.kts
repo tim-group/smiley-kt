@@ -19,7 +19,7 @@ plugins {
 }
 
 repositories {
-    maven(url = "http://repo.net.local/nexus/content/groups/public")
+    jcenter()
 }
 
 dependencies {
