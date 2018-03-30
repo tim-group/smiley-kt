@@ -8,7 +8,7 @@ import org.w3c.dom.events.EventTarget
 import kotlin.browser.document
 
 fun main(args: Array<String>) {
-    document.getElementById("submit")!!.onClick {
+    document.getElementById("submit")?.onClick {
         val data = HappinessData(document.inputElementValue("email"), document.inputElementValue("emotion"))
         try {
             postJSON("/happiness", data)
