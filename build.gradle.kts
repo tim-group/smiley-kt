@@ -103,7 +103,7 @@ repositories {
 val jacksonVersion by extra("2.9.4")
 val metricsVersion by extra("4.0.2")
 val jettyVersion by extra("9.4.9.v20180320")
-val kotlinCoroutinesVersion by extra("0.22.3")
+val kotlinCoroutinesVersion by extra("0.22.5")
 
 dependencies {
     compile("com.timgroup:Tucker:1.0.1497") // autobump
