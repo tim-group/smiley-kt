@@ -8,7 +8,6 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.time.Clock
-import java.time.Instant
 import java.util.Properties
 import java.util.TimeZone
 import javax.mail.internet.InternetAddress
@@ -71,38 +70,17 @@ object Launcher {
     }
 }
 
-class AutoReloadingUserDefinitions(private val propertiesFile: Path) : AbstractSet<UserDefinition>() {
+class AutoReloadingUserDefinitions(propertiesFile: Path) : AbstractSet<UserDefinition>() {
     private val logger = LoggerFactory.getLogger(javaClass)
-    private lateinit var currentData: Loaded
+    private val users: Set<UserDefinition> by AutoReloadingProperties(propertiesFile) {
+        logger.info("Loaded users from $propertiesFile")
+        parseUserDefinitions(it.getStringValue("users"))
+    }
 
     override val size: Int
-        get() {
-            sync()
-            return currentData.users.size
-        }
+        get() = users.size
 
-    override fun iterator(): Iterator<UserDefinition> {
-        sync()
-        return currentData.users.iterator()
-    }
-
-    private data class Loaded(val users: Set<UserDefinition>, val modificationTime: Instant)
-
-    private fun load(): Set<UserDefinition> {
-        val properties = Properties().apply {
-            Files.newInputStream(propertiesFile).use { load(it) }
-        }
-        return parseUserDefinitions(properties.getStringValue("users"))
-    }
-
-    private fun sync() {
-        val currentModificationTime = Files.getLastModifiedTime(propertiesFile).toInstant()
-        if (this::currentData.isInitialized && currentData.modificationTime >= currentModificationTime) {
-            return
-        }
-        currentData = Loaded(load(), currentModificationTime)
-        logger.info("Loaded users from $propertiesFile, last modified at $currentModificationTime")
-    }
+    override fun iterator() = users.iterator()
 }
 
 internal fun Properties.getStringValue(name: String): String = getProperty(name) ?: throw RuntimeException("Property '$name' not specified")
