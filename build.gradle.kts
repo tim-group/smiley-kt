@@ -126,6 +126,7 @@ dependencies {
     compile("com.google.guava:guava:24.1-jre")
     compile("org.jboss.resteasy:resteasy-jaxrs:3.1.2.Final")
     compile("javax.mail:mail:1.4.6")
+    compile("org.apache.commons:commons-compress:1.16.1")
 
     testCompile(kotlin("test-junit"))
     testCompile("com.natpryce:hamkrest:1.4.2.2")

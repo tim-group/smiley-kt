@@ -26,7 +26,7 @@ import org.jboss.resteasy.plugins.server.servlet.Filter30Dispatcher
 import org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
 import org.jboss.resteasy.spi.ResteasyDeployment
 import java.net.URI
-import java.util.*
+import java.util.EnumSet
 import javax.servlet.DispatcherType
 import javax.servlet.ServletContextEvent
 
@@ -68,6 +68,7 @@ class JettyService(port: Int,
                         val deployment = event.servletContext.getAttribute(ResteasyDeployment::class.java.name) as ResteasyDeployment
                         deployment.providerFactory.register(JacksonJsonProvider(jacksonObjectMapper))
                         deployment.registry.addSingletonResource(HappinessResources(eventSource, frontEndUri))
+                        deployment.registry.addSingletonResource(EventStoreResources(eventSource))
                         deployment.registry.addSingletonResource(MetricsResource(metrics))
                     }
                 })
