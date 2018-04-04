@@ -4,6 +4,7 @@ import com.timgroup.eventstore.api.EventRecord
 import com.timgroup.eventstore.api.EventSource
 import org.apache.commons.compress.archivers.cpio.CpioArchiveEntry
 import org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream
+import java.time.Instant
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -23,12 +24,18 @@ class EventStoreResources(eventSource: EventSource) {
                 eventStream.forEachOrdered { re ->
                     val baseFilename = formatBaseFilename(++outputPosition, re.eventRecord())
                     val dataFilename = "$baseFilename.data.txt"
-                    val dataEntry = CpioArchiveEntry(dataFilename, re.eventRecord().data().size.toLong())
+                    val dataEntry = CpioArchiveEntry(dataFilename).apply {
+                        size = re.eventRecord().data().size.toLong()
+                        lastModified = re.eventRecord().timestamp()
+                    }
                     cpio.putArchiveEntry(dataEntry)
                     cpio.write(re.eventRecord().data())
                     cpio.closeArchiveEntry()
                     if (re.eventRecord().metadata().isNotEmpty()) {
-                        val metadataEntry = CpioArchiveEntry(dataFilename, re.eventRecord().metadata().size.toLong())
+                        val metadataEntry = CpioArchiveEntry(dataFilename).apply {
+                            size = re.eventRecord().metadata().size.toLong()
+                            lastModified = re.eventRecord().timestamp()
+                        }
                         cpio.putArchiveEntry(metadataEntry)
                         cpio.write(re.eventRecord().metadata())
                         cpio.closeArchiveEntry()
@@ -37,6 +44,12 @@ class EventStoreResources(eventSource: EventSource) {
             }
         }
     }
+
+    private var CpioArchiveEntry.lastModified: Instant
+        get() = Instant.ofEpochSecond(time)
+        set(instant) {
+            time = instant.epochSecond
+        }
 
     private fun formatBaseFilename(position: Int, eventRecord: EventRecord) = buildString {
         append("%08x".format(position))
