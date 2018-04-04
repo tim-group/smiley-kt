@@ -4,6 +4,7 @@ import com.timgroup.eventstore.api.EventRecord
 import com.timgroup.eventstore.api.EventSource
 import org.apache.commons.compress.archivers.cpio.CpioArchiveEntry
 import org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream
+import org.apache.commons.compress.archivers.cpio.CpioConstants
 import java.time.Instant
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -19,22 +20,24 @@ class EventStoreResources(eventSource: EventSource) {
     @Produces("application/x-cpio")
     fun dumpAsArchive() = StreamingOutput { out ->
         var outputPosition = 0
+        val entryMode = CpioConstants.C_ISREG.toLong() or "644".toLong(8)
         CpioArchiveOutputStream(out).use { cpio ->
             eventReader.readAllForwards().use { eventStream ->
                 eventStream.forEachOrdered { re ->
                     val baseFilename = formatBaseFilename(++outputPosition, re.eventRecord())
-                    val dataFilename = "$baseFilename.data.txt"
-                    val dataEntry = CpioArchiveEntry(dataFilename).apply {
+                    val dataEntry = CpioArchiveEntry("$baseFilename.data.txt").apply {
                         size = re.eventRecord().data().size.toLong()
                         lastModified = re.eventRecord().timestamp()
+                        mode = entryMode
                     }
                     cpio.putArchiveEntry(dataEntry)
                     cpio.write(re.eventRecord().data())
                     cpio.closeArchiveEntry()
                     if (re.eventRecord().metadata().isNotEmpty()) {
-                        val metadataEntry = CpioArchiveEntry(dataFilename).apply {
+                        val metadataEntry = CpioArchiveEntry("$baseFilename.metadata.txt").apply {
                             size = re.eventRecord().metadata().size.toLong()
                             lastModified = re.eventRecord().timestamp()
+                            mode = entryMode
                         }
                         cpio.putArchiveEntry(metadataEntry)
                         cpio.write(re.eventRecord().metadata())
