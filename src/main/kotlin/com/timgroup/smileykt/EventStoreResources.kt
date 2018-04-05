@@ -2,6 +2,7 @@ package com.timgroup.smileykt
 
 import com.timgroup.eventstore.api.EventRecord
 import com.timgroup.eventstore.api.EventSource
+import com.timgroup.eventstore.api.ResolvedEvent
 import org.apache.commons.compress.archivers.cpio.CpioArchiveEntry
 import org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream
 import org.apache.commons.compress.archivers.cpio.CpioConstants
@@ -13,6 +14,7 @@ import javax.ws.rs.core.StreamingOutput
 
 @Path("eventstore")
 class EventStoreResources(eventSource: EventSource) {
+    private val positionCodec = eventSource.positionCodec()
     private val eventReader = eventSource.readAll()
 
     @GET
@@ -22,6 +24,7 @@ class EventStoreResources(eventSource: EventSource) {
         var outputPosition = 0
         val entryMode = CpioConstants.C_ISREG.toLong() or "644".toLong(8)
         CpioArchiveOutputStream(out).use { cpio ->
+            var lastEvent: ResolvedEvent? = null
             eventReader.readAllForwards().use { eventStream ->
                 eventStream.forEachOrdered { re ->
                     val baseFilename = formatBaseFilename(++outputPosition, re.eventRecord())
@@ -45,6 +48,22 @@ class EventStoreResources(eventSource: EventSource) {
                     }
                 }
             }
+            val (position, timestamp) =
+                if (lastEvent != null) {
+                    lastEvent.position() to lastEvent.eventRecord().timestamp()
+                }
+                else {
+                    eventReader.emptyStorePosition() to Instant.EPOCH
+                }
+            val positionContent = positionCodec.serializePosition(position).toByteArray()
+            val positionEntry = CpioArchiveEntry("position.txt").apply {
+                size = positionContent.size.toLong()
+                lastModified = timestamp
+                mode = entryMode
+            }
+            cpio.putArchiveEntry(positionEntry)
+            cpio.write(positionContent)
+            cpio.closeArchiveEntry()
         }
     }
 

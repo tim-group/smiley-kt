@@ -43,7 +43,8 @@ class EventStoreResourcesIntegrationTest {
                                     and has(CpioEntry::timestamp, equalTo(Instant.parse("2017-12-08T12:13:05Z"))))
             assertThat(entries[1], has(CpioEntry::name, equalTo("00000002.2017-12-08T12:13:05Z.test.test.1.SomeEvent.data.txt")))
             assertThat(entries[2], has(CpioEntry::name, equalTo("00000002.2017-12-08T12:13:05Z.test.test.1.SomeEvent.metadata.txt")))
-            assertThat(entries, hasSize(equalTo(3)))
+            assertThat(entries[3], has(CpioEntry::name, equalTo("position.txt")))
+            assertThat(entries, hasSize(equalTo(4)))
         }
     }
 
