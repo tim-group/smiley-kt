@@ -1,5 +1,6 @@
 package app
 
+import kotlinx.html.classes
 import react.*
 import react.dom.*
 import logo.*
@@ -8,6 +9,10 @@ import ticker.*
 class App : RComponent<RProps, RState>() {
     override fun RBuilder.render() {
         table {
+            attrs.classes = setOf("table")
+            attrs.jsStyle {
+                border = "solid black 1px"
+            }
             thead {
                 tr {
                     th { +"User" }
