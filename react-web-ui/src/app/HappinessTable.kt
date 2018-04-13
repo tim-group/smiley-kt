@@ -37,7 +37,7 @@ class HappinessTable(props: HappinessTableProps) : RComponent<HappinessTableProp
                         tr {
                             td { +h.email }
                             td { +h.date }
-                            td { +h.emotion }
+                            emotion(h.emotion)
                         }
                     }
                 }
