@@ -13,6 +13,7 @@ import java.nio.file.attribute.BasicFileAttributeView
 // and https://kotlinlang.org/docs/reference/javascript-dce.html
 
 val kotlinCoroutinesVersion: String by rootProject.extra
+val kotlinStdlibJsVersion: String by rootProject.extra
 
 plugins {
     id("kotlin-dce-js")
@@ -25,6 +26,7 @@ repositories {
 dependencies {
     "compile"("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinCoroutinesVersion")
     "compile"("org.jetbrains.kotlinx:kotlinx-html-js:0.6.8")
+    "compile"("org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinStdlibJsVersion")
 }
 
 kotlin {
