@@ -13,7 +13,6 @@ import java.nio.file.attribute.BasicFileAttributeView
 // and https://kotlinlang.org/docs/reference/javascript-dce.html
 
 val kotlinCoroutinesVersion: String by rootProject.extra
-val kotlinStdlibJsVersion: String by rootProject.extra
 
 plugins {
     id("kotlin-dce-js")
