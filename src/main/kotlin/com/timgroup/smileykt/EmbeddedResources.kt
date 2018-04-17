@@ -7,8 +7,8 @@ import java.io.IOException
 import java.io.InputStream
 import java.net.URL
 import java.nio.channels.ReadableByteChannel
-import java.nio.charset.StandardCharsets.UTF_8
 import java.time.Instant
+import kotlin.text.Charsets.UTF_8
 
 class EmbeddedResources(private val resources: Map<String, StaticResource>) {
     operator fun get(name: String) = resources[name]?.url

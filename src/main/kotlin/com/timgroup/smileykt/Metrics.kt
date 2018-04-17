@@ -17,15 +17,15 @@ import java.io.PrintWriter
 import java.lang.management.ManagementFactory
 import java.net.InetSocketAddress
 import java.net.URI
-import java.nio.charset.StandardCharsets.UTF_8
 import java.time.Duration
-import java.util.*
+import java.util.Properties
 import java.util.concurrent.TimeUnit
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.StreamingOutput
 import kotlin.math.roundToLong
+import kotlin.text.Charsets.UTF_8
 
 data class Metrics(val registry: MetricRegistry, val reporterService: Service)
 

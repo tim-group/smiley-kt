@@ -6,8 +6,8 @@ import com.natpryce.hamkrest.equalTo
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.nio.charset.StandardCharsets.UTF_8
 import java.time.ZoneOffset
+import kotlin.text.Charsets.UTF_8
 
 class AutoReloadingUserDefinitionsTest {
     @get:Rule val temporaryFolder = TemporaryFolder()

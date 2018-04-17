@@ -19,6 +19,7 @@ import java.time.LocalDate
 import java.util.stream.Collectors
 import java.util.stream.Collectors.toList
 import kotlin.test.assertEquals
+import kotlin.text.Charsets.UTF_8
 
 class HappinessResourcesIntegrationTest {
     @get:Rule
@@ -197,7 +198,7 @@ class HappinessResourcesIntegrationTest {
     }
 
     private fun formEntity(vararg entries: Pair<String, String>): UrlEncodedFormEntity =
-            UrlEncodedFormEntity(entries.map { (key, value) -> BasicNameValuePair(key, value) }, Charsets.UTF_8)
+            UrlEncodedFormEntity(entries.map { (key, value) -> BasicNameValuePair(key, value) }, UTF_8)
 
     private fun String.sortLines() = split("\n").filter { it.isNotBlank() }.sorted().joinToString("\n")
 }
