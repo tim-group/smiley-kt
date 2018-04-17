@@ -23,6 +23,8 @@ class AutoReloadingUserDefinitionsTest {
 
         assertThat(userDefinitions, equalTo(setOf(UserDefinition("some.user@example.com", ZoneOffset.UTC))))
 
+        Thread.sleep(200) // avoid problems with the test running so fast the on-disk mtime doesn't change
+
         MoreFiles.asCharSink(propertiesPath, UTF_8).write("""
             users=some.user@example.com some.other.user@example.com
         """.trimIndent())
