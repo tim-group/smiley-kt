@@ -26,7 +26,7 @@ repositories {
 dependencies {
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinCoroutinesVersion")
     compile("org.jetbrains.kotlinx:kotlinx-html-js:0.6.8")
-    compile("org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinStdlibJsVersion")
+    compile(kotlin("stdlib-js"))
 }
 
 kotlin {
