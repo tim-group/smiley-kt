@@ -50,7 +50,7 @@ tasks {
     val shadowJar by getting(ShadowJar::class) {
         manifest {
             attributes(mapOf(
-                    "X-Java-Version" to "9"
+                    "X-Java-Version" to "10"
             ))
         }
         from("webui/build/web") {
