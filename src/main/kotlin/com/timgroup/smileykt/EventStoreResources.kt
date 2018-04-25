@@ -46,15 +46,17 @@ class EventStoreResources(eventSource: EventSource) {
                         cpio.write(re.eventRecord().metadata())
                         cpio.closeArchiveEntry()
                     }
+                    lastEvent = re
                 }
             }
-            val (position, timestamp) =
-                if (lastEvent != null) {
-                    lastEvent.position() to lastEvent.eventRecord().timestamp()
+            val (position, timestamp) = lastEvent.let {
+                if (it != null) {
+                    it.position() to it.eventRecord().timestamp()
                 }
                 else {
                     eventReader.emptyStorePosition() to Instant.EPOCH
                 }
+            }
             val positionContent = positionCodec.serializePosition(position).toByteArray()
             val positionEntry = CpioArchiveEntry("position.txt").apply {
                 size = positionContent.size.toLong()
