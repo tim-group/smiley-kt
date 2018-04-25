@@ -107,7 +107,7 @@ val kotlinCoroutinesVersion by extra("0.22.5")
 
 dependencies {
     compile("com.timgroup:Tucker:1.0.1498") // autobump
-    compile("com.timgroup:tim-logger:1.5.1086") // autobump
+    compile("com.timgroup:tim-logger:1.5.1087") // autobump
     compile("com.timgroup:tim-structured-events:0.4.1238") // autobump
     compile("com.timgroup:eventstore-api:0.0.1597") // autobump
     compile("com.timgroup:eventstore-filesystem:0.0.1597") // autobump
