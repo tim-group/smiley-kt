@@ -68,36 +68,36 @@ class EventStoreResources(eventSource: EventSource) {
             cpio.closeArchiveEntry()
         }
     }
+}
 
-    private var CpioArchiveEntry.lastModified: Instant
-        get() = Instant.ofEpochSecond(time)
-        set(instant) {
-            time = instant.epochSecond
-        }
-
-    private fun formatBaseFilename(position: Int, eventRecord: EventRecord) = buildString {
-        append("%08x".format(position))
-        append('.')
-        append(eventRecord.timestamp())
-        append('.')
-        appendEncoded(eventRecord.streamId().category())
-        append('.')
-        appendEncoded(eventRecord.streamId().id())
-        append('.')
-        append(eventRecord.eventNumber())
-        append('.')
-        appendEncoded(eventRecord.eventType())
+private var CpioArchiveEntry.lastModified: Instant
+    get() = Instant.ofEpochSecond(time)
+    set(instant) {
+        time = instant.epochSecond
     }
 
-    private fun Appendable.appendEncoded(str: CharSequence) {
-        str.forEach { chr ->
-            if (chr != '%' && chr != '.' && chr.toInt() in 33 until 127) {
-                append(chr)
-            }
-            else {
-                append('%')
-                append(String.format("%04x", chr.toInt()))
-            }
+private fun formatBaseFilename(position: Int, eventRecord: EventRecord) = buildString {
+    append("%08x".format(position))
+    append('.')
+    append(eventRecord.timestamp())
+    append('.')
+    appendEncoded(eventRecord.streamId().category())
+    append('.')
+    appendEncoded(eventRecord.streamId().id())
+    append('.')
+    append(eventRecord.eventNumber())
+    append('.')
+    appendEncoded(eventRecord.eventType())
+}
+
+private fun Appendable.appendEncoded(str: CharSequence) {
+    str.forEach { chr ->
+        if (chr != '%' && chr != '.' && chr.toInt() in 33 until 127) {
+            append(chr)
+        }
+        else {
+            append('%')
+            append(String.format("%04x", chr.toInt()))
         }
     }
 }
