@@ -2,6 +2,8 @@ package com.timgroup.smileykt
 
 import com.google.common.util.concurrent.ServiceManager
 import com.timgroup.eventstore.api.EventSource
+import com.timgroup.structuredevents.EventSink
+import com.timgroup.structuredevents.standardevents.ApplicationStarted
 import com.timgroup.tucker.info.Component
 import com.timgroup.tucker.info.component.JvmVersionComponent
 import java.net.URI
@@ -16,7 +18,8 @@ class App(
         users: Set<UserDefinition>,
         emailer: Emailer,
         frontEndUri: URI,
-        metrics: Metrics
+        metrics: Metrics,
+        eventSink: EventSink
 ) {
     private val statusPage = AppStatus("smiley-kt", clock, basicComponents = listOf(
             JvmVersionComponent(),
@@ -30,7 +33,13 @@ class App(
             HtmlEmailGenerator(frontEndUri),
             emailer
     )
-    private val serviceManager = ServiceManager(listOf(jettyService, invitationService, metrics.reporterService))
+    private val serviceManager = ServiceManager(listOf(jettyService, invitationService, metrics.reporterService)).apply {
+        addListener(object : ServiceManager.Listener() {
+            override fun healthy() {
+                eventSink.sendEvent(ApplicationStarted.withVersionFromAndParameters(this@App.javaClass, emptyMap<String, Any>()))
+            }
+        })
+    }
 
     fun start() {
         serviceManager.startAsync().awaitHealthy()

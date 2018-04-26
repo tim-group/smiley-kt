@@ -2,6 +2,7 @@ package com.timgroup.smileykt
 
 import com.timgroup.eventstore.filesystem.FlatFilesystemEventSource
 import com.timgroup.logger.FilebeatAppender
+import com.timgroup.structuredevents.Slf4jEventSink
 import org.slf4j.LoggerFactory
 import java.net.URI
 import java.nio.file.Files
@@ -53,7 +54,8 @@ object Launcher {
                 users,
                 emailer,
                 frontEndUri,
-                metrics
+                metrics,
+                Slf4jEventSink()
         ).run {
             start()
             Runtime.getRuntime().addShutdownHook(Thread({ stop() }, "shutdown"))
