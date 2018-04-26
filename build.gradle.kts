@@ -106,7 +106,7 @@ val jettyVersion by extra("9.4.9.v20180320")
 val kotlinCoroutinesVersion by extra("0.22.5")
 
 dependencies {
-    compile("com.timgroup:Tucker:1.0.1498") // autobump
+    compile("com.timgroup:Tucker:1.0.1499") // autobump
     compile("com.timgroup:tim-logger:1.5.1087") // autobump
     compile("com.timgroup:tim-structured-events:0.4.1239") // autobump
     compile("com.timgroup:eventstore-api:0.0.1599") // autobump
