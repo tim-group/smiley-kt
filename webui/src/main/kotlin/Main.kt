@@ -13,7 +13,6 @@ import kotlin.js.Date
 
 fun main(args: Array<String>) {
     document.getElementById("emotion")?.append {
-        console.log("appending emotions to dropdown")
         Emotion.values().forEach { emotion ->
             option {
                 attributes["value"] = emotion.name
