@@ -1,6 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.timgroup.gradle.productstore.ProductStorePublication
-import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import java.net.URI
 
 plugins {
@@ -16,7 +13,7 @@ val githubUrl: URI by extra(URI("https://github.com/tim-group/smiley-kt"))
 
 allprojects {
     group = "com.timgroup"
-    if (buildNumber != null) version = "1.0.${buildNumber}"
+    if (buildNumber != null) version = "1.0.$buildNumber"
 }
 
 val jacksonVersion by extra("2.9.4")
