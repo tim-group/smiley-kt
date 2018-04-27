@@ -44,8 +44,8 @@ object Launcher {
 
         val clock = Clock.systemDefaultZone()
 
-        val emailer = if (properties.contains("mail.smtp.host")) DummyEmailer
-        else JavaMailEmailer(javax.mail.Session.getInstance(properties), InternetAddress(properties.getStringValue("email.from")))
+        val emailer = if (!properties.containsKey("mail.smtp.host")) DummyEmailer
+                      else JavaMailEmailer(javax.mail.Session.getInstance(properties), InternetAddress(properties.getStringValue("email.from")))
 
         App(
                 port,
