@@ -2,6 +2,7 @@ package com.timgroup.smileykt
 
 import com.timgroup.eventstore.api.EventSource
 import com.timgroup.eventstore.api.StreamId.streamId
+import com.timgroup.smileykt.common.Emotion
 import com.timgroup.smileykt.events.EventCodecs
 import com.timgroup.smileykt.events.HappinessReceived
 import java.io.PrintWriter

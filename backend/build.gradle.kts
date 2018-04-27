@@ -5,7 +5,7 @@ import java.net.URI
 
 plugins {
     application
-    kotlin("jvm")
+    id("kotlin-platform-jvm")
     id("com.timgroup.jarmangit")
     id("com.github.johnrengelman.shadow")
     id("com.timgroup.productstore")
@@ -122,6 +122,7 @@ dependencies {
     compile("org.jboss.resteasy:resteasy-jaxrs:3.1.2.Final")
     compile("javax.mail:mail:1.4.6")
     compile("org.apache.commons:commons-compress:1.16.1")
+    expectedBy(project(":common"))
 
     testCompile(kotlin("test-junit"))
     testCompile("com.natpryce:hamkrest:1.4.2.2")

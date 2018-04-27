@@ -1,6 +1,6 @@
 package com.timgroup.smileykt.events
 
-import com.timgroup.smileykt.Emotion
+import com.timgroup.smileykt.common.Emotion
 import java.time.LocalDate
 
 sealed class Event

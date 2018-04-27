@@ -1,5 +1,6 @@
 package com.timgroup.smileykt
 
+import com.timgroup.smileykt.common.Emotion
 import java.net.URI
 import java.time.LocalDate
 

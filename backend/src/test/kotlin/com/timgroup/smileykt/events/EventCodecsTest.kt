@@ -5,7 +5,7 @@ import com.natpryce.hamkrest.cast
 import com.natpryce.hamkrest.equalTo
 import com.timgroup.eventstore.api.EventRecord
 import com.timgroup.eventstore.api.StreamId
-import com.timgroup.smileykt.Emotion
+import com.timgroup.smileykt.common.Emotion
 import org.araqnid.hamkrest.json.bytesEquivalentTo
 import org.junit.Test
 import java.time.Instant
