@@ -1,31 +1,25 @@
 package com.timgroup.smileykt
 
 import com.timgroup.smileykt.common.Emotion
+import kotlinx.html.a
+import kotlinx.html.body
+import kotlinx.html.img
+import kotlinx.html.p
+import kotlinx.html.stream.createHTML
 import java.net.URI
 import java.time.LocalDate
 
 class HtmlEmailGenerator(private val serverUri: URI) {
-    fun emailFor(email: String, date: LocalDate): String {
-        return buildString {
-            append("""
-                <body>
-                <p>Hello $email</p>
-
-                <p>How are you feeling today?</p>
-
-                <p>
-            """.trimIndent())
-
-            Emotion.values().map { emotion -> emotion.name }.forEach { emotion ->
-                append("""
-                    <a href="${serverUri.resolve("submit_happiness?date=$date&email=$email&emotion=$emotion")}" title="${emotion.toLowerCase()}"><img src="cid:${emotion.toLowerCase()}-face" alt="${emotion.toLowerCase()}"/></a>
-                """.trimIndent())
+    fun emailFor(email: String, date: LocalDate) = createHTML(true).body {
+        p { +"Hello $email" }
+        p { +"How are you feeling today?" }
+        p {
+            Emotion.values().forEach { emotion ->
+                a(href = serverUri.resolve("submit_happiness?date=$date&email=$email&emotion=${emotion.name}").toString()) {
+                    attributes["title"] = emotion.name.toLowerCase()
+                    img(src = "cid:${emotion.name.toLowerCase()}-face", alt=emotion.name.toLowerCase())
+                }
             }
-
-            append("""
-                </p>
-                </body>
-            """.trimIndent())
         }
     }
 }
