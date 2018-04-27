@@ -75,7 +75,7 @@ class JettyService(port: Int,
                 if (javaClass.getResource("/www/.MANIFEST") != null)
                     baseResource = embeddedResourcesFromManifest("www/", javaClass.classLoader).asDocumentRoot()
                 else
-                    resourceBase = "webui/build/web"
+                    resourceBase = "../webui/build/web"
             }.wrapWith(InstrumentedHandler(metrics, "jetty"))
         }
     }

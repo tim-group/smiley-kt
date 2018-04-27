@@ -18,6 +18,7 @@ application {
 tasks {
     "run"(JavaExec::class) {
         args("config.properties")
+        dependsOn(":webui:assembleWeb")
     }
 
     "runShadow"(JavaExec::class) {

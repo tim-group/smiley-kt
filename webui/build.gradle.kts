@@ -15,7 +15,7 @@ import java.nio.file.attribute.BasicFileAttributeView
 val kotlinCoroutinesVersion: String by rootProject.extra
 
 plugins {
-    id("kotlin-dce-js")
+    id("kotlin-platform-js")
 }
 
 repositories {
@@ -26,11 +26,14 @@ dependencies {
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinCoroutinesVersion")
     compile("org.jetbrains.kotlinx:kotlinx-html-js:0.6.8")
     compile(kotlin("stdlib-js"))
+    expectedBy(project(":common"))
 }
 
 kotlin {
     experimental.coroutines = Coroutines.ENABLE
 }
+
+val mainSourceSet = the<JavaPluginConvention>().sourceSets["main"]!!
 
 tasks {
     "compileKotlin2Js"(Kotlin2JsCompile::class) {
@@ -41,15 +44,36 @@ tasks {
         }
     }
 
+    val unpackKotlinJsDependencies by creating {
+        group = "build"
+        description = "Unpack the Kotlin JavaScript standard library"
+        val outputDir = file("$buildDir/$name")
+        val compileClasspath = configurations["compileClasspath"]
+        inputs.property("compileClasspath", compileClasspath)
+        outputs.dir(outputDir)
+        doLast {
+            copy {
+                includeEmptyDirs = false
+                mainSourceSet.compileClasspath.forEach { thisJar ->
+                    from(zipTree(thisJar))
+                }
+                into(outputDir)
+                include("**/*.js")
+                include("**/*.js.map")
+                exclude("META-INF/**")
+            }
+        }
+    }
 
     val assembleWeb by creating(Sync::class) {
         group = "build"
         description = "Assemble the web application"
         includeEmptyDirs = false
-        from("$buildDir/kotlin-js-min/main")
+        from(unpackKotlinJsDependencies)
+        from(mainSourceSet.output)
         from("src/main/web")
         into("$buildDir/web")
-        dependsOn("runDceKotlinJs")
+        dependsOn("compileKotlin2Js")
     }
 
     val resourceManifest by creating {

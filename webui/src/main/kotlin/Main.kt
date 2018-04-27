@@ -1,5 +1,8 @@
+import com.timgroup.smileykt.common.Emotion
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.launch
+import kotlinx.html.dom.append
+import kotlinx.html.option
 import org.w3c.dom.Document
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLSelectElement
@@ -8,6 +11,15 @@ import org.w3c.dom.events.EventTarget
 import kotlin.browser.document
 
 fun main(args: Array<String>) {
+    document.getElementById("emotion")?.append {
+        console.log("appending emotions to dropdown")
+        Emotion.values().forEach { emotion ->
+            option() {
+                attributes["value"] = emotion.name
+                +emotion.name.toTitleCase()
+            }
+        }
+    }
     document.getElementById("submit")?.onClick {
         val data = HappinessData(
                 date = today().toString(),
@@ -23,6 +35,11 @@ fun main(args: Array<String>) {
             console.error("failed to post JSON", e)
         }
     }
+}
+
+fun String.toTitleCase(): String {
+    val l = toLowerCase()
+    return l.substring(0, 1).toUpperCase() + l.substring(1)
 }
 
 external interface JsDate {
