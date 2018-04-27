@@ -9,6 +9,7 @@ import org.w3c.dom.HTMLSelectElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventTarget
 import kotlin.browser.document
+import kotlin.js.Date
 
 fun main(args: Array<String>) {
     document.getElementById("emotion")?.append {
@@ -42,23 +43,17 @@ fun String.toTitleCase(): String {
     return l.substring(0, 1).toUpperCase() + l.substring(1)
 }
 
-external interface JsDate {
-    fun getYear(): Int
-    fun getMonth(): Int
-    fun getDate(): Int
-}
-
 data class LocalDate(val year: Int, val month: Int, val day: Int) {
     override fun toString() = "${year.pad(4)}-${month.pad(2)}-${day.pad(2)}"
 }
 
-fun JsDate.toLocalDate() = LocalDate(
-        year = getYear() + 1900,
+fun Date.toLocalDate() = LocalDate(
+        year = getFullYear(),
         month = getMonth() + 1,
         day = getDate()
 )
 
-fun today() = js("new Date()").unsafeCast<JsDate>().toLocalDate()
+fun today() = Date().toLocalDate()
 
 private fun EventTarget.onClick(block: suspend CoroutineScope.() -> Unit) {
     addEventListener("click", { e: Event ->
