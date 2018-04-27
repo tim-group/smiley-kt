@@ -3,6 +3,7 @@ package com.timgroup.smileykt
 import com.timgroup.eventstore.api.EventSource
 import com.timgroup.eventstore.api.StreamId.streamId
 import com.timgroup.smileykt.common.Emotion
+import com.timgroup.smileykt.common.emotionOf
 import com.timgroup.smileykt.events.EventCodecs
 import com.timgroup.smileykt.events.HappinessReceived
 import java.io.PrintWriter
@@ -46,7 +47,7 @@ class HappinessResources(eventSource: EventSource, private val frontEndUri: URI)
         } catch (e: DateTimeParseException) {
             throw BadRequestException(e)
         }
-        val emotion = Emotion.valueOfOrNull(emotionString) ?: throw BadRequestException("Unknown emotion $emotionString")
+        val emotion = emotionOf(emotionString) ?: throw BadRequestException("Unknown emotion $emotionString")
         recordHappiness(HappinessReceived(email, date, emotion))
     }
 
@@ -86,7 +87,7 @@ class HappinessResources(eventSource: EventSource, private val frontEndUri: URI)
         } catch (e: DateTimeParseException) {
             throw BadRequestException(e)
         }
-        val emotion = Emotion.valueOfOrNull(emotionString) ?: throw BadRequestException("Unknown emotion $emotionString")
+        val emotion = emotionOf(emotionString) ?: throw BadRequestException("Unknown emotion $emotionString")
         recordHappiness(HappinessReceived(email, date, emotion))
 
         return Response.seeOther(frontEndUri).build()
