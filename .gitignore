@@ -1,9 +1,7 @@
 /.gradle
 /.idea
 *.iml
-/log
 /log.directory_IS_UNDEFINED
 /null
-/events
 *.xcf
 /build
