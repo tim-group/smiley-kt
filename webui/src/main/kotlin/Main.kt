@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
     document.getElementById("emotion")?.append {
         console.log("appending emotions to dropdown")
         Emotion.values().forEach { emotion ->
-            option() {
+            option {
                 attributes["value"] = emotion.name
                 +emotion.name.toTitleCase()
             }
