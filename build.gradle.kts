@@ -5,6 +5,7 @@ import java.net.URI
 
 plugins {
     kotlin("jvm") version "1.2.40" apply false
+
     id("com.timgroup.jarmangit") version "1.1.86" apply false
     id("com.github.johnrengelman.shadow") version "2.0.3" apply false
     id("com.timgroup.productstore") version "1.0.3" apply false
