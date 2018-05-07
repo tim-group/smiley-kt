@@ -15,6 +15,10 @@ plugins {
     id("org.jetbrains.dokka")
 }
 
+base {
+    archivesBaseName = "smiley-kt"
+}
+
 application {
     mainClassName = "com.timgroup.smileykt.Launcher"
 }
