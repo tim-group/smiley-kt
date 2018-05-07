@@ -26,6 +26,7 @@ dependencies {
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinCoroutinesVersion")
     compile("org.jetbrains.kotlinx:kotlinx-html-js:0.6.8")
     compile(kotlin("stdlib-js"))
+    testCompile(kotlin("test-js"))
     expectedBy(project(":common"))
 }
 
