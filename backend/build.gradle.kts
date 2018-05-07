@@ -22,6 +22,8 @@ val jettyVersion: String by rootProject.extra
 val jacksonVersion: String by rootProject.extra
 val guavaVersion: String by rootProject.extra
 
+val githubUrl: URI by rootProject.extra
+
 base {
     archivesBaseName = "smiley-kt"
 }
@@ -78,12 +80,12 @@ tasks {
         jdkVersion = 8
         linkMapping(delegateClosureOf<LinkMapping> {
             dir = file("src/main/kotlin").toString()
-            url = "https://github.com/tim-group/smiley-kt/blob/master/backend/src/main/kotlin"
+            url = "$githubUrl/blob/master/backend/src/main/kotlin"
             suffix = "#L"
         })
         linkMapping(delegateClosureOf<LinkMapping> {
             dir = project(":common").file("src/main/kotlin").toString()
-            url = "https://github.com/tim-group/smiley-kt/blob/master/common/src/main/kotlin"
+            url = "$githubUrl/blob/master/common/src/main/kotlin"
             suffix = "#L"
         })
         externalDocumentationLink(delegateClosureOf<DokkaConfiguration.ExternalDocumentationLink.Builder> {
