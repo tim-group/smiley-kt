@@ -18,10 +18,12 @@ allprojects {
     if (buildNumber != null) version = "1.0.$buildNumber"
 }
 
-ext {
+val versions = mapOf(
+        "jackson" to "2.9.4",
+        "metrics" to "4.0.2",
+        "jetty" to "9.4.9.v20180320",
+        "kotlinCoroutines" to "0.22.5",
+        "guava" to "25.0-jre"
+)
 
-}
-val jacksonVersion by extra("2.9.4")
-val metricsVersion by extra("4.0.2")
-val jettyVersion by extra("9.4.9.v20180320")
-val kotlinCoroutinesVersion by extra("0.22.5")
+versions.forEach { t, u -> ext[t + "Version"] = u }

@@ -1,10 +1,12 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.timgroup.gradle.productstore.ProductStorePublication
 import groovy.lang.Closure
+import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.dokka.gradle.LinkMapping
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import java.net.URI
+import java.net.URL
 
 plugins {
     application
@@ -14,6 +16,11 @@ plugins {
     id("com.timgroup.productstore")
     id("org.jetbrains.dokka")
 }
+
+val metricsVersion: String by rootProject.extra
+val jettyVersion: String by rootProject.extra
+val jacksonVersion: String by rootProject.extra
+val guavaVersion: String by rootProject.extra
 
 base {
     archivesBaseName = "smiley-kt"
@@ -79,6 +86,9 @@ tasks {
             url = "https://github.com/tim-group/smiley-kt/blob/master/common/src/main/kotlin"
             suffix = "#L"
         })
+        externalDocumentationLink(delegateClosureOf<DokkaConfiguration.ExternalDocumentationLink.Builder> {
+            url = URL("https://google.github.io/guava/releases/$guavaVersion/api/docs/")
+        })
     }
 
     "assemble" {
@@ -119,10 +129,6 @@ repositories {
     maven(url = "http://repo.net.local/nexus/content/groups/public")
 }
 
-val metricsVersion: String by rootProject.extra
-val jettyVersion: String by rootProject.extra
-val jacksonVersion: String by rootProject.extra
-
 dependencies {
     compile("com.timgroup:Tucker:1.0.1500") // autobump
     compile("com.timgroup:tim-logger:1.5.1087") // autobump
@@ -141,7 +147,7 @@ dependencies {
     compile("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
     compile("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion")
-    compile("com.google.guava:guava:24.1-jre")
+    compile("com.google.guava:guava:$guavaVersion")
     compile("org.jboss.resteasy:resteasy-jaxrs:3.1.2.Final")
     compile("javax.mail:mail:1.4.6")
     compile("org.apache.commons:commons-compress:1.16.1")
