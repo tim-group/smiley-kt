@@ -28,9 +28,13 @@ fun <R: Any, C: Any, V> Table<R, C, V>.toTable(): ImmutableTable<R, C, V> = Immu
 
 fun <R: Any, C: Any, V> Table<R, C, V>.toMutableTable(): Table<R, C, V> = HashBasedTable.create(this)
 
-fun <R: Any, C: Any, V> Table<R, C, V>.forEach(action: (R, C, V) -> Unit) {
-    cellSet().forEach {
-        @Suppress("UNCHECKED_CAST")
-        action(it.rowKey!!, it.columnKey!!, it.value as V)
+operator fun <R: Any, C: Any, V> Table.Cell<R, C, V>.component1() = rowKey as R
+operator fun <R: Any, C: Any, V> Table.Cell<R, C, V>.component2() = columnKey as C
+@Suppress("UNCHECKED_CAST")
+operator fun <R: Any, C: Any, V> Table.Cell<R, C, V>.component3() = value as V
+
+inline fun <R: Any, C: Any, V> Table<R, C, V>.forEach(action: (R, C, V) -> Unit) {
+    cellSet().forEach { (row, column, value) ->
+        action(row, column, value)
     }
 }
