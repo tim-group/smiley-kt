@@ -1,5 +1,8 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.timgroup.gradle.productstore.ProductStorePublication
+import groovy.lang.Closure
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.LinkMapping
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import java.net.URI
 
@@ -9,6 +12,7 @@ plugins {
     id("com.timgroup.jarmangit")
     id("com.github.johnrengelman.shadow")
     id("com.timgroup.productstore")
+    id("org.jetbrains.dokka")
 }
 
 application {
@@ -58,12 +62,26 @@ tasks {
         dependsOn(":webui:resourceManifest")
     }
 
+    "dokka"(DokkaTask::class) {
+        moduleName = "smiley-kt"
+        jdkVersion = 8
+        linkMapping(delegateClosureOf<LinkMapping> {
+            dir = file("src/main/kotlin").toString()
+            url = "https://github.com/tim-group/smiley-kt/blob/master/backend/src/main/kotlin"
+            suffix = "#L"
+        })
+        linkMapping(delegateClosureOf<LinkMapping> {
+            dir = project(":common").file("src/main/kotlin").toString()
+            url = "https://github.com/tim-group/smiley-kt/blob/master/common/src/main/kotlin"
+            suffix = "#L"
+        })
+    }
+
     "assemble" {
         dependsOn(sourcesJar)
         dependsOn(shadowJar)
     }
 }
-
 
 tasks.withType<JavaCompile> {
     sourceCompatibility = "1.8"

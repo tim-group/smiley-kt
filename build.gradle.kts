@@ -6,6 +6,8 @@ plugins {
     id("com.timgroup.jarmangit") version "1.1.86" apply false
     id("com.github.johnrengelman.shadow") version "2.0.3" apply false
     id("com.timgroup.productstore") version "1.0.3" apply false
+
+    id("org.jetbrains.dokka") version "0.9.16" apply false
 }
 
 val buildNumber: String? by extra(System.getenv("ORIGINAL_BUILD_NUMBER") ?: System.getenv("BUILD_NUMBER"))
@@ -16,6 +18,9 @@ allprojects {
     if (buildNumber != null) version = "1.0.$buildNumber"
 }
 
+ext {
+
+}
 val jacksonVersion by extra("2.9.4")
 val metricsVersion by extra("4.0.2")
 val jettyVersion by extra("9.4.9.v20180320")
