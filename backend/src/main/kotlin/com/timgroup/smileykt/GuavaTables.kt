@@ -8,11 +8,15 @@ import com.google.common.collect.Table
 
 fun <R: Any, C: Any, V> emptyTable(): ImmutableTable<R, C, V> = ImmutableTable.of<R, C, V>()
 
+fun <R: Any, C: Any, V> mutableTableOf(): Table<R, C, V> = HashBasedTable.create<R, C, V>()
+
 fun <R: Any, C: Any, V> mutableTableOf(vararg triple: Triple<R, C, V>): Table<R, C, V> = HashBasedTable.create<R, C, V>().apply {
     triple.forEach {
         put(it.first, it.second, it.third)
     }
 }
+
+fun <R: Any, C: Any, V> tableOf(): ImmutableTable<R, C, V> = emptyTable()
 
 fun <R: Any, C: Any, V> tableOf(vararg triple: Triple<R, C, V>): ImmutableTable<R, C, V> = ImmutableTable.builder<R, C, V>().apply {
     triple.forEach {
