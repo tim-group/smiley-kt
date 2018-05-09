@@ -32,6 +32,10 @@ application {
     mainClassName = "com.timgroup.smileykt.Launcher"
 }
 
+configurations {
+    "web"()
+}
+
 tasks {
     "run"(JavaExec::class) {
         args("config.properties")
@@ -65,14 +69,9 @@ tasks {
                     "X-Java-Version" to "10"
             ))
         }
-        from("../webui/build/web") {
+        from(project.configurations["web"]) {
             into("www")
         }
-        from("../webui/build/resource_manifest") {
-            into("www")
-        }
-        dependsOn(":webui:assembleWeb")
-        dependsOn(":webui:resourceManifest")
     }
 
     "dokka"(DokkaTask::class) {
@@ -165,6 +164,8 @@ dependencies {
     testCompile("com.timgroup:clocks-testing:1.0.1081") // autobump
 
     runtime("ch.qos.logback:logback-classic:1.2.3")
+
+    "web"(project(path = ":webui", configuration = "web"))
 }
 
 kotlin {

@@ -22,12 +22,8 @@ repositories {
     jcenter()
 }
 
-dependencies {
-    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinCoroutinesVersion")
-    compile("org.jetbrains.kotlinx:kotlinx-html-js:0.6.8")
-    compile(kotlin("stdlib-js"))
-    testCompile(kotlin("test-js"))
-    expectedBy(project(":common"))
+configurations {
+    "web"()
 }
 
 kotlin {
@@ -49,16 +45,16 @@ tasks {
         group = "build"
         description = "Unpack the Kotlin JavaScript standard library"
         val outputDir = file("$buildDir/$name")
-        val compileClasspath = configurations["compileClasspath"]
-        inputs.property("compileClasspath", compileClasspath)
+        val classpath = mainSourceSet.compileClasspath
+        inputs.files(classpath)
         outputs.dir(outputDir)
         doLast {
             copy {
                 includeEmptyDirs = false
-                mainSourceSet.compileClasspath.forEach { thisJar ->
+                into(outputDir)
+                classpath.forEach { thisJar ->
                     from(zipTree(thisJar))
                 }
-                into(outputDir)
                 include("**/*.js")
                 include("**/*.js.map")
                 exclude("META-INF/**")
@@ -74,7 +70,7 @@ tasks {
         from(mainSourceSet.output)
         from("src/main/web")
         into("$buildDir/web")
-        dependsOn("compileKotlin2Js")
+        exclude("**/*.kjsm")
     }
 
     val resourceManifest by creating {
@@ -130,4 +126,20 @@ tasks {
         dependsOn(assembleWeb)
         dependsOn(resourceManifest)
     }
+}
+
+dependencies {
+    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinCoroutinesVersion")
+    compile("org.jetbrains.kotlinx:kotlinx-html-js:0.6.8")
+    compile(kotlin("stdlib-js"))
+    expectedBy(project(":common"))
+
+    testCompile(kotlin("test-js"))
+
+    "web"(files("$buildDir/web") {
+        builtBy(tasks["assembleWeb"])
+    })
+    "web"(files("$buildDir/resource_manifest") {
+        builtBy(tasks["resourceManifest"])
+    })
 }
