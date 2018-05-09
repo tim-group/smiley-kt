@@ -130,7 +130,7 @@ tasks {
 
 dependencies {
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinCoroutinesVersion")
-    compile("org.jetbrains.kotlinx:kotlinx-html-js:0.6.8")
+    compile("org.jetbrains.kotlinx:kotlinx-html-js:0.6.10")
     compile(kotlin("stdlib-js"))
     expectedBy(project(":common"))
 

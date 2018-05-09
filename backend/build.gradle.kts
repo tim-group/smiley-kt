@@ -152,7 +152,7 @@ dependencies {
     compile("org.jboss.resteasy:resteasy-jaxrs:3.1.2.Final")
     compile("javax.mail:mail:1.4.6")
     compile("org.apache.commons:commons-compress:1.16.1")
-    compile("org.jetbrains.kotlinx:kotlinx-html-jvm:0.6.8")
+    compile("org.jetbrains.kotlinx:kotlinx-html-jvm:0.6.10")
     expectedBy(project(":common"))
 
     testCompile(kotlin("test-junit"))
