@@ -21,7 +21,7 @@ allprojects {
 val versions = mapOf(
         "jackson" to "2.9.4",
         "metrics" to "4.0.2",
-        "jetty" to "9.4.9.v20180320",
+        "jetty" to "9.4.10.v20180503",
         "kotlinCoroutines" to "0.22.5",
         "guava" to "25.0-jre"
 )
