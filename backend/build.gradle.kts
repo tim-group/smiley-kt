@@ -32,9 +32,7 @@ application {
     mainClassName = "com.timgroup.smileykt.Launcher"
 }
 
-configurations {
-    "web"()
-}
+val web by configurations.creating
 
 tasks {
     "run"(JavaExec::class) {
@@ -165,7 +163,7 @@ dependencies {
 
     runtime("ch.qos.logback:logback-classic:1.2.3")
 
-    "web"(project(path = ":webui", configuration = "web"))
+    web(project(path = ":webui", configuration = "web"))
 }
 
 kotlin {

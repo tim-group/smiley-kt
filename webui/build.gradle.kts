@@ -22,9 +22,7 @@ repositories {
     jcenter()
 }
 
-configurations {
-    "web"()
-}
+val web by configurations.creating
 
 kotlin {
     experimental.coroutines = Coroutines.ENABLE
@@ -136,10 +134,10 @@ dependencies {
 
     testCompile(kotlin("test-js"))
 
-    "web"(files("$buildDir/web") {
+    web(files("$buildDir/web") {
         builtBy(tasks["assembleWeb"])
     })
-    "web"(files("$buildDir/resource_manifest") {
+    web(files("$buildDir/resource_manifest") {
         builtBy(tasks["resourceManifest"])
     })
 }
