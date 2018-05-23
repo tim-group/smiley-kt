@@ -66,7 +66,7 @@ tasks {
                     "X-Java-Version" to "11"
             ))
         }
-        from(project.configurations["web"]) {
+        from(web) {
             into("www")
         }
     }
