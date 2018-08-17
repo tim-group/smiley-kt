@@ -21,9 +21,9 @@ allprojects {
 val versions = mapOf(
         "jackson" to "2.9.4",
         "metrics" to "4.0.2",
-        "jetty" to "9.4.10.v20180503",
+        "jetty" to "9.4.11.v20180605",
         "kotlinCoroutines" to "0.22.5",
-        "guava" to "25.0-jre"
+        "guava" to "26.0-jre"
 )
 
 versions.forEach { t, u -> ext[t + "Version"] = u }
