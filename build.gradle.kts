@@ -22,7 +22,7 @@ val versions = mapOf(
         "jackson" to "2.9.4",
         "metrics" to "4.0.2",
         "jetty" to "9.4.11.v20180605",
-        "kotlinCoroutines" to "0.22.5",
+        "kotlinCoroutines" to "0.24.0",
         "guava" to "26.0-jre"
 )
 
