@@ -58,7 +58,7 @@ tasks {
 
     val sourcesJar by creating(Jar::class) {
         classifier = "sources"
-        from(java.sourceSets["main"].allSource)
+        from(sourceSets["main"].allSource)
     }
 
     val shadowJar by getting(ShadowJar::class) {
@@ -171,8 +171,8 @@ kotlin {
 }
 
 publishing {
-    (publications) {
-        "productStore"(ProductStorePublication::class) {
+    publications {
+        create<ProductStorePublication>("productStore") {
             application = "smiley-kt"
             artifact(tasks["shadowJar"])
             from(components["java"])
