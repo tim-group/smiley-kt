@@ -7,4 +7,6 @@ pluginManagement {
 
 rootProject.name = "smiley-kt"
 
+enableFeaturePreview("STABLE_PUBLISHING")
+
 include("webui", "backend", "common")
