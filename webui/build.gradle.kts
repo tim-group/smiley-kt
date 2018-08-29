@@ -39,7 +39,7 @@ tasks {
         }
     }
 
-    val unpackKotlinJsDependencies by creating {
+    val unpackKotlinJsDependencies by registering {
         group = "build"
         description = "Unpack the Kotlin JavaScript standard library"
         val outputDir = file("$buildDir/$name")
@@ -71,7 +71,7 @@ tasks {
         exclude("**/*.kjsm")
     }
 
-    val resourceManifest by creating {
+    val resourceManifest by registering {
         val outputDir = file("$buildDir/resource_manifest")
         outputs.dir(outputDir)
         inputs.files(assembleWeb)

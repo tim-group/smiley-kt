@@ -56,12 +56,12 @@ tasks {
         enabled = false
     }
 
-    val sourcesJar by creating(Jar::class) {
+    val sourcesJar by registering(Jar::class) {
         classifier = "sources"
         from(sourceSets["main"].allSource)
     }
 
-    val shadowJar by getting(ShadowJar::class) {
+    val shadowJar by existing(ShadowJar::class) {
         manifest {
             attributes(mapOf(
                     "X-Java-Version" to "10"
@@ -172,7 +172,7 @@ kotlin {
 
 publishing {
     publications {
-        create<ProductStorePublication>("productStore") {
+        register<ProductStorePublication>("productStore") {
             application = "smiley-kt"
             artifact(tasks["shadowJar"])
             from(components["java"])
