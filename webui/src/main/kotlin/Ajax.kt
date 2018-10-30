@@ -1,6 +1,8 @@
 import org.w3c.dom.events.Event
 import org.w3c.xhr.XMLHttpRequest
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 suspend fun postJSON(url: String, data: Any): Int {
     return suspendCoroutine { continuation ->

@@ -1,6 +1,7 @@
 import com.timgroup.smileykt.common.Emotion
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.html.dom.append
 import kotlinx.html.option
 import org.w3c.dom.Document
@@ -57,7 +58,7 @@ fun today() = Date().toLocalDate()
 private fun EventTarget.onClick(block: suspend CoroutineScope.() -> Unit) {
     addEventListener("click", { e: Event ->
         e.preventDefault()
-        launch(block = block)
+        GlobalScope.launch(block = block)
     })
 }
 
