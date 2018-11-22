@@ -21,6 +21,7 @@ val metricsVersion: String by rootProject.extra
 val jettyVersion: String by rootProject.extra
 val jacksonVersion: String by rootProject.extra
 val guavaVersion: String by rootProject.extra
+val kotlinCoroutinesVersion: String by rootProject.extra
 
 val githubUrl: URI by rootProject.extra
 
@@ -151,6 +152,7 @@ dependencies {
     compile("javax.mail:mail:1.4.6")
     compile("org.apache.commons:commons-compress:1.16.1")
     compile("org.jetbrains.kotlinx:kotlinx-html-jvm:0.6.10")
+    compile("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlinCoroutinesVersion")
     expectedBy(project(":common"))
 
     testCompile(kotlin("test-junit"))
@@ -164,10 +166,6 @@ dependencies {
     runtime("ch.qos.logback:logback-classic:1.2.3")
 
     web(project(path = ":webui", configuration = "web"))
-}
-
-kotlin {
-    experimental.coroutines = Coroutines.ENABLE
 }
 
 publishing {

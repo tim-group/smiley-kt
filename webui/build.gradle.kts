@@ -24,10 +24,6 @@ repositories {
 
 val web by configurations.creating
 
-kotlin {
-    experimental.coroutines = Coroutines.ENABLE
-}
-
 val mainSourceSet = the<JavaPluginConvention>().sourceSets["main"]!!
 
 tasks {

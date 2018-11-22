@@ -1,7 +1,7 @@
 import java.net.URI
 
 plugins {
-    kotlin("jvm") version "1.3.0" apply false
+    kotlin("jvm") version "1.3.10" apply false
 
     id("com.timgroup.jarmangit") version "1.1.86" apply false
     id("com.github.johnrengelman.shadow") version "2.0.3" apply false
@@ -22,7 +22,7 @@ val versions = mapOf(
         "jackson" to "2.9.4",
         "metrics" to "4.0.2",
         "jetty" to "9.4.12.v20180830",
-        "kotlinCoroutines" to "1.0.0",
+        "kotlinCoroutines" to "1.0.1",
         "guava" to "27.0-jre"
 )
 

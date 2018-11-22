@@ -8,7 +8,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.common.util.concurrent.AbstractIdleService
-import com.timgroup.eventstore.api.EventSource
 import org.eclipse.jetty.server.Handler
 import org.eclipse.jetty.server.HttpConfiguration
 import org.eclipse.jetty.server.HttpConnectionFactory
@@ -25,16 +24,14 @@ import org.eclipse.jetty.servlet.ServletHolder
 import org.jboss.resteasy.plugins.server.servlet.Filter30Dispatcher
 import org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
 import org.jboss.resteasy.spi.ResteasyDeployment
-import java.net.URI
 import java.util.EnumSet
 import javax.servlet.DispatcherType
 import javax.servlet.ServletContextEvent
 
 class JettyService(port: Int,
                    appStatus: AppStatus,
-                   eventSource: EventSource,
                    metrics: MetricRegistry,
-                   frontEndUri: URI) : AbstractIdleService() {
+                   jaxrsResources: Collection<Any>) : AbstractIdleService() {
     private val server = run {
         val jacksonObjectMapper = jacksonObjectMapper()
                 .registerModule(JavaTimeModule())
@@ -67,9 +64,7 @@ class JettyService(port: Int,
                         super.contextInitialized(event)
                         val deployment = event.servletContext.getAttribute(ResteasyDeployment::class.java.name) as ResteasyDeployment
                         deployment.providerFactory.register(JacksonJsonProvider(jacksonObjectMapper))
-                        deployment.registry.addSingletonResource(HappinessResources(eventSource, frontEndUri))
-                        deployment.registry.addSingletonResource(EventStoreResources(eventSource))
-                        deployment.registry.addSingletonResource(MetricsResource(metrics))
+                        jaxrsResources.forEach { deployment.registry.addSingletonResource(it) }
                     }
                 })
                 if (javaClass.getResource("/www/.MANIFEST") != null)
