@@ -28,7 +28,8 @@ class App(
     private val jettyService = JettyService(port, statusPage, metrics.registry, listOf(
             HappinessResources(eventSource, frontEndUri),
             EventStoreResources(eventSource),
-            MetricsResource(metrics.registry)
+            MetricsResource(metrics.registry),
+            ProxiedGoogleAuthResources()
     ))
     private val invitationService = UserInvitationService(
             UserInvitationsRepository(eventSource),
