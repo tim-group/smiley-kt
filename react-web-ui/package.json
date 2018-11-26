@@ -3,12 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "create-react-kotlin-app": "^1.0.7",
-    "react": "^16.3.1",
-    "react-dom": "^16.3.1"
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0"
   },
   "devDependencies": {
-    "react-scripts-kotlin": "2.1.9"
+    "react-scripts-kotlin": "2.1.11"
   },
   "scripts": {
     "start": "react-scripts-kotlin start",
