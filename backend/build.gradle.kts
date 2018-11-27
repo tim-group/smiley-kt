@@ -173,7 +173,6 @@ publishing {
         register<ProductStorePublication>("productStore") {
             application = "smiley-kt"
             artifact(tasks["shadowJar"])
-            from(components["java"])
         }
     }
 }
