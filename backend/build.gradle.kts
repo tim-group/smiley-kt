@@ -1,10 +1,8 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.timgroup.gradle.productstore.ProductStorePublication
-import groovy.lang.Closure
 import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.dokka.gradle.LinkMapping
-import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import java.net.URI
 import java.net.URL
 
@@ -33,7 +31,7 @@ application {
     mainClassName = "com.timgroup.smileykt.Launcher"
 }
 
-val web by configurations.creating
+val web: Configuration by configurations.creating
 
 tasks {
     "run"(JavaExec::class) {
@@ -65,7 +63,7 @@ tasks {
     val shadowJar by existing(ShadowJar::class) {
         manifest {
             attributes(mapOf(
-                    "X-Java-Version" to "10"
+                    "X-Java-Version" to "11"
             ))
         }
         from(project.configurations["web"]) {
@@ -98,8 +96,8 @@ tasks {
 }
 
 tasks.withType<JavaCompile> {
-    sourceCompatibility = "1.8"
-    targetCompatibility = "1.8"
+    sourceCompatibility = "11"
+    targetCompatibility = "11"
     options.encoding = "UTF-8"
     options.isIncremental = true
     options.isDeprecation = true
