@@ -30,11 +30,12 @@ class ServerRule : ExternalResource() {
     val emailSink = EmailSink(clock)
     val users = setOf(UserDefinition("abc@example.com", timeZone = ZoneOffset.UTC))
     val frontEndUri = URI("https://smiley.example.com/")
+    val backEndUri = URI("https://smiley.example.com/_api")
     val metrics = MetricRegistry()
     val eventSink = LocalEventSink()
 
     override fun before() {
-        app = App(0, clock, eventSource, users, emailSink, frontEndUri, Metrics(metrics, NoMetrics()), eventSink)
+        app = App(0, clock, eventSource, users, emailSink, frontEndUri, backEndUri, Metrics(metrics, NoMetrics()), eventSink)
         app.start()
     }
 

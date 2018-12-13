@@ -18,6 +18,7 @@ class App(
         users: Set<UserDefinition>,
         emailer: Emailer,
         frontEndUri: URI,
+        backEndUri: URI,
         metrics: Metrics,
         eventSink: EventSink
 ) {
@@ -35,7 +36,7 @@ class App(
             UserInvitationsRepository(eventSource),
             clock,
             users,
-            HtmlEmailGenerator(frontEndUri),
+            HtmlEmailGenerator(backEndUri),
             emailer
     )
     private val serviceManager = ServiceManager(listOf(jettyService, invitationService, metrics.reporterService)).apply {

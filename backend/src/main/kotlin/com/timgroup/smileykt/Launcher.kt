@@ -41,6 +41,7 @@ object Launcher {
         val users = AutoReloadingUserDefinitions(Paths.get(args[0]))
 
         val frontEndUri = URI(properties.getStringValue("frontEndUri"))
+        val backEndUri = URI(properties.getStringValue("backEndUri"))
 
         val clock = Clock.systemDefaultZone()
 
@@ -54,6 +55,7 @@ object Launcher {
                 users,
                 emailer,
                 frontEndUri,
+                backEndUri,
                 metrics,
                 Slf4jEventSink()
         ).run {
