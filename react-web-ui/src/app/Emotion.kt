@@ -7,11 +7,11 @@ import kotlinx.html.classes
 import org.w3c.fetch.RequestInit
 import org.w3c.xhr.XMLHttpRequest
 
-@JsModule("src/app/emotion/happy.png")
+@JsModule("src/app/happy.png")
 external val happy: dynamic
-@JsModule("src/app/emotion/neutral.png")
+@JsModule("src/app/neutral.png")
 external val neutral: dynamic
-@JsModule("src/app/emotion/sad.png")
+@JsModule("src/app/sad.png")
 external val sad: dynamic
 
 interface EmotionProps : RProps {
