@@ -4,7 +4,8 @@ plugins {
 
 repositories {
     jcenter()
-    maven(url = "http://repo.net.local/nexus/content/groups/public")
+    val repoUrl: String by project
+    maven(url = "$repoUrl/groups/public")
 }
 
 dependencies {

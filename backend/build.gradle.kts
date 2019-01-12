@@ -61,6 +61,7 @@ tasks {
     }
 
     val shadowJar by existing(ShadowJar::class) {
+        classifier = "all"
         manifest {
             attributes(mapOf(
                     "X-Java-Version" to "11"
@@ -124,7 +125,8 @@ tasks.withType<Jar> {
 
 repositories {
     jcenter()
-    maven(url = "http://repo.net.local/nexus/content/groups/public")
+    val repoUrl: String by project
+    maven(url = "$repoUrl/groups/public")
 }
 
 dependencies {
