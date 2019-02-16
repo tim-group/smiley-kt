@@ -4,6 +4,7 @@ import com.codahale.metrics.MetricRegistry
 import com.codahale.metrics.jetty9.InstrumentedConnectionFactory
 import com.codahale.metrics.jetty9.InstrumentedHandler
 import com.codahale.metrics.jetty9.InstrumentedQueuedThreadPool
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -35,6 +36,7 @@ class JettyService(port: Int,
     private val server = run {
         val jacksonObjectMapper = jacksonObjectMapper()
                 .registerModule(JavaTimeModule())
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
 
         val threadPool = InstrumentedQueuedThreadPool(metrics).apply {
             name = "Jetty"

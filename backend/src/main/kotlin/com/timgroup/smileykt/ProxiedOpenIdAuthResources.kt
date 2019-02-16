@@ -1,5 +1,6 @@
 package com.timgroup.smileykt
 
+import java.time.Instant
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -18,7 +19,12 @@ class ProxiedOpenIdAuthResources {
             if (name.startsWith("OIDC_CLAIM_")) {
                 val claimKey = name.substring("OIDC_CLAIM_".length).toLowerCase()
                 val claimString: String = value[0]
-                claims[claimKey] = claimString
+                claims[claimKey] = when (claimKey) {
+                    "iat" -> Instant.ofEpochSecond(claimString.toLong())
+                    "exp" -> Instant.ofEpochSecond(claimString.toLong())
+                    "email_verified" -> claimString.toInt() != 0
+                    else -> claimString
+                }
             }
         }
 
