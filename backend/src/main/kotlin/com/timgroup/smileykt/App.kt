@@ -30,7 +30,7 @@ class App(
             HappinessResources(eventSource, frontEndUri),
             EventStoreResources(eventSource),
             MetricsResource(metrics.registry),
-            ProxiedGoogleAuthResources()
+            ProxiedOpenIdAuthResources()
     ))
     private val invitationService = UserInvitationService(
             UserInvitationsRepository(eventSource),
