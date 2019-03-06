@@ -1,12 +1,11 @@
-import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
-import java.security.MessageDigest
 import java.io.OutputStreamWriter
 import java.io.PrintWriter
 import java.nio.file.Files.getFileAttributeView
 import java.nio.file.Files.newInputStream
 import java.nio.file.Files.newOutputStream
 import java.nio.file.attribute.BasicFileAttributeView
+import java.security.MessageDigest
 
 // see https://github.com/gradle/kotlin-dsl/blob/master/samples/hello-js/build.gradle.kts for inspiration
 // see also https://github.com/Kotlin/kotlinx.coroutines/tree/master/js/example-frontend-js
@@ -15,7 +14,7 @@ import java.nio.file.attribute.BasicFileAttributeView
 val kotlinCoroutinesVersion: String by rootProject.extra
 
 plugins {
-    id("kotlin-platform-js")
+    id("kotlin2js")
 }
 
 repositories {
@@ -126,7 +125,6 @@ dependencies {
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinCoroutinesVersion")
     compile("org.jetbrains.kotlinx:kotlinx-html-js:0.6.10")
     compile(kotlin("stdlib-js"))
-    expectedBy(project(":common"))
 
     testCompile(kotlin("test-js"))
 

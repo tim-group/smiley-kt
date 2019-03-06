@@ -8,7 +8,7 @@ import java.net.URL
 
 plugins {
     application
-    id("kotlin-platform-jvm")
+    kotlin("jvm")
     id("com.timgroup.jarmangit")
     id("com.github.johnrengelman.shadow")
     id("com.timgroup.productstore")
@@ -80,11 +80,6 @@ tasks {
             url = "$githubUrl/blob/master/backend/src/main/kotlin"
             suffix = "#L"
         })
-        linkMapping(delegateClosureOf<LinkMapping> {
-            dir = project(":common").file("src/main/kotlin").toString()
-            url = "$githubUrl/blob/master/common/src/main/kotlin"
-            suffix = "#L"
-        })
         externalDocumentationLink(delegateClosureOf<DokkaConfiguration.ExternalDocumentationLink.Builder> {
             url = URL("https://google.github.io/guava/releases/$guavaVersion/api/docs/")
         })
@@ -153,7 +148,6 @@ dependencies {
     compile("org.apache.commons:commons-compress:1.16.1")
     compile("org.jetbrains.kotlinx:kotlinx-html-jvm:0.6.10")
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlinCoroutinesVersion")
-    expectedBy(project(":common"))
 
     testCompile(kotlin("test-junit"))
     testCompile("com.natpryce:hamkrest:1.4.2.2")
