@@ -5,7 +5,7 @@ plugins {
 
     id("com.timgroup.jarmangit") version "1.1.86" apply false
     id("com.github.johnrengelman.shadow") version "4.0.3" apply false
-    id("com.timgroup.productstore") version "1.0.16" apply false
+    id("com.timgroup.productstore") version "1.0.18" apply false
 
     id("org.jetbrains.dokka") version "0.9.16" apply false
 }
