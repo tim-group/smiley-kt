@@ -126,8 +126,8 @@ repositories {
 
 dependencies {
     compile("com.timgroup:Tucker:1.0.1523") // autobump
-    compile("com.timgroup:tim-logger:1.5.1095") // autobump
-    compile("com.timgroup:tim-structured-events:0.4.1261") // autobump
+    compile("com.timgroup:tim-logger:1.5.1096") // autobump
+    compile("com.timgroup:tim-structured-events:0.4.1262") // autobump
     compile("com.timgroup:eventstore-api:0.0.1763") // autobump
     compile("com.timgroup:eventstore-filesystem:0.0.1763") // autobump
     compile(kotlin("stdlib-jdk8"))
@@ -152,7 +152,7 @@ dependencies {
     testCompile(kotlin("test-junit"))
     testCompile("com.natpryce:hamkrest:1.4.2.2")
     testCompile("org.araqnid:hamkrest-json:1.0.3")
-    testCompile("com.timgroup:tim-structured-events-testing:0.4.1261") // autobump
+    testCompile("com.timgroup:tim-structured-events-testing:0.4.1262") // autobump
     testCompile("com.timgroup:eventstore-memory:0.0.1763") // autobump
     testCompile("org.apache.httpcomponents:httpclient:4.5.5")
     testCompile("com.timgroup:clocks-testing:1.0.1091") // autobump
