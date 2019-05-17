@@ -9,13 +9,15 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.common.util.concurrent.AbstractIdleService
+import org.eclipse.jetty.server.CustomRequestLog
+import org.eclipse.jetty.server.CustomRequestLog.EXTENDED_NCSA_FORMAT
 import org.eclipse.jetty.server.Handler
 import org.eclipse.jetty.server.HttpConfiguration
 import org.eclipse.jetty.server.HttpConnectionFactory
 import org.eclipse.jetty.server.NetworkConnector
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
-import org.eclipse.jetty.server.Slf4jRequestLog
+import org.eclipse.jetty.server.Slf4jRequestLogWriter
 import org.eclipse.jetty.server.handler.HandlerWrapper
 import org.eclipse.jetty.server.handler.gzip.GzipHandler
 import org.eclipse.jetty.servlet.DefaultServlet
@@ -50,7 +52,7 @@ class JettyService(port: Int,
             addConnector(ServerConnector(this, InstrumentedConnectionFactory(HttpConnectionFactory(httpConfiguration), metrics.timer("jetty-http.connections"))).apply {
                 this.port = port
             })
-            requestLog = Slf4jRequestLog().apply {
+            requestLog = CustomRequestLog(Slf4jRequestLogWriter(), EXTENDED_NCSA_FORMAT).apply {
                 ignorePaths = arrayOf("/info/*", "/favicon.ico")
             }
             handler = ServletContextHandler().apply {
