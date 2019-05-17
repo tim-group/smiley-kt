@@ -11,8 +11,6 @@ import java.security.MessageDigest
 // see also https://github.com/Kotlin/kotlinx.coroutines/tree/master/js/example-frontend-js
 // and https://kotlinlang.org/docs/reference/javascript-dce.html
 
-val kotlinCoroutinesVersion: String by rootProject.extra
-
 plugins {
     id("kotlin2js")
 }
@@ -122,7 +120,7 @@ tasks {
 }
 
 dependencies {
-    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinCoroutinesVersion")
+    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:${Versions.kotlinCoroutines}")
     compile("org.jetbrains.kotlinx:kotlinx-html-js:0.6.10")
     compile(kotlin("stdlib-js"))
 
