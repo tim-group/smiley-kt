@@ -22,10 +22,12 @@ class App(
         metrics: Metrics,
         eventSink: EventSink
 ) {
-    private val statusPage = AppStatus("smiley-kt", clock, basicComponents = listOf(
-            JvmVersionComponent(),
-            Component.supplyInfo("kotlinVersion", "Kotlin Version") { KotlinVersion.CURRENT.toString() }
-    ))
+    private val statusPage = AppStatus("smiley-kt", clock,
+            basicComponents = listOf(
+                JvmVersionComponent(),
+                Component.supplyInfo("kotlinVersion", "Kotlin Version") { KotlinVersion.CURRENT.toString() }),
+            metricRegistry = metrics.registry
+    )
     private val jettyService = JettyService(port, statusPage, metrics.registry, listOf(
             HappinessResources(eventSource, frontEndUri),
             EventStoreResources(eventSource),
