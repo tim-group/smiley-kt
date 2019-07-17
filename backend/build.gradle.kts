@@ -149,7 +149,7 @@ dependencies {
     testCompile("com.timgroup:tim-structured-events-testing:0.4.1264") // autobump
     testCompile("com.timgroup:eventstore-memory:0.0.1786") // autobump
     testCompile("org.apache.httpcomponents:httpclient:4.5.5")
-    testCompile("com.timgroup:clocks-testing:1.0.1093") // autobump
+    testCompile("com.timgroup:clocks-testing:1.0.1095") // autobump
 
     runtime("ch.qos.logback:logback-classic:1.2.3")
 
