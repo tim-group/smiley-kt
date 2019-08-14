@@ -8,7 +8,6 @@ import com.natpryce.hamkrest.has
 import com.natpryce.hamkrest.hasSize
 import com.timgroup.eventstore.api.NewEvent.newEvent
 import com.timgroup.eventstore.api.StreamId.streamId
-import com.timgroup.eventstore.memory.InMemoryEventSource
 import com.timgroup.eventstore.memory.JavaInMemoryEventStore
 import org.apache.commons.compress.archivers.cpio.CpioArchiveEntry
 import org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream
@@ -89,6 +88,7 @@ class EventStoreResourcesIntegrationTest {
         }
         return list
     }
-}
 
-private val EmptyStorePosition: String = InMemoryEventSource(JavaInMemoryEventStore(Clock.systemUTC())).run { positionCodec().serializePosition(readAll().emptyStorePosition()) }
+    private val EmptyStorePosition: String
+        get() = JavaInMemoryEventStore(Clock.systemUTC()).run { storePositionCodec().serializePosition(emptyStorePosition()) }
+}
