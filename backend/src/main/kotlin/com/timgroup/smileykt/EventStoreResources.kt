@@ -14,7 +14,6 @@ import javax.ws.rs.core.StreamingOutput
 
 @Path("eventstore")
 class EventStoreResources(eventSource: EventSource) {
-    private val positionCodec = eventSource.positionCodec()
     private val eventReader = eventSource.readAll()
 
     @GET
@@ -57,7 +56,7 @@ class EventStoreResources(eventSource: EventSource) {
                     eventReader.emptyStorePosition() to Instant.EPOCH
                 }
             }
-            val positionContent = positionCodec.serializePosition(position).toByteArray()
+            val positionContent = eventReader.storePositionCodec().serializePosition(position).toByteArray()
             val positionEntry = CpioArchiveEntry("position.txt").apply {
                 size = positionContent.size.toLong()
                 lastModified = timestamp
