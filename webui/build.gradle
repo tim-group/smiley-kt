@@ -32,6 +32,7 @@ kotlinFrontend {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:1.3.50"
     compile "org.jetbrains.kotlin:kotlin-test-js:1.3.50"
+    compile "org.jetbrains.kotlinx:kotlinx-html-js:0.6.12"
 
     web fileTree("src/main/web") {
         include "**/*.html"

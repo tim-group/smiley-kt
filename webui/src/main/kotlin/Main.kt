@@ -1,12 +1,14 @@
-import zen.Observable
+import kotlinx.html.div
+import kotlinx.html.dom.append
+import kotlin.browser.document
 
 fun main() {
     console.log("Kotlin Main function")
-    val obs = Observable.of(1, 2, 3)
-    console.log("obs=$obs")
-    obs.subscribe(
-            { console.log("got $it") },
-            { console.warn("failed", it) },
-            { console.log("done") }
-    )
+
+    document.body!!.append {
+        div {
+            attributes["id"] = "app"
+            +"this is some text"
+        }
+    }
 }
