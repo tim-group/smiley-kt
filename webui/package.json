@@ -1,0 +1,83 @@
+{
+  "name": "smiley-kt",
+  "scripts": {
+    "test": "jest",
+    "start": "webpack-dev-server --devtool source-map",
+    "start-against-latest": "USE_LATEST=1 webpack-dev-server --devtool source-map",
+    "start-against-prod": "USE_PROD=1 webpack-dev-server --devtool source-map"
+  },
+  "dependencies": {
+    "core-js": "^3.2.1",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-router": "^5.0.1",
+    "react-router-dom": "^5.0.1",
+    "regenerator-runtime": "^0.13.3",
+    "styled-components": "^4.3.2",
+    "zen-observable": "^0.8.14"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "7.0.0",
+    "@babel/register": "^7.5.5",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-styled-components": "^1.10.6",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "file-loader": "^4.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "imports-loader": "^0.8.0",
+    "jest": "^24.9.0",
+    "jest-junit": "^8.0.0",
+    "jsdom": "^15.1.1",
+    "jsdom-global": "^3.0.2",
+    "nise": "^1.5.2",
+    "raw-loader": "^3.1.0",
+    "url-loader": "^2.1.0",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(png|css|svg)$": "<rootDir>/src/test/javascript/AssetStub.js"
+    },
+    "roots": [
+      "src/test/javascript"
+    ],
+    "setupFilesAfterEnv": [
+      "./src/test/javascript/setupTests"
+    ]
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/env",
+        {
+          "modules": false
+        }
+      ],
+      "@babel/react"
+    ],
+    "env": {
+      "test": {
+        "presets": [
+          [
+            "@babel/env",
+            {
+              "modules": "commonjs"
+            }
+          ],
+          "@babel/react"
+        ]
+      }
+    },
+    "plugins": [
+      "@babel/plugin-proposal-object-rest-spread",
+      "babel-plugin-styled-components"
+    ]
+  }
+}

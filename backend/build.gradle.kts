@@ -30,7 +30,6 @@ val web: Configuration by configurations.creating
 tasks {
     "run"(JavaExec::class) {
         args("config.properties")
-        dependsOn(":webui:assembleWeb")
     }
 
     "runShadow"(JavaExec::class) {
@@ -38,7 +37,6 @@ tasks {
     }
 
     "test" {
-        dependsOn(":webui:assembleWeb")
     }
 
     "distZip" {
