@@ -14,6 +14,8 @@ kotlinFrontend {
 
     npm {
         dependency("zen-observable")
+        dependency("axios")
+        dependency("immutable")
         devDependency("karma")
         devDependency("html-webpack-plugin")
     }
