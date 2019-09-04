@@ -1,3 +1,3 @@
-fun main(args: Array<String>) {
+fun main() {
     console.log("Kotlin Main function")
 }

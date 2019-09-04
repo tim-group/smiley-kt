@@ -1,0 +1,48 @@
+apply plugin: 'kotlin2js'
+apply plugin: 'org.jetbrains.kotlin.frontend'
+
+repositories {
+    jcenter()
+}
+
+configurations {
+    web
+}
+
+kotlinFrontend {
+    downloadNodeJsVersion = 'latest'
+
+    npm {
+        dependency("zen-observable")
+        devDependency("karma")
+        devDependency("html-webpack-plugin")
+    }
+
+    sourceMaps = true
+
+    webpackBundle {
+    	bundleName = "main"
+        contentPath = file('src/main/web')
+        proxyUrl = "http://localhost:9090"
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:1.3.50"
+    compile "org.jetbrains.kotlin:kotlin-test-js:1.3.50"
+
+    web fileTree("src/main/web") {
+        include "**/*.html"
+    }
+    web fileTree("build/bundle") {
+        builtBy("webpack-bundle")
+    }
+}
+
+compileKotlin2Js {
+    kotlinOptions.metaInfo = true
+    kotlinOptions.outputFile = "$project.buildDir.path/js/${project.name}.js"
+    kotlinOptions.sourceMap = true
+    kotlinOptions.moduleKind = 'commonjs'
+    kotlinOptions.main = "call"
+}

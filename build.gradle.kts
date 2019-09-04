@@ -1,5 +1,15 @@
 import java.net.URI
 
+buildscript {
+    repositories {
+        jcenter()
+        maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
+    }
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.45")
+    }
+}
+
 plugins {
     kotlin("jvm") version "1.3.50" apply false
 
