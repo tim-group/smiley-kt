@@ -119,7 +119,7 @@ repositories {
 }
 
 dependencies {
-    compile("com.timgroup:Tucker:1.0.1537") // autobump
+    compile("com.timgroup:Tucker:1.0.1538") // autobump
     compile("com.timgroup:tim-logger:1.5.1098") // autobump
     compile("com.timgroup:tim-structured-events:0.4.1269") // autobump
     compile("com.timgroup:eventstore-api:0.0.1878") // autobump
