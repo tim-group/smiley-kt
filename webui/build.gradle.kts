@@ -4,7 +4,7 @@ plugins {
 
 node {
     download = true
-    version = "12.8.0"
+    version = "12.10.0"
 }
 
 val web by configurations.creating

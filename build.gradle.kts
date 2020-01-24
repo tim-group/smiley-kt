@@ -3,10 +3,10 @@ import java.net.URI
 plugins {
     kotlin("jvm") version "1.3.50" apply false
 
-    id("com.timgroup.jarmangit") version "1.1.115" apply false
-    id("com.github.johnrengelman.shadow") version "5.1.0" apply false
-    id("com.timgroup.productstore") version "1.0.18" apply false
-    id("com.timgroup.webpack") version "1.0.61" apply false
+    id("com.timgroup.jarmangit") version "1.1.117" apply false
+    id("com.github.johnrengelman.shadow") version "5.2.0" apply false
+    id("com.timgroup.productstore") version "1.0.25" apply false
+    id("com.timgroup.webpack") version "1.0.63" apply false
 
     id("org.jetbrains.dokka") version "0.9.16" apply false
 }
