@@ -4,7 +4,7 @@ import com.codahale.metrics.MetricRegistry
 import com.timgroup.clocks.testing.ManualClock
 import com.timgroup.eventstore.memory.InMemoryEventSource
 import com.timgroup.eventstore.memory.JavaInMemoryEventStore
-import com.timgroup.structuredevents.LocalEventSink
+import com.timgroup.structuredevents.testing.LocalEventSink
 import org.apache.http.HttpHost
 import org.apache.http.HttpResponse
 import org.apache.http.client.methods.HttpUriRequest
