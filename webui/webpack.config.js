@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const KotlinWebpackPlugin = require('@jetbrains/kotlin-webpack-plugin');
 
 function relative(suffix) {
     return path.resolve(__dirname, suffix);
@@ -10,11 +11,14 @@ const production = process.env.NODE_ENV === "production";
 
 module.exports = {
     context: relative("src/main/javascript"),
-    entry: "./index",
+    entry: ["./index", "kotlinApp"],
     mode: production ? 'production' : 'development',
     output: {
         path: relative('build/site'),
         filename: production ? "[name]-[hash].js" : "[name].js"
+    },
+    resolve: {
+        modules: ["kotlin_build", "node_modules"]
     },
     devtool: production ? "source-map" : "cheap-module-eval-source-map",
     devServer: {
@@ -35,6 +39,15 @@ module.exports = {
                 }
             },
             {
+                test: /\.js$/,
+                include: path.resolve(__dirname, "../kotlin_build"),
+                exclude: [
+                    /kotlin\.js$/
+                ],
+                use: ['source-map-loader'],
+                enforce: 'pre',
+            },
+            {
                 test: /\.css$/,
                 use: [ 'style-loader', 'css-loader' ]
             },
@@ -50,6 +63,9 @@ module.exports = {
                 title: "Smiley-KT",
                 appVersion: process.env.ORIGINAL_BUILD_NUMBER ? "1.0." + process.env.ORIGINAL_BUILD_NUMBER :
                     process.env.BUILD_NUMBER ? "1.0." + process.env.BUILD_NUMBER : "dev"
+            }),
+            new KotlinWebpackPlugin({
+                src: __dirname + "/src/main/kotlin"
             }),
             new webpack.optimize.SplitChunksPlugin()
         ];
