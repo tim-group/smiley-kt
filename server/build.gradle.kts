@@ -69,7 +69,7 @@ tasks {
         jdkVersion = 8
         linkMapping(delegateClosureOf<LinkMapping> {
             dir = file("src/main/kotlin").toString()
-            url = "$githubUrl/blob/master/backend/src/main/kotlin"
+            url = "$githubUrl/blob/master/server/src/main/kotlin"
             suffix = "#L"
         })
         externalDocumentationLink(delegateClosureOf<DokkaConfiguration.ExternalDocumentationLink.Builder> {

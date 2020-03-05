@@ -8,4 +8,4 @@ pluginManagement {
 
 rootProject.name = "smiley-kt"
 
-include("webui", "backend")
+include("webui", "server")
