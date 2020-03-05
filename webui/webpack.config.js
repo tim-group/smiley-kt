@@ -33,7 +33,7 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                exclude: /node_modules/,
+                exclude: /node_modules|kotlin_build/,
                 use: {
                     loader: 'babel-loader'
                 }
@@ -65,7 +65,9 @@ module.exports = {
                     process.env.BUILD_NUMBER ? "1.0." + process.env.BUILD_NUMBER : "dev"
             }),
             new KotlinWebpackPlugin({
-                src: __dirname + "/src/main/kotlin"
+                src: __dirname + "/src/main/kotlin",
+                librariesAutoLookup: true,
+                verbose: true,
             }),
             new webpack.optimize.SplitChunksPlugin()
         ];
