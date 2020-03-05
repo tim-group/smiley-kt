@@ -120,8 +120,8 @@ dependencies {
     implementation("com.timgroup:Tucker:1.0.1546") // autobump
     implementation("com.timgroup:tim-logger:1.5.1101") // autobump
     implementation("com.timgroup:tim-structured-events:0.4.1281") // autobump
-    implementation("com.timgroup:eventstore-api:0.0.1951") // autobump
-    implementation("com.timgroup:eventstore-filesystem:0.0.1951") // autobump
+    implementation("com.timgroup:eventstore-api:0.0.1952") // autobump
+    implementation("com.timgroup:eventstore-filesystem:0.0.1952") // autobump
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
     implementation("io.dropwizard.metrics:metrics-core:${Versions.metrics}")
@@ -145,7 +145,7 @@ dependencies {
     testImplementation("com.natpryce:hamkrest:1.4.2.2")
     testImplementation("org.araqnid:hamkrest-json:1.0.3")
     testImplementation("com.timgroup:tim-structured-events-testing:0.4.1281") // autobump
-    testImplementation("com.timgroup:eventstore-memory:0.0.1951") // autobump
+    testImplementation("com.timgroup:eventstore-memory:0.0.1952") // autobump
     testImplementation("org.apache.httpcomponents:httpclient:4.5.5")
     testImplementation("com.timgroup:clocks-testing:1.0.1105") // autobump
 
