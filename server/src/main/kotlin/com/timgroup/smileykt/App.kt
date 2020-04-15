@@ -1,5 +1,6 @@
 package com.timgroup.smileykt
 
+import com.google.common.util.concurrent.MoreExecutors.directExecutor
 import com.google.common.util.concurrent.ServiceManager
 import com.timgroup.eventstore.api.EventSource
 import com.timgroup.structuredevents.EventSink
@@ -46,7 +47,7 @@ class App(
             override fun healthy() {
                 eventSink.sendEvent(ApplicationStarted.withVersionFromAndParameters(this@App.javaClass, emptyMap<String, Any>()))
             }
-        })
+        }, directExecutor())
     }
 
     fun start() {
