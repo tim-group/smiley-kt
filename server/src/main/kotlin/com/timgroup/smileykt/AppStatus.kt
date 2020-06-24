@@ -1,6 +1,6 @@
 package com.timgroup.smileykt
 
-import com.codahale.metrics.MetricRegistry
+import com.timgroup.metrics.Metrics
 import com.timgroup.tucker.info.Component
 import com.timgroup.tucker.info.Health
 import com.timgroup.tucker.info.Stoppable
@@ -18,14 +18,14 @@ class AppStatus(
         private val stoppable: Stoppable = Stoppable.ALWAYS_STOPPABLE,
         private val basicComponents: List<Component> = emptyList(),
         private val asyncComponents: List<AsyncComponent> = emptyList(),
-        private val metricRegistry: MetricRegistry = MetricRegistry()
+        private val metrics: Metrics = Metrics()
 ) {
     private val statusPageGenerator = StatusPageGenerator(appName, JarVersionComponent(this.javaClass), clock).apply {
         basicComponents.forEach(this::addComponent)
         asyncComponents.forEach(this::addComponent)
     }
 
-    fun createServlet() = ApplicationInformationServlet(statusPageGenerator, stoppable, health, metricRegistry)
+    fun createServlet() = ApplicationInformationServlet(statusPageGenerator, stoppable, health, metrics.metricWriter)
 
     fun createAsyncComponentScheduler() = AsyncComponentScheduler.createFromAsync(asyncComponents)
 }

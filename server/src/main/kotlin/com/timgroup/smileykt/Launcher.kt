@@ -2,6 +2,7 @@ package com.timgroup.smileykt
 
 import com.timgroup.eventstore.filesystem.FlatFilesystemEventSource
 import com.timgroup.logger.FilebeatAppender
+import com.timgroup.metrics.StacksConfiguredMetrics
 import com.timgroup.structuredevents.Slf4jEventSink
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -29,7 +30,7 @@ object Launcher {
         setUpTimezone()
         setUpLogging(properties)
 
-        val metrics = createMetrics(properties)
+        val metrics = StacksConfiguredMetrics.setUpMetrics(properties)
 
         val port = properties.getStringValue("port").toInt()
 

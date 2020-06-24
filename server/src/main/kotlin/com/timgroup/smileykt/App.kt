@@ -3,6 +3,7 @@ package com.timgroup.smileykt
 import com.google.common.util.concurrent.MoreExecutors.directExecutor
 import com.google.common.util.concurrent.ServiceManager
 import com.timgroup.eventstore.api.EventSource
+import com.timgroup.metrics.Metrics
 import com.timgroup.structuredevents.EventSink
 import com.timgroup.structuredevents.standardevents.ApplicationStarted
 import com.timgroup.tucker.info.Component
@@ -27,12 +28,11 @@ class App(
             basicComponents = listOf(
                 JvmVersionComponent(),
                 Component.supplyInfo("kotlinVersion", "Kotlin Version") { KotlinVersion.CURRENT.toString() }),
-            metricRegistry = metrics.registry
+            metrics = metrics
     )
-    private val jettyService = JettyService(port, statusPage, metrics.registry, listOf(
+    private val jettyService = JettyService(port, statusPage, metrics.metricRegistry, listOf(
             HappinessResources(eventSource, frontEndUri),
             EventStoreResources(eventSource),
-            MetricsResource(metrics.registry),
             ProxiedOpenIdAuthResources()
     ))
     private val invitationService = UserInvitationService(
@@ -42,7 +42,7 @@ class App(
             HtmlEmailGenerator(backEndUri),
             emailer
     )
-    private val serviceManager = ServiceManager(listOf(jettyService, invitationService, metrics.reporterService)).apply {
+    private val serviceManager = ServiceManager(listOf(jettyService, invitationService)).apply {
         addListener(object : ServiceManager.Listener() {
             override fun healthy() {
                 eventSink.sendEvent(ApplicationStarted.withVersionFromAndParameters(this@App.javaClass, emptyMap<String, Any>()))
