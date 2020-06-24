@@ -4,6 +4,7 @@ import com.codahale.metrics.MetricRegistry
 import com.timgroup.clocks.testing.ManualClock
 import com.timgroup.eventstore.memory.InMemoryEventSource
 import com.timgroup.eventstore.memory.JavaInMemoryEventStore
+import com.timgroup.metrics.Metrics
 import com.timgroup.structuredevents.testing.LocalEventSink
 import org.apache.http.HttpHost
 import org.apache.http.HttpResponse
@@ -31,11 +32,10 @@ class ServerRule : ExternalResource() {
     val users = setOf(UserDefinition("abc@example.com", timeZone = ZoneOffset.UTC))
     val frontEndUri = URI("https://smiley.example.com/")
     val backEndUri = URI("https://smiley.example.com/_api")
-    val metrics = MetricRegistry()
     val eventSink = LocalEventSink()
 
     override fun before() {
-        app = App(0, clock, eventSource, users, emailSink, frontEndUri, backEndUri, Metrics(metrics, NoMetrics()), eventSink)
+        app = App(0, clock, eventSource, users, emailSink, frontEndUri, backEndUri, Metrics(), eventSink)
         app.start()
     }
 
