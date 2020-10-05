@@ -27,10 +27,9 @@ class App(
     private val statusPage = AppStatus("smiley-kt", clock,
             basicComponents = listOf(
                 JvmVersionComponent(),
-                Component.supplyInfo("kotlinVersion", "Kotlin Version") { KotlinVersion.CURRENT.toString() }),
-            metrics = metrics
+                Component.supplyInfo("kotlinVersion", "Kotlin Version") { KotlinVersion.CURRENT.toString() })
     )
-    private val jettyService = JettyService(port, statusPage, metrics.metricRegistry, listOf(
+    private val jettyService = JettyService(port, statusPage, metrics, listOf(
             HappinessResources(eventSource, frontEndUri),
             EventStoreResources(eventSource),
             ProxiedOpenIdAuthResources()

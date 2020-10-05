@@ -1,24 +1,13 @@
 package com.timgroup.smileykt
 
-import com.codahale.metrics.MetricRegistry
-import com.codahale.metrics.jetty9.InstrumentedConnectionFactory
-import com.codahale.metrics.jetty9.InstrumentedHandler
-import com.codahale.metrics.jetty9.InstrumentedQueuedThreadPool
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.common.util.concurrent.AbstractIdleService
-import org.eclipse.jetty.server.CustomRequestLog
-import org.eclipse.jetty.server.CustomRequestLog.EXTENDED_NCSA_FORMAT
-import org.eclipse.jetty.server.Handler
-import org.eclipse.jetty.server.HttpConfiguration
-import org.eclipse.jetty.server.HttpConnectionFactory
+import com.timgroup.jetty.JettyServerBuilder
+import com.timgroup.metrics.Metrics
 import org.eclipse.jetty.server.NetworkConnector
-import org.eclipse.jetty.server.Server
-import org.eclipse.jetty.server.ServerConnector
-import org.eclipse.jetty.server.Slf4jRequestLogWriter
-import org.eclipse.jetty.server.handler.HandlerWrapper
 import org.eclipse.jetty.server.handler.gzip.GzipHandler
 import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.servlet.FilterHolder
@@ -31,52 +20,32 @@ import java.util.EnumSet
 import javax.servlet.DispatcherType
 import javax.servlet.ServletContextEvent
 
-class JettyService(port: Int,
-                   appStatus: AppStatus,
-                   metrics: MetricRegistry,
-                   jaxrsResources: Collection<Any>) : AbstractIdleService() {
+class JettyService(port: Int, appStatus: AppStatus, metrics: Metrics, jaxrsResources: Collection<Any>) : AbstractIdleService() {
     private val server = run {
         val jacksonObjectMapper = jacksonObjectMapper()
                 .registerModule(JavaTimeModule())
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-
-        val threadPool = InstrumentedQueuedThreadPool(metrics).apply {
-            name = "Jetty"
-        }
-
-        val httpConfiguration = HttpConfiguration().apply {
-            requestHeaderSize = 16384
-        }
-
-        Server(threadPool).apply {
-            addConnector(ServerConnector(this, InstrumentedConnectionFactory(HttpConnectionFactory(httpConfiguration), metrics.timer("jetty-http.connections"))).apply {
-                this.port = port
+        val handler = ServletContextHandler().apply {
+            gzipHandler = GzipHandler()
+            addServlet(ServletHolder(DefaultServlet::class.java).apply {
+                setInitParameter("precompressed", "true")
+                setInitParameter("etags", "true")
+            }, "/")
+            addFilter(FilterHolder(Filter30Dispatcher()), "/*", EnumSet.of(DispatcherType.REQUEST))
+            addEventListener(object : ResteasyBootstrap() {
+                override fun contextInitialized(event: ServletContextEvent) {
+                    super.contextInitialized(event)
+                    val deployment = event.servletContext.getAttribute(ResteasyDeployment::class.java.name) as ResteasyDeployment
+                    deployment.providerFactory.register(JacksonJsonProvider(jacksonObjectMapper))
+                    jaxrsResources.forEach { deployment.registry.addSingletonResource(it) }
+                }
             })
-            requestLog = CustomRequestLog(Slf4jRequestLogWriter(), EXTENDED_NCSA_FORMAT).apply {
-                ignorePaths = arrayOf("/info/*", "/favicon.ico")
-            }
-            handler = ServletContextHandler().apply {
-                gzipHandler = GzipHandler()
-                addServlet(ServletHolder(appStatus.createServlet()), "/info/*")
-                addServlet(ServletHolder(DefaultServlet::class.java).apply {
-                    setInitParameter("precompressed", "true")
-                    setInitParameter("etags", "true")
-                }, "/")
-                addFilter(FilterHolder(Filter30Dispatcher()), "/*", EnumSet.of(DispatcherType.REQUEST))
-                addEventListener(object : ResteasyBootstrap() {
-                    override fun contextInitialized(event: ServletContextEvent) {
-                        super.contextInitialized(event)
-                        val deployment = event.servletContext.getAttribute(ResteasyDeployment::class.java.name) as ResteasyDeployment
-                        deployment.providerFactory.register(JacksonJsonProvider(jacksonObjectMapper))
-                        jaxrsResources.forEach { deployment.registry.addSingletonResource(it) }
-                    }
-                })
-                if (javaClass.getResource("/www/.MANIFEST") != null)
-                    baseResource = embeddedResourcesFromManifest("www/", javaClass.classLoader).asDocumentRoot()
-                else
-                    resourceBase = "../webui/build/web"
-            }.wrapWith(InstrumentedHandler(metrics, "jetty"))
+            if (javaClass.getResource("/www/.MANIFEST") != null)
+                baseResource = embeddedResourcesFromManifest("www/", javaClass.classLoader).asDocumentRoot()
+            else
+                resourceBase = "../webui/build/web"
         }
+        JettyServerBuilder(port, appStatus.createServlet(), metrics).addHandler(handler).build()
     }
 
     override fun startUp() {
@@ -92,9 +61,4 @@ class JettyService(port: Int,
             check(server.isRunning)
             return (server.connectors[0] as NetworkConnector).localPort
         }
-
-    private fun Handler.wrapWith(wrapper: HandlerWrapper): Handler {
-        wrapper.handler = this
-        return wrapper
-    }
 }
