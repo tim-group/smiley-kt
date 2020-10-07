@@ -118,7 +118,7 @@ repositories {
 
 dependencies {
     implementation("com.timgroup:Tucker:1.0.1577") // autobump
-    implementation("com.timgroup:tim-jetty:1.0.15") // autobump
+    implementation("com.timgroup:tim-jetty:1.0.16") // autobump
     implementation("com.timgroup:tim-logger:1.5.1108") // autobump
     implementation("com.timgroup:tim-metrics:1.0.38") // autobump
     implementation("com.timgroup:tim-structured-events:0.4.1284") // autobump
