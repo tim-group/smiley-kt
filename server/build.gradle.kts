@@ -122,8 +122,8 @@ dependencies {
     implementation("com.timgroup:tim-logger:1.5.1108") // autobump
     implementation("com.timgroup:tim-metrics:1.0.39") // autobump
     implementation("com.timgroup:tim-structured-events:0.4.1284") // autobump
-    implementation("com.timgroup:eventstore-api:0.0.2079") // autobump
-    implementation("com.timgroup:eventstore-filesystem:0.0.2079") // autobump
+    implementation("com.timgroup:eventstore-api:0.0.2080") // autobump
+    implementation("com.timgroup:eventstore-filesystem:0.0.2080") // autobump
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
     implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}")
@@ -141,7 +141,7 @@ dependencies {
     testImplementation("com.natpryce:hamkrest:1.4.2.2")
     testImplementation("org.araqnid:hamkrest-json:1.0.3")
     testImplementation("com.timgroup:tim-structured-events-testing:0.4.1284") // autobump
-    testImplementation("com.timgroup:eventstore-memory:0.0.2079") // autobump
+    testImplementation("com.timgroup:eventstore-memory:0.0.2080") // autobump
     testImplementation("org.apache.httpcomponents:httpclient:4.5.5")
     testImplementation("com.timgroup:clocks-testing:1.0.1106") // autobump
 
