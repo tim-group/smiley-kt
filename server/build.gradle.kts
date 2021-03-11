@@ -111,7 +111,7 @@ tasks.withType<Jar> {
 
 
 repositories {
-    jcenter()
+    mavenCentral()
     val repoUrl: String by project
     maven(url = "$repoUrl/groups/public")
 }

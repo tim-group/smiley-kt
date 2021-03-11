@@ -8,5 +8,5 @@ gradlePlugin {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
